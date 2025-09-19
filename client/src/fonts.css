@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'BillionDreams';
+  src: url('/fonts/BillionDreams_PERSONAL.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CreamCake';
+  src: url('/fonts/CreamCake.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CreamCake';
+  src: url('/fonts/CreamCakeBol.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HelloValentina';
+  src: url('/fonts/HelloValentina.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

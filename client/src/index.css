@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import './fonts.css';
+
+/* Custom scrollbar only inside notification box */
+.notifications::-webkit-scrollbar {
+    width: 9px;
+}
+
+.notifications::-webkit-scrollbar-track {
+    background: #fff;
+
+    /* light gray */
+}
+
+.notifications::-webkit-scrollbar-thumb {
+    background: #7c3aed;
+    /* purple */
+    border-radius: 5px;
+}
+
+.notifications::-webkit-scrollbar-thumb:hover {
+    background: #5b21b6;
+    /* darker purple */
+}
