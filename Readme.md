@@ -1,4 +1,9 @@
-# [!Logo](./client/public/logo.png) Wuddy
+<p align="center">
+  <img src="./client/public/logo.png" alt="Wuddy Logo" width="120"/>
+</p>
+
+<h1 align="center">Wuddy</h1>
+
 
 Wuddy is a **social + professional networking app** built with the MERN stack. It combines the ease of social platforms with the productivity of collaboration tools. With Wuddy, you can connect, chat, and collaborate with friends, colleagues, or new people in one place.
 
