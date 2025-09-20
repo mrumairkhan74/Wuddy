@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./images/banner.jpeg" alt="Wuddy Banner" width="100%" />
+<img src="./images/banner.jpg" alt="Wuddy Banner" width="100%" />
 </div>
 <!-- logo -->
 <div align="center">
