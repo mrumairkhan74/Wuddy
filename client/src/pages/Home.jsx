@@ -4,6 +4,7 @@ import Birthday from '../components/Birthday'
 import Friend from '../components/Friend'
 import Groups from '../components/Groups'
 import CreatePost from '../components/CreatePost'
+import PostPage from '../components/PostPage'
 
 const Home = () => {
   return (
@@ -17,9 +18,12 @@ const Home = () => {
         </div>
 
         {/* Main Content (always visible) */}
-        <div className="flex-1 min-h-screen rounded-md p-3 overflow-hidden shadow-md overflow-y-auto">
+        <div className="flex-1 min-h-[700px] rounded-md p-3 overflow-hidden shadow-md">
           <div className="flex justify-center items-center mb-2">
             <CreatePost />
+          </div>
+          <div className="flex overflow-y-auto min-h-[600px] bg-white shadow-md rounded-md m-2">
+            <PostPage/>
           </div>
         </div>
 
