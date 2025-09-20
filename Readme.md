@@ -1,7 +1,7 @@
 <div align="center">
-<img src="./images/banner.jpeg" alt="Wuddy Banner" width="100%"/>
+<img src="./images/banner.jpeg" alt="Wuddy Banner" width="100%" height="300px"/>
 </div>
----
+<!-- logo -->
 <div align="center">
 <img src="./images/logo.png" alt="Wuddy Logo" width="100"/>
 <h1 align="center">Wuddy</h1>
