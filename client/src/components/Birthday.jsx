@@ -7,7 +7,7 @@ const Birthday = () => {
     <>
       {/* Birthday list card */}
       <div className="w-[300px] p-4 bg-[#206059] rounded-md m-2 ">
-        <h1 className="text-[#EBF2FD] font-[Poppins] border-b-2 my-2 text-center text-2xl">
+        <h1 className="text-[#EBF2FD] font-[Poppins] border-b-2 my-2 text-center text-xl">
           Today Birthdays
         </h1>
         {/* {

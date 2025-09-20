@@ -5,13 +5,21 @@ const Task = () => {
   const [isTaskOpen, setIsTaskOpen] = useState(false);
   const [tasks, setTasks] = useState([
     { id: 1, title: "Design new logo", tag: "important", color: "red", time: "5:00 PM" },
-    { id: 2, title: "Meeting", tag: "work", color: "green", time: "5:00 PM" },
-    { id: 3, title: "Get Together", tag: "enjoy", color: "purple", time: " 5:00 PM" },
-    { id: 4, title: "Get Together", tag: "enjoy", color: "purple", time: " 5:00 PM" },
-    { id: 5, title: "Get Together", tag: "enjoy", color: "purple", time: " 5:00 PM" },
+    { id: 2, title: "Meeting", tag: "work", color: "purple", time: "5:00 PM" },
+    { id: 5, title: "Get Together", tag: "enjoy", color: "red", time: " 5:00 PM" },
   ]);
 
   const [newTask, setNewTask] = useState({ title: "", tag: "", time: "" });
+
+  const colorMap = {
+    red: { bg: "bg-red-500", border: "border-red-500" },
+    blue: { bg: "bg-blue-500", border: "border-blue-500" },
+    purple: { bg: "bg-purple-500", border: "border-purple-500" },
+    green: { bg: "bg-green-500", border: "border-green-500" },
+    yellow: { bg: "bg-yellow-500", border: "border-yellow-500" },
+  };
+
+
 
   const addTask = (e) => {
     e.preventDefault();
@@ -22,7 +30,7 @@ const Task = () => {
         id: Date.now(),
         title: newTask.title,
         tag: newTask.tag || "general",
-        color: "purple",
+        color: newTask.color || "blue",
         time: newTask.time || "No deadline"
       }
     ]);
@@ -34,12 +42,14 @@ const Task = () => {
     setTasks(tasks.filter((t) => t.id !== id));
   };
 
+
+
   return (
     <>
       {/* Task Sidebar (desktop only) */}
       <div className="w-[300px] p-4 bg-[#206059] rounded-md m-2 ">
         <div className="flex justify-between items-center px-4 py-2 mb-2">
-          <h4 className="md:text-2xl font-[Poppins] text-[#EBF2FD]">Today Task</h4>
+          <h4 className="md:text-xl font-[Poppins] text-[#EBF2FD]">Today Task</h4>
           <button
             className="text-xl font-[Poppins] bg-white rounded-md px-2"
             onClick={() => setIsTaskOpen(!isTaskOpen)}
@@ -59,13 +69,13 @@ const Task = () => {
                   key={task.id}
                   className="flex items-center justify-between bg-white mb-2 p-2 rounded-md"
                 >
-                  <div className={`flex-col border-l-2 border-${task.color}-500`}>
+                  <div className={`flex-col border-l-2 ${colorMap[task.color]?.border || "border-gray-500"}`}>
                     <h4 className="text-md font-[Poppins] text-[#206059] ml-2">
                       {task.title}
                     </h4>
                     <div className="flex items-center justify-between">
                       <p
-                        className={`bg-${task.color}-500 text-[#EBF2FD] px-2 py-1 mx-2 rounded-md text-[9px]`}
+                        className={`${colorMap[task.color]?.bg || "bg-gray-500"} text-[#EBF2FD] px-2 py-1 mx-2 rounded-md text-[9px]`}
                       >
                         {task.tag}
                       </p>

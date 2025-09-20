@@ -1,14 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Basic -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/*" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wuddy | Chat & Meet </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Wuddy | Chat & Meet</title>
+    <meta
+      name="description"
+      content="Wuddy is a social and professional platform to chat, meet, and connect with people online. Simple, fast, and secure."
+    />
+    <link rel="canonical" href="https://wuddy.com/" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wuddy | Chat & Meet" />
+    <meta
+      property="og:description"
+      content="Connect with friends and professionals on Wuddy. Chat, meet, and grow your network."
+    />
+    <meta property="og:url" content="https://wuddy.com/" />
+    <meta property="og:site_name" content="Wuddy" />
+    <meta property="og:image" content="https://wuddy.com/og-image.jpg" />
+    <meta property="og:image:alt" content="Wuddy app preview" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Wuddy | Chat & Meet" />
+    <meta
+      name="twitter:description"
+      content="Social + professional networking redefined. Chat, meet, and connect with ease."
+    />
+    <meta name="twitter:image" content="https://wuddy.com/og-image.jpg" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#206059" />
+
+    <!-- JSON-LD (basic Organization + Website) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Wuddy",
+            "url": "https://wuddy.com",
+            "logo": "https://wuddy.com/logo.png"
+          },
+          {
+            "@type": "WebSite",
+            "url": "https://wuddy.com",
+            "name": "Wuddy",
+            "description": "Wuddy is a social and professional platform to chat, meet, and connect with people online.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://wuddy.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
