@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState } from 'react'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -9,6 +9,14 @@ import Signup from './pages/Auth/Signup'
 import { AnimatePresence } from 'framer-motion'
 const App = () => {
   const [showSplash, setShowSplash] = useState(true)
+  // const [isLoggedIn, setIsLoggedIn] = useState(false)
+  // const [user, setUser] = useState(null)
+
+  // useEffect(()=>{
+  //   axios.get(
+
+  //   )
+  // })
   return (
     <>
       <BrowserRouter>
