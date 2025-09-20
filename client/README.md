@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./client/public/logo.png" alt="Wuddy Logo" width="100"/>
+  <img src="./public/logo.png" alt="Wuddy Logo" width="100"/>
 <h1 align="center">Wuddy</h1>
 </div>
 
