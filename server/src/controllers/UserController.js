@@ -1,6 +1,7 @@
 const UserModel = require('../models/UserModel')
 const generateUsername = require('../utils/GenerateUsername')
 const hashedPassword = require('../utils/HashedPassword')
+const bcrypt = require('bcrypt')
 const { sendEmailVerificationCode } = require('./VerifyController')
 const {
     BadRequestError,
@@ -57,6 +58,7 @@ const createUser = async (req, res, next) => {
             username: user.username,
             email: user.email,
             isEmailVerified: user.isEmailVerified,
+            message: `Verification code is sent to your ${user.email}`
 
         })
 
@@ -67,9 +69,84 @@ const createUser = async (req, res, next) => {
 }
 
 
-// verify user email
+// login user 
+const loginUser = async (req, res, next) => {
+    try {
+        const { username, email, password } = req.body;
+        const user = await UserModel.findOne({ $or: [{ email }, { username }] })
+        if (!user) throw new NotFoundError("Invalid User email or username")
 
+        const comparePassword = await bcrypt.compare(password, user.password)
+        if (!comparePassword) throw new BadRequestError("Invalid Password")
+        if (user.isEmailVerified === true) {
+            const { AccessToken, RefreshToken } = GenerateToken({
+                _id: user._id,
+                name: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+                profileImg: user.profileImg?.url,
+                role: user.role,
+                username: user.username
+            })
+
+            user.refreshToken = RefreshToken;
+            await user.save();
+
+            res.cookie('token', AccessToken);
+            res.cookie('refreshToken', RefreshToken)
+
+            return res.status(200).json({
+                success: true,
+                token: AccessToken,
+                user: {
+                    _id: user._id,
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
+                    profileImg: user.profileImg?.url,
+                    role: user.role,
+                    username: user.username
+                }
+            })
+        }
+
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
+
+// const updateUSer
+
+const updateUser = async (req, res, next) => {
+    try {
+        const userId = req.user?._id
+        const updateUser = req.body;
+
+        const updatedUser = await UserModel.findByIdAndUpdate(userId, updateUser, { new: true }).select('-password')
+        if (!updatedUser) throw new NotFoundError("Invalid User")
+
+        return res.status(200).json({
+            success: true,
+            updatedUser
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+const user = async (req, res,next) => {
+    try {
+
+    }
+    catch (error) {
+        next(error)
+    }
+}
 
 module.exports = {
-    createUser
+    createUser,
+    loginUser,
+    updateUser
 }
