@@ -1,3 +1,95 @@
+const mongoose = require('mongoose')
 const db = require('../config/db')
 
 
+
+
+const userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true,
+        minlength: 3,
+        trim: true,
+        maxlength: true
+    },
+    lastName: {
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 20,
+        trim: true
+    },
+    username: {
+        type: String,
+        minlength: 8,
+        maxlength: 20,
+        trim: true,
+        lowercase: true,
+        match: /^[a-z0-9_@\-.*&#@$!]+$/i,
+        unique: true,
+    },
+    email: {
+        type: String,
+        lowercase: true,
+        unique: true,
+        trim: true,
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    dateofBirth: {
+        type: Date,
+        required: true,
+    },
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'other'],
+        default: 'male',
+    },
+    address: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    country: {
+        type: String,
+    },
+    phoneNo: {
+        type: Number,
+        minlength: 8,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'moderator'],
+        default: 'user'
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpiry: {
+        type: Date
+    },
+    isEmailVerified: {
+        type: Boolean,
+        default: false,
+    },
+    isPhoneVerified: {
+        type: Boolean,
+        default: false,
+    },
+    refreshToken: {
+        type: String
+    },
+
+}, { timestamps: true })
+
+userSchema.index({ email: 1, username: 1 })
+
+
+const UserModel = mongoose.model('User',userSchema)
+
+module.exports = UserModel
