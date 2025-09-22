@@ -8,6 +8,8 @@ const VerifyEmail = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { userId } = useParams();
+
+    console.log(userId)
     const handleVerify = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -20,7 +22,7 @@ const VerifyEmail = () => {
                 { withCredentials: true } // send cookies if using session
             );
             setStatus("Email verified successfully!");
-            setTimeout(() => navigate("/login"), 2000); // redirect after success
+            setTimeout(() => navigate("/"), 2000); // redirect after success
         } catch (error) {
             setStatus(error.response?.data?.message || "Invalid code");
         } finally {

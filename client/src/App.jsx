@@ -31,7 +31,7 @@ const App = () => {
               <Route path='/signup' element={<Signup />} />
               <Route path='/home' element={<Home />} />
               <Route path='/notification' element={<Notification />} />
-              <Route path='/verify-email' element={<VerifyEmail />} />
+              <Route path='/verify-email/:userId' element={<VerifyEmail />} />
             </Routes>
           )}
         </AnimatePresence>

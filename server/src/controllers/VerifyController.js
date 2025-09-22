@@ -46,9 +46,10 @@ const sendEmailVerificationCode = async (user) => {
 const verifyEmail = async (req, res) => {
     try {
         const { code } = req.body;
-        const userId = req.user?._id; // from URL
-
+        const userId = req.params.id; // from URL
+        console.log(userId)
         const storedCode = await client.get(redisKeys.emailVerify(userId));
+
         if (!storedCode || storedCode !== code) {
             return res.status(400).json({ error: "Invalid or Expired Code" });
         }

@@ -27,17 +27,36 @@ const Signup = () => {
   };
 
   // Handle form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    toast.success("Email Verification code sent to your email")
-    setTimeout(() => {
-      navigate('/verify-email')
-    }, 2000)
-    dispatch(signUpUser(form)); // Dispatch Redux action
+
+    try {
+      // Dispatch signup and wait for the response
+      const resultAction = await dispatch(signUpUser(form));
+
+      // Check if signup was successful
+      if (signUpUser.fulfilled.match(resultAction)) {
+        const userId = resultAction.payload.user._id; // get the new user's ID
+
+        toast.success("Email Verification code sent to your email");
+
+        // Redirect to verification page with actual userId
+        setTimeout(() => {
+          navigate(`/verify-email/${userId}`);
+        }, 2000);
+      } else {
+        // Signup failed
+        toast.error(resultAction.payload?.message || "Signup failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

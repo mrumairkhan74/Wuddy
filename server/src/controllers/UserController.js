@@ -53,13 +53,15 @@ const createUser = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            _id: user._id,
-            name: `${user.firstName} ${user.lastName}`,
-            username: user.username,
-            email: user.email,
-            isEmailVerified: user.isEmailVerified,
-            message: `Verification code is sent to your ${user.email}`
+            user: {
+                _id: user._id,
+                name: `${user.firstName} ${user.lastName}`,
+                username: user.username,
+                email: user.email,
+                isEmailVerified: user.isEmailVerified,
+                message: `Verification code is sent to your ${user.email}`
 
+            }
         })
 
     }
@@ -136,7 +138,7 @@ const updateUser = async (req, res, next) => {
 
 }
 
-const user = async (req, res,next) => {
+const user = async (req, res, next) => {
     try {
 
     }
