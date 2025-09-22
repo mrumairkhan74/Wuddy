@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -7,6 +7,7 @@ import Loading from './components/Loading'
 import Login from './pages/Auth/Login'
 import Signup from './pages/Auth/Signup'
 import { AnimatePresence } from 'framer-motion'
+import VerifyEmail from './components/VerifyEmail'
 const App = () => {
   const [showSplash, setShowSplash] = useState(true)
   // const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -30,6 +31,7 @@ const App = () => {
               <Route path='/signup' element={<Signup />} />
               <Route path='/home' element={<Home />} />
               <Route path='/notification' element={<Notification />} />
+              <Route path='/verify-email' element={<VerifyEmail />} />
             </Routes>
           )}
         </AnimatePresence>

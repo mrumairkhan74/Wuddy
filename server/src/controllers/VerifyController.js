@@ -46,7 +46,7 @@ const sendEmailVerificationCode = async (user) => {
 const verifyEmail = async (req, res) => {
     try {
         const { code } = req.body;
-        const userId = req.params.id; // from URL
+        const userId = req.user?._id; // from URL
 
         const storedCode = await client.get(redisKeys.emailVerify(userId));
         if (!storedCode || storedCode !== code) {
