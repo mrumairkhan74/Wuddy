@@ -10,13 +10,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 3,
         trim: true,
-        maxlength: true
     },
     lastName: {
         type: String,
         required: true,
         minlength: 3,
-        maxlength: 20,
         trim: true
     },
     username: {
@@ -39,9 +37,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        match: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%.-^&*]).{8,}$/
     },
-    dateofBirth: {
-        type: Date,
+    dateOfBirth: {
+        type: String,
         required: true,
     },
     gender: {
@@ -90,6 +89,6 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ email: 1, username: 1 })
 
 
-const UserModel = mongoose.model('User',userSchema)
+const UserModel = mongoose.model('User', userSchema)
 
 module.exports = UserModel
