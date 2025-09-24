@@ -81,7 +81,7 @@ const CreatePost = () => {
         </div>
 
         {/* Post button */}
-        <button className="bg-[#206059] px-4 py-2 rounded-full text-white text-sm hover:bg-[#15423d]">
+        <button className="bg-[#206059] px-4 py-2 rounded-full text-white md:text-sm hover:bg-[#15423d]">
           Post Now
         </button>
       </div>

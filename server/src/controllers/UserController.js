@@ -48,9 +48,19 @@ const createUser = async (req, res, next) => {
         user.refreshToken = RefreshToken
         await user.save();
 
-        res.cookie('token', AccessToken)
-        res.cookie('refreshToken', RefreshToken);
+        res.cookie("token", AccessToken, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === "production", // true if on https
+            sameSite: "lax", // important for frontend <-> backend on different domains
+            maxAge: 15 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
+        });
 
+        res.cookie("refreshToken", RefreshToken, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
         return res.status(200).json({
             success: true,
             user: {
@@ -74,8 +84,8 @@ const createUser = async (req, res, next) => {
 // login user 
 const loginUser = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
-        const user = await UserModel.findOne({ $or: [{ email }, { username }] })
+        const { identifier, password } = req.body;
+        const user = await UserModel.findOne({ $or: [{ email: identifier }, { username: identifier }] })
         if (!user) throw new NotFoundError("Invalid User email or username")
 
         const comparePassword = await bcrypt.compare(password, user.password)
@@ -93,9 +103,19 @@ const loginUser = async (req, res, next) => {
             user.refreshToken = RefreshToken;
             await user.save();
 
-            res.cookie('token', AccessToken);
-            res.cookie('refreshToken', RefreshToken)
-
+            res.cookie("token", AccessToken, {
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === "production", // true if on https
+                sameSite: "lax", // important for frontend <-> backend on different domains
+                maxAge: 15 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
+            });
+            ;
+            res.cookie("refreshToken", RefreshToken, {
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            });
             return res.status(200).json({
                 success: true,
                 token: AccessToken,
@@ -138,17 +158,36 @@ const updateUser = async (req, res, next) => {
 
 }
 
-const user = async (req, res, next) => {
+const getMe = async (req, res, next) => {
     try {
-
+        const userId = req.user?._id
+        const user = await UserModel.findById(userId).select("-password")
+        if (!user) throw new NotFoundError("User Not Found")
+        return res.status(200).json({
+            success: true,
+            user
+        })
     }
     catch (error) {
         next(error)
     }
 }
 
+// userLogout
+const logout = async (req, res) => {
+    try {
+        res.clearCookie('token')
+        return res.status(200).json({ message: "Logout Successfully" })
+    }
+    catch (error) {
+        console.error("Error", error)
+    }
+}
+
 module.exports = {
     createUser,
     loginUser,
-    updateUser
+    updateUser,
+    getMe,
+    logout
 }

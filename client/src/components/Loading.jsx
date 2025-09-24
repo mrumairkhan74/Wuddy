@@ -16,7 +16,7 @@ const Loading = ({ onFinish }) => {
             <motion.img
                 src="./logo.png"
                 alt="Wuddy Logo"
-                className="w-28 h-25 mb-6"
+                className=" w-18 h-15 md:w-28 md:h-25 md:mb-6 mb-3"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -25,7 +25,7 @@ const Loading = ({ onFinish }) => {
 
             {/* App name with CreamCake font + typewriter effect */}
             <motion.h1
-                className="text-white text-6xl"
+                className="text-white md:text-5xl text-3xl"
                 style={{ fontFamily: 'CreamCake, cursive' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -43,7 +43,7 @@ const Loading = ({ onFinish }) => {
 
             {/* Tagline under the name */}
             <motion.p
-                className="text-white text-lg mt-4 tracking-wide font-[Poppins]"
+                className="text-white md:text-lg text-sm mt-4 tracking-wide font-[Poppins]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 1, y: -30 }}

@@ -1,19 +1,33 @@
 
 import React, { useState } from 'react'
 import { FaSearch } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io"
 import { BiTask } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
 import logo from '/public/logo.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../features/authSlice'
+import { toast } from 'react-toastify';
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(null); // "profile" | "notify" | "message" | null
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth?.user)
+    const navigate = useNavigate()
 
+    //    menu toggle
     const toggleMenu = (menu) => {
         setActiveMenu((prev) => (prev === menu ? null : menu));
     };
 
+    const handleLogout = async () => {
+        await dispatch(logout())
+        toast.success("Logout successfully")
+        setTimeout(() => {
+            navigate('/')
+        }, 2000)
+    }
     return (
         <div className='m-2 font-[Poppins] shadow-md rounded-md '>
             <div className='bg-[#206059] p-4 text-[#EBF2FD] flex items-center justify-between rounded-md mt-2'>
@@ -90,7 +104,7 @@ const Navbar = () => {
                     {/* your mobile links here */}
                     <Link to='/myProfile' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide flex gap-2 items-center justify-center'>
                         <div className="bg-[#206059] w-15 h-15 rounded-full"></div>
-                        Umair Khan
+                        {user?.name}
                     </Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Home</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Meeting</Link>
@@ -98,16 +112,16 @@ const Navbar = () => {
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Groups</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Notes</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Setting</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-700 rounded-full w-[100px] text-center'>Logout</Link>
+                    <button onClick={handleLogout} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-700 rounded-full w-[100px] text-center'>Logout</button>
                 </div>
             )}
 
             {/* Profile dropdown (desktop) */}
             {activeMenu === "profile" && (
                 <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-7 bg-[#206059] w-[300px]">
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>My Profile</Link>
+                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>{user?.name}</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>Setting</Link>
-                    <Link to='/' className=' hover:bg-red-800 text-center text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-500 rounded-full w-[100px]'>Logout</Link>
+                    <button onClick={handleLogout} className=' hover:bg-red-800 text-center text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-500 rounded-full w-[100px]'>Logout</button>
                 </div>
             )}
 

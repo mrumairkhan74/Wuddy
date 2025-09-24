@@ -1,43 +1,60 @@
-import React, { useState } from 'react'
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Notification from './pages/Notification'
-import Loading from './components/Loading'
-import Login from './pages/Auth/Login'
-import Signup from './pages/Auth/Signup'
-import { AnimatePresence } from 'framer-motion'
-import VerifyEmail from './components/VerifyEmail'
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AnimatePresence } from "framer-motion";
+
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
+import Notification from "./pages/Notification";
+import VerifyEmail from "./components/VerifyEmail";
+import Loading from "./components/Loading";
+import ProtectedRoute from "./ProtectedRoutes";
+
+import { GetMe } from "./features/authSlice";
+
 const App = () => {
-  const [showSplash, setShowSplash] = useState(true)
-  // const [isLoggedIn, setIsLoggedIn] = useState(false)
-  // const [user, setUser] = useState(null)
+  const [showSplash, setShowSplash] = useState(true);
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
 
-  // useEffect(()=>{
-  //   axios.get(
+  useEffect(() => {
+    dispatch(GetMe());
+  }, [dispatch]);
 
-  //   )
-  // })
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <AnimatePresence mode='wait'>
-          {showSplash ? (
-            <Loading key="splash" onFinish={() => setShowSplash(false)} />
-          ) : (
-            <Routes>
-              <Route path='/' element={<Login />} />
-              <Route path='/signup' element={<Signup />} />
-              <Route path='/home' element={<Home />} />
-              <Route path='/notification' element={<Notification />} />
-              <Route path='/verify-email/:userId' element={<VerifyEmail />} />
-            </Routes>
-          )}
-        </AnimatePresence>
-      </BrowserRouter >
-    </>
-  )
-}
+    <BrowserRouter>
+      {user && <Navbar />}
+      <AnimatePresence mode="wait">
+        {showSplash || loading ? (
+          <Loading key="splash" onFinish={() => setShowSplash(false)} />
+        ) : (
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email/:userId" element={<VerifyEmail />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <ProtectedRoute>
+                  <Notification />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        )}
+      </AnimatePresence>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
