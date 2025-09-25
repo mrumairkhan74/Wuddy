@@ -8,7 +8,7 @@ import PostPage from '../components/PostPage'
 
 const Home = () => {
   return (
-    <div className="z-0 md:m-5 p-4 ">
+    <div className="z-0 md:m-2 p-4 ">
       <div className="flex flex-wrap items-start justify-center gap-3">
 
         {/* Left Sidebar (hidden on mobile) */}
@@ -18,14 +18,18 @@ const Home = () => {
         </aside>
 
         {/* Main Content (always visible) */}
-        <div className="flex-1 min-h-[700px] rounded-md p-3 overflow-hidden shadow-md">
+        <div className="flex-1 min-h-[700px] rounded-md p-3">
+          {/* Create post stays fixed */}
           <div className="flex justify-center items-center mb-2">
             <CreatePost />
           </div>
-          <div className="flex overflow-y-auto min-h-[600px] bg-white shadow-md rounded-md m-2">
-            <PostPage/>
+
+          {/* Posts container */}
+          <div className="bg-white shadow-md rounded-md h-[600px] overflow-y-auto">
+            <PostPage />
           </div>
         </div>
+
 
         {/* Right Sidebar (hidden on mobile) */}
         <div className="hidden md:flex flex-col shadow-md rounded-md">
