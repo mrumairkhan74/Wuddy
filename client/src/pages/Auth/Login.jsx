@@ -26,9 +26,7 @@ const Login = () => {
     try {
       await dispatch(loginUser(form)).unwrap();
       toast.success("Login successfully")
-      setTimeout(() => {
-        navigate('/home')
-      }, 2000)
+      navigate('/home')
     }
     catch (error) {
       toast.error("Something went Wrong", error)

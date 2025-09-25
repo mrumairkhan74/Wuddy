@@ -6,9 +6,9 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io"
 import { BiTask } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
-import logo from '/public/logo.png'
+import logo from '/logo.png'
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../features/authSlice'
+import { logoutUser } from '../features/authSlice'
 import { toast } from 'react-toastify';
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(null); // "profile" | "notify" | "message" | null
@@ -22,11 +22,10 @@ const Navbar = () => {
     };
 
     const handleLogout = async () => {
-        await dispatch(logout())
+        dispatch(logoutUser())
         toast.success("Logout successfully")
-        setTimeout(() => {
-            navigate('/')
-        }, 2000)
+        navigate('/')
+
     }
     return (
         <div className='m-2 font-[Poppins] shadow-md rounded-md '>
@@ -34,7 +33,7 @@ const Navbar = () => {
 
                 {/* Left side */}
                 <div className="flex items-center">
-                    <div className="logo text-3xl font-bold tracking-wide flex items-center" style={{ fontFamily: "CreamCake" }}>
+                    <div className="logo text-3xl font-bold tracking-wide flex items-center" style={{ fontFamily: "HelloValentina" }}>
                         <img src={logo} alt="" className='md:w-20 md:h-15 w-12 h-10' />
                         Wuddy
                     </div>
@@ -102,11 +101,11 @@ const Navbar = () => {
             {activeMenu === "profile" && (
                 <div className="md:hidden flex flex-col bg-[#206059] mt-2 rounded-md">
                     {/* your mobile links here */}
-                    <Link to='/myProfile' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide flex gap-2 items-center justify-center'>
+                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide flex gap-2 items-center justify-center'>
                         <div className="bg-[#206059] w-15 h-15 rounded-full"></div>
-                        {user?.name}
+                        {user ? `${user.firstName} ${user.lastName}` : "Guest"}
                     </Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Home</Link>
+                    <Link to="/home" className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Home</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Meeting</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Friends</Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Groups</Link>
@@ -119,7 +118,9 @@ const Navbar = () => {
             {/* Profile dropdown (desktop) */}
             {activeMenu === "profile" && (
                 <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-7 bg-[#206059] w-[300px]">
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>{user?.name}</Link>
+                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>
+                        {user ? `${user.firstName} ${user.lastName}` : "Guest"}
+                    </Link>
                     <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>Setting</Link>
                     <button onClick={handleLogout} className=' hover:bg-red-800 text-center text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-500 rounded-full w-[100px]'>Logout</button>
                 </div>

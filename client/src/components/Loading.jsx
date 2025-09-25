@@ -14,7 +14,7 @@ const Loading = ({ onFinish }) => {
         <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-[#206059]">
             {/* Logo with a fade-in scale animation */}
             <motion.img
-                src="./logo.png"
+                src="/logo.png"
                 alt="Wuddy Logo"
                 className=" w-18 h-15 md:w-28 md:h-25 md:mb-6 mb-3"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -26,7 +26,7 @@ const Loading = ({ onFinish }) => {
             {/* App name with CreamCake font + typewriter effect */}
             <motion.h1
                 className="text-white md:text-5xl text-3xl"
-                style={{ fontFamily: 'CreamCake, cursive' }}
+                style={{ fontFamily: 'HelloValentina, cursive' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}

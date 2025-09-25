@@ -12,10 +12,10 @@ const Home = () => {
       <div className="flex flex-wrap items-start justify-center gap-3">
 
         {/* Left Sidebar (hidden on mobile) */}
-        <div className="hidden md:flex  flex-col shadow-md rounded-md">
+        <aside className="hidden md:flex flex-col shadow-md rounded-md">
           <Task className="" />
           <Birthday />
-        </div>
+        </aside>
 
         {/* Main Content (always visible) */}
         <div className="flex-1 min-h-[700px] rounded-md p-3 overflow-hidden shadow-md">

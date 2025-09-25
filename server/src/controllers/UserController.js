@@ -12,6 +12,31 @@ const {
 
 const GenerateToken = require('../utils/GenerateToken');
 
+
+// for clean user
+const sanitizeUser = (user) => {
+    return {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+        isPhoneVerified: user.isPhoneVerified,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        profileImg: user.profileImg,
+    };
+};
+
+
+
+
+
+
 const createUser = async (req, res, next) => {
     try {
         const { firstName, lastName, email, password, dateOfBirth, gender } = req.body;
@@ -63,15 +88,8 @@ const createUser = async (req, res, next) => {
         });
         return res.status(200).json({
             success: true,
-            user: {
-                _id: user._id,
-                name: `${user.firstName} ${user.lastName}`,
-                username: user.username,
-                email: user.email,
-                isEmailVerified: user.isEmailVerified,
-                message: `Verification code is sent to your ${user.email}`
-
-            }
+            token:AccessToken,
+            user: sanitizeUser(user)
         })
 
     }
@@ -119,14 +137,7 @@ const loginUser = async (req, res, next) => {
             return res.status(200).json({
                 success: true,
                 token: AccessToken,
-                user: {
-                    _id: user._id,
-                    name: `${user.firstName} ${user.lastName}`,
-                    email: user.email,
-                    profileImg: user.profileImg?.url,
-                    role: user.role,
-                    username: user.username
-                }
+                user: sanitizeUser(user)
             })
         }
 
@@ -143,14 +154,14 @@ const loginUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const updateUser = req.body;
+        const update = req.body;
 
-        const updatedUser = await UserModel.findByIdAndUpdate(userId, updateUser, { new: true }).select('-password')
-        if (!updatedUser) throw new NotFoundError("Invalid User")
+        const user = await UserModel.findByIdAndUpdate(userId, update, { new: true }).select('-password')
+        if (!user) throw new NotFoundError("Invalid User")
 
         return res.status(200).json({
             success: true,
-            updatedUser
+            user
         })
     } catch (error) {
         next(error)
@@ -161,7 +172,7 @@ const updateUser = async (req, res, next) => {
 const getMe = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const user = await UserModel.findById(userId).select("-password")
+        const user = await UserModel.findById(userId).select("-password -refreshToken")
         if (!user) throw new NotFoundError("User Not Found")
         return res.status(200).json({
             success: true,
@@ -176,13 +187,28 @@ const getMe = async (req, res, next) => {
 // userLogout
 const logout = async (req, res) => {
     try {
-        res.clearCookie('token')
-        return res.status(200).json({ message: "Logout Successfully" })
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "lax",
+            // secure: process.env.NODE_ENV === "production",
+            path: "/", // must match login
+        });
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            sameSite: "lax",
+            // secure: process.env.NODE_ENV === "production",
+            path: "/", // must match login
+        });
+
+        return res.status(200).json({ message: "Logout Successfully" });
+    } catch (error) {
+        console.error("Error", error);
+        return res.status(500).json({ message: "Logout failed" });
     }
-    catch (error) {
-        console.error("Error", error)
-    }
-}
+};
+
+
 
 module.exports = {
     createUser,

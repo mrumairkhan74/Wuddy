@@ -12,10 +12,10 @@ const verifyAccessToken = (req, res, next) => {
         const decoded = jwt.verify(token, accessSecret)
         req.user = {
             _id: decoded._id,
-            name: decoded.name,
-            username: decoded.username,
-            email: decoded.email,
-            profileImg: decoded.profileImg
+            // name: decoded.name,
+            // username: decoded.username,
+            // email: decoded.email,
+            // profileImg: decoded.profileImg
         }
         next()
     }
@@ -39,10 +39,10 @@ const verifyRefreshToken = (req, res, next) => {
         const decoded = jwt.verify(token, refreshSecret)
         req.user = {
             _id: decoded._id,
-            name: decoded.name,
-            username: decoded.username,
-            email: decoded.email,
-            profileImg: decoded.profileImg
+            // name: decoded.name,
+            // username: decoded.username,
+            // email: decoded.email,
+            // profileImg: decoded.profileImg
         }
         next()
     }

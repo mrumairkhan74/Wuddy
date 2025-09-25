@@ -11,7 +11,7 @@ router.post('/create', createUser)
 router.post('/login', loginUser)
 router.get('/logout',verifyAccessToken ,logout)
 router.put('/:id/verify-email', verifyEmail)
-router.put('/:id/', verifyAccessToken, updateUser)
+router.put('/:id', verifyAccessToken, updateUser)
 
 
 

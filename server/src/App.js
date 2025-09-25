@@ -16,9 +16,9 @@ app.use(cors({
     origin: process.env.FRONTEND_URI,
     credentials: true
 }))
-app.use(errorHandler)
 
 app.use('/api', allRoutes)
 
+app.use(errorHandler)
 
 module.exports = app

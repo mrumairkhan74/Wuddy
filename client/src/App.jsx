@@ -13,6 +13,7 @@ import Loading from "./components/Loading";
 import ProtectedRoute from "./ProtectedRoutes";
 
 import { GetMe } from "./features/authSlice";
+import MyProfile from "./components/forms/MyProfile";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -39,6 +40,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/myprofile/:id"
+              element={
+                <ProtectedRoute>
+                  <MyProfile />
                 </ProtectedRoute>
               }
             />
