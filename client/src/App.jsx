@@ -13,7 +13,7 @@ import Loading from "./components/Loading";
 import ProtectedRoute from "./ProtectedRoutes";
 
 import { GetMe } from "./features/authSlice";
-import MyProfile from "./components/forms/MyProfile";
+import MyProfile from "./components/MyProfile";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);

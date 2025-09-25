@@ -43,12 +43,12 @@ const CreatePost = () => {
   return (
     <>
       {/* Post bar */}
-      <div className="sticky bg-white p-3 shadow-md w-full m-2  flex items-center gap-3 rounded-md">
+      <div className="sticky bg-white p-3 shadow-md w-full m-2 flex flex-col  sm:flex-row items-start sm:items-center gap-3 rounded-md">
         {/* User avatar */}
-        <div className="w-12 h-12 bg-[#206059] rounded-full"></div>
+        <div className="w-12 h-12 bg-[#206059] rounded-full shrink-0"></div>
 
         {/* Post input + options */}
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 w-full">
           {/* Input box */}
           <input
             type="text"
@@ -58,7 +58,7 @@ const CreatePost = () => {
           />
 
           {/* Options row */}
-          <div className="flex items-center justify-between mt-2 text-gray-600 text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 mt-2 text-gray-600 text-sm">
             <button
               className="flex items-center gap-1 hover:text-[#206059]"
               onClick={handleImageClick}
@@ -81,10 +81,11 @@ const CreatePost = () => {
         </div>
 
         {/* Post button */}
-        <button className="bg-[#206059] px-4 py-2 rounded-full text-white md:text-sm hover:bg-[#15423d]">
+        <button className="bg-[#206059] px-4 py-2 rounded-full text-white text-sm hover:bg-[#15423d] self-end sm:self-auto">
           Post Now
         </button>
       </div>
+
 
       {/* Modal */}
       {isOpen && (

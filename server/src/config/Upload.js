@@ -6,4 +6,8 @@ const upload = multer({
     storage: storage
 })
 
-module.exports = upload 
+const uploadUserImages = upload.fields([
+    { name: 'profileImg', maxCount: 1 },
+    { name: 'coverImg', maxCount: 1 },
+])
+module.exports = uploadUserImages 

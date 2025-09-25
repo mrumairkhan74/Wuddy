@@ -28,8 +28,9 @@ const Navbar = () => {
 
     }
     return (
-        <div className='m-2 font-[Poppins] shadow-md rounded-md '>
-            <div className='bg-[#206059] p-4 text-[#EBF2FD] flex items-center justify-between rounded-md mt-2'>
+        <div className='m-2 font-[Poppins] shadow-md rounded-md relative z-50' >
+            <div className='bg-[#206059] p-4 text-[#EBF2FD] flex items-center justify-between rounded-md mt-2 relative z-50'>
+
 
                 {/* Left side */}
                 <div className="flex items-center">
@@ -53,10 +54,10 @@ const Navbar = () => {
 
                 {/* Desktop menu */}
                 <div className="hidden md:flex items-center justify-center">
-                    <Link to='/' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Home</Link>
-                    <Link to='/' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Meeting</Link>
-                    <Link to='/' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Groups</Link>
-                    <Link to='/' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Notes</Link>
+                    <Link to='/home' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Home</Link>
+                    <Link to='/meeting' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Meeting</Link>
+                    <Link to='/group' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Groups</Link>
+                    <Link to='/notes' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Notes</Link>
                 </div>
 
                 {/* Right side icons */}
@@ -85,50 +86,60 @@ const Navbar = () => {
                             }
                         }}
                     />
-
+                    {/* profile Img */}
                     <div
                         title="Profile"
-                        className="border-2 border-white rounded-full h-7 w-7 md:w-10 md:h-10 flex items-center justify-center 
-                       hover:border-red-500 cursor-pointer overflow-hidden"
+                        className="border-2 border-white rounded-full h-9 w-9 md:w-10 md:h-10 flex items-center justify-center 
+             hover:border-red-500 cursor-pointer overflow-hidden"
                         onClick={() => toggleMenu("profile")}
                     >
-                        <IoPerson className="text-[#EBF2FD] h-6 w-6" />
+                        {user && user.profileImg?.url ? (
+                            <img
+                                src={user.profileImg.url}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <IoPerson className="text-[#EBF2FD] h-6 w-6" />
+                        )}
                     </div>
+
                 </div>
             </div>
 
             {/* Mobile Menu (when profile is clicked on mobile) */}
             {activeMenu === "profile" && (
-                <div className="md:hidden flex flex-col bg-[#206059] mt-2 rounded-md">
+                <div className="md:hidden flex flex-col bg-[#206059] mt-3 rounded-md">
                     {/* your mobile links here */}
-                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide flex gap-2 items-center justify-center'>
-                        <div className="bg-[#206059] w-15 h-15 rounded-full"></div>
+                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide flex gap-2 items-center justify-start'>
+                        <img src={user.profileImg?.url} className="bg-[#206059] object-cover border-2 border-white w-15 h-15 rounded-full"></img>
                         {user ? `${user.firstName} ${user.lastName}` : "Guest"}
                     </Link>
                     <Link to="/home" className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Home</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Meeting</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Friends</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Groups</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Notes</Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Setting</Link>
+                    <Link to='/meeting' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Meeting</Link>
+                    <Link to='/friends' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Friends</Link>
+                    <Link to='/groups' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Groups</Link>
+                    <Link to='/notes' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Notes</Link>
+                    <Link to='/setting' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 border-gray-500 tracking-wide'>Setting</Link>
                     <button onClick={handleLogout} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-xl text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-700 rounded-full w-[100px] text-center'>Logout</button>
                 </div>
             )}
 
             {/* Profile dropdown (desktop) */}
             {activeMenu === "profile" && (
-                <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-7 bg-[#206059] w-[300px]">
-                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>
+                <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-4 bg-[#206059] w-[300px]">
+                    <Link to={`/myprofile/${user?._id}`} className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide flex items-center justify-start gap-3'>
+                        <img src={user.profileImg?.url} className="bg-[#206059] object-cover border-2 border-white w-10 h-10 rounded-full"></img>
                         {user ? `${user.firstName} ${user.lastName}` : "Guest"}
                     </Link>
-                    <Link to='/' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>Setting</Link>
+                    <Link to='/setting' className=' hover:underline-offset-10 hover:decoration-4 hover:underline text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] border-b-2 tracking-wide'>Setting</Link>
                     <button onClick={handleLogout} className=' hover:bg-red-800 text-center text-[16px] text-[#EBF2FD] m-2 p-3 font-[Poppins] bg-red-500 rounded-full w-[100px]'>Logout</button>
                 </div>
             )}
 
             {/* Notifications dropdown */}
             {activeMenu === "notify" && (
-                <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-7 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
+                <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                     <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Notification</h4>
 
                     {/* Notification item 1 */}
@@ -158,7 +169,7 @@ const Navbar = () => {
             {/* Messages dropdown */}
             {
                 activeMenu === "message" && (
-                    <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-7 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
+                    <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                         <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Message</h4>
 
                         {/* Message item 1 */}

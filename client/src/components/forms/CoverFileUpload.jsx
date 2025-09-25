@@ -5,27 +5,20 @@ const CoverSection = ({ user }) => {
   const fileInputRef = useRef(null);
 
   const handleUploadClick = () => {
-    fileInputRef.current.click(); // open file picker
+    fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    // preview or send to backend
     console.log("Selected file:", file);
-
-    // Example: send file to backend with FormData
-    // const formData = new FormData();
-    // formData.append("coverPfp", file);
-    // await axios.post("/api/user/upload-cover", formData);
   };
 
   return (
-    <div className="relative rounded-md w-full h-[200px] overflow-hidden flex">
-      {user && user.coverPfp ? (
+    <div className="relative w-full md:h-64 h-38 overflow-hidden rounded-md z-0">
+      {user && user.coverImg ? (
         <img
-          src={user.coverPfp}
+          src={user.coverImg?.url}
           alt="Cover"
           className="w-full h-full object-cover"
         />
@@ -41,7 +34,6 @@ const CoverSection = ({ user }) => {
         <FaCamera />
       </button>
 
-      {/* Hidden File Input */}
       <input
         type="file"
         accept="image/*"

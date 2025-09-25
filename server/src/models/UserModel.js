@@ -83,6 +83,14 @@ const userSchema = new mongoose.Schema({
     refreshToken: {
         type: String
     },
+    profileImg: {
+        url: String,
+        public_id: String
+    },
+    coverImg: {
+        url: String,
+        public_id: String
+    },
 
 }, { timestamps: true })
 

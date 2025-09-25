@@ -10,6 +10,9 @@ const {
     ConflictError,
 } = require('../middleware/errors/httpErrors');
 
+const { uploadProfileImgToCloudinary, uploadCoverImgToCloudinary } = require('../utils/CloudinaryUpload')
+
+
 const GenerateToken = require('../utils/GenerateToken');
 
 
@@ -88,7 +91,7 @@ const createUser = async (req, res, next) => {
         });
         return res.status(200).json({
             success: true,
-            token:AccessToken,
+            token: AccessToken,
             user: sanitizeUser(user)
         })
 
@@ -152,22 +155,53 @@ const loginUser = async (req, res, next) => {
 // const updateUSer
 
 const updateUser = async (req, res, next) => {
-    try {
-        const userId = req.user?._id
-        const update = req.body;
+  try {
+    const userId = req.user?._id;
+    const update = { ...req.body };
 
-        const user = await UserModel.findByIdAndUpdate(userId, update, { new: true }).select('-password')
-        if (!user) throw new NotFoundError("Invalid User")
-
-        return res.status(200).json({
-            success: true,
-            user
-        })
-    } catch (error) {
-        next(error)
+    // Ensure files exist
+    if (!req.files || (!req.files.profileImg && !req.files.coverImg)) {
+      throw new NotFoundError("Files not uploaded");
     }
 
-}
+    // Upload profile image if provided
+    if (req.files.profileImg) {
+      const cloudinaryResult = await uploadProfileImgToCloudinary(
+        req.files.profileImg[0].buffer
+      );
+      update.profileImg = {
+        url: cloudinaryResult.secure_url,
+        public_id: cloudinaryResult.public_id,
+      };
+    }
+
+    // Upload cover image if provided
+    if (req.files.coverImg) {
+      const cloudinaryResult1 = await uploadCoverImgToCloudinary(
+        req.files.coverImg[0].buffer
+      );
+      update.coverImg = {
+        url: cloudinaryResult1.secure_url,
+        public_id: cloudinaryResult1.public_id,
+      };
+    }
+
+    // Update user
+    const user = await UserModel.findByIdAndUpdate(userId, update, {
+      new: true,
+    }).select("-password");
+
+    if (!user) throw new NotFoundError("Invalid User");
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const getMe = async (req, res, next) => {
     try {
