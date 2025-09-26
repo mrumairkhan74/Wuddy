@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 
 const Profile = ({ user }) => {
   const fileInputRef = useRef(null);
+  const addressInputRef = useRef(null);
+  // const addressInputRef = useRef(null);
 
   // file click using ref
   const handleUploadClick = () => {
@@ -19,6 +21,10 @@ const Profile = ({ user }) => {
   const handleEducation = () => {
 
   }
+  const handleAddressClick = () => {
+    addressInputRef.current.click();
+  }
+
   const handleAddress = () => {
 
   }
@@ -51,7 +57,7 @@ const Profile = ({ user }) => {
         <div className="flex flex-col md:h-[300px] md:w-[400px] w-full rounded-md  overflow-hidden">
           <div className="flex items-center justify-between">
             <h6 className="font-[Poppins] p-3 text-center font-bold tracking-wide text-[#206059] text-2xl">Address</h6>
-            <button onClick={handleAddress} className="bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</button>
+            <div className=" cursor-pointer bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</div>
           </div>
           <div className="w-full border border-gray-300"></div>
           <div className="p-3">
@@ -61,7 +67,7 @@ const Profile = ({ user }) => {
         <div className="flex flex-col md:h-[300px] md:w-[400px] w-full rounded-md  overflow-hidden">
           <div className="flex items-center justify-between">
             <h6 className="font-[Poppins] p-3 text-center font-bold tracking-wide text-[#206059] text-2xl">Education</h6>
-            <button onClick={handleEducation} className="bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</button>
+            <div className="cursor-pointer bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</div>
           </div>
           <div className="w-full border border-gray-300"></div>
           <div className="p-3 gap-3 flex flex-col">
@@ -98,7 +104,7 @@ const Profile = ({ user }) => {
         <div className="flex flex-col wrap  md:h-[300px] md:w-[400px] w-full rounded-md  overflow-hidden">
           <div className="flex items-center justify-between">
             <h6 className="font-[Poppins] p-3 text-center font-bold tracking-wide text-[#206059] text-2xl">Skills</h6>
-            <button onClick={handleSkills} className="bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</button>
+            <div className="cursor-pointer bg-[#206059] px-3 py-2 rounded-md text-center font-[Poppins] text-white">+</div>
           </div>
           <div className="w-full border border-gray-300"></div>
           <div className="p-3 flex gap-3 flex-wrap justify-center items-center">
@@ -115,6 +121,10 @@ const Profile = ({ user }) => {
 
       {/* file upload */}
       <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+      {/* input address */}
+      <input type="text" ref={addressInputRef} onChange={handleAddress} className="" />
+      {/* input education */}
+      {/* input skills */}
     </>
   );
 };
