@@ -46,7 +46,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWith
 
 export const updatedUser = createAsyncThunk("auth/update", async ({ userId, updateData }, { rejectWithValue }) => {
     try {
-        return await authApi.updateUser(updateData, userId)
+        return await authApi.updateUser(userId, updateData)
     }
     catch (error) {
         return rejectWithValue(error.response?.data)
@@ -87,6 +87,19 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
             }))
             .addCase(loginUser.rejected, ((state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message
+            }))
+            .addCase(updatedUser.pending, ((state) => {
+                state.loading = true;
+                state.error = null
+            }))
+            .addCase(updatedUser.fulfilled, ((state, action) => {
+                state.loading = false;
+                state.user = action.payload.user;
+
+            }))
+            .addCase(updatedUser.rejected, ((state, action) => {
                 state.loading = false;
                 state.error = action.payload?.message
             }))

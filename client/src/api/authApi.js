@@ -15,7 +15,9 @@ export const login = async (credentials) => {
 }
 // update Api
 export const updateUser = async (userId, updateData) => {
-    const res = await axios.put(`${apiUrl}/user/${userId}`, updateData, { withCredentials: true })
+    const res = await axios.put(`${apiUrl}/user/${userId}`, updateData, {
+        withCredentials: true
+    })
     return res.data;
 }
 // get verify
@@ -25,7 +27,7 @@ export const getMe = async () => {
 }
 
 // logout
-export const logout = async()=>{
-    const res = await axios.get(`${apiUrl}/user/logout`,{withCredentials:true})
+export const logout = async () => {
+    const res = await axios.get(`${apiUrl}/user/logout`, { withCredentials: true })
     return res.data
 }
