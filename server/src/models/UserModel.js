@@ -91,6 +91,13 @@ const userSchema = new mongoose.Schema({
         url: String,
         public_id: String
     },
+    // all this user created Details
+    tasks: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Task'
+        }
+    ]
 
 }, { timestamps: true })
 

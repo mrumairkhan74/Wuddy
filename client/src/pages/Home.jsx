@@ -8,7 +8,7 @@ import PostPage from '../components/PostPage'
 
 const Home = () => {
   return (
-    <div className="z-0 md:m-2 p-4 ">
+    <div className="z-0 container mx-auto relative">
       <div className="flex flex-wrap items-start justify-center gap-3">
 
         {/* Left Sidebar (hidden on mobile) */}

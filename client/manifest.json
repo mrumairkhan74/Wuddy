@@ -1,0 +1,8 @@
+{
+  "name": "Wuddy",
+  "short_name": "Wuddy",
+  "theme_color": "#206059",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "."
+}

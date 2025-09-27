@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { FaImage, FaVideo, FaPaperclip } from "react-icons/fa";
+import { BsFillSendFill } from "react-icons/bs";
 
 const CreatePost = () => {
   const [isOpen, isSetOpen] = useState(false);
@@ -43,7 +44,7 @@ const CreatePost = () => {
   return (
     <>
       {/* Post bar */}
-      <div className="sticky bg-white p-3 shadow-md w-full m-2 flex flex-col  sm:flex-row items-start sm:items-center gap-3 rounded-md">
+      <div className="sticky bg-white p-3 shadow-md w-full m-2 flex flex-col justify-around  sm:flex-row items-start sm:items-center gap-3 rounded-md">
         {/* User avatar */}
         <div className="w-12 h-12 bg-[#206059] rounded-full shrink-0"></div>
 
@@ -82,7 +83,7 @@ const CreatePost = () => {
 
         {/* Post button */}
         <button className="bg-[#206059] px-4 py-2 rounded-full text-white text-sm hover:bg-[#15423d] self-end sm:self-auto">
-          Post Now
+          <BsFillSendFill />
         </button>
       </div>
 
