@@ -3,14 +3,14 @@ const express = require('express')
 const { verifyAccessToken } = require('../middleware/verifyToken')
 
 // Controller
-
-const { createTask,getTask } = require('../controllers/TaskController')
+const { createTask, getTask, updateTask, deleteTask } = require('../controllers/TaskController')
 
 const router = express.Router()
 
 
 router.post('/create', verifyAccessToken, createTask)
-router.get('/', verifyAccessToken, getTask)
+router.get('/myTask', verifyAccessToken, getTask)
+router.delete('/:id', verifyAccessToken, deleteTask)
 
 
 

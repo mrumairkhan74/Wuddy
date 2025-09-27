@@ -1,7 +1,9 @@
 const UserModel = require('../models/UserModel')
 const TaskModel = require('../models/TaskModel')
-const { NotFoundError } = require('../middleware/errors/httpErrors')
+const { NotFoundError, UnAuthorizedError } = require('../middleware/errors/httpErrors')
 
+
+// Created Task
 const createTask = async (req, res, next) => {
     try {
         const userId = req.user?._id;
@@ -31,15 +33,15 @@ const createTask = async (req, res, next) => {
     }
 }
 
-
+// My Task
 const getTask = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const task = await TaskModel.find({user:userId}).populate('user', 'firstName lastName')
+        const task = await TaskModel.find({ user: userId }).populate('user', 'firstName lastName')
 
         return res.status(200).json({
             success: true,
-            task: task
+            tasks: task
         })
     }
     catch (error) {
@@ -47,7 +49,56 @@ const getTask = async (req, res, next) => {
     }
 }
 
+// delete task
+const deleteTask = async (req, res, next) => {
+    try {
+        const userId = req.user?._id
+        const { id } = req.params
+        const task = await TaskModel.findById(id)
+        if (task.user.toString() !== userId) {
+            throw new UnAuthorizedError("You Cannot Delete this Task")
+        }
+
+        await TaskModel.findByIdAndDelete(id)
+
+        await UserModel.findByIdAndUpdate(userId, {
+            $pull: { tasks: task._id }
+        });
+
+        return res.status(200).json({ message: "Task Removed Successfully" })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+// Update Task
+const updateTask = async (req, res, next) => {
+    try {
+        const userId = req.user?._id;
+        const { id } = req.params
+        const update = req.body
+
+        const task = await TaskModel.findById(id)
+        if (task.user.toString() !== userId) throw new UnAuthorizedError("You Cannot Update Task")
+        const updated = await TaskModel.findByIdAndUpdate(id, update, { new: true })
+
+        return res.status(200).json({
+            success: true,
+            task: updated,
+            message: "Task Updated Successfully"
+        })
+
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     createTask,
-    getTask
+    getTask,
+    deleteTask,
+    updateTask
 }
