@@ -111,38 +111,41 @@ const loginUser = async (req, res, next) => {
 
         const comparePassword = await bcrypt.compare(password, user.password)
         if (!comparePassword) throw new BadRequestError("Invalid Password")
-        if (user.isEmailVerified === true) {
-            const { AccessToken, RefreshToken } = GenerateToken({
-                _id: user._id,
-                name: `${user.firstName} ${user.lastName}`,
-                email: user.email,
-                profileImg: user.profileImg?.url,
-                role: user.role,
-                username: user.username
-            })
-
-            user.refreshToken = RefreshToken;
-            await user.save();
-
-            res.cookie("token", AccessToken, {
-                httpOnly: true,
-                // secure: process.env.NODE_ENV === "production", // true if on https
-                sameSite: "lax", // important for frontend <-> backend on different domains
-                maxAge: 15 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
-            });
-            ;
-            res.cookie("refreshToken", RefreshToken, {
-                httpOnly: true,
-                // secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            });
-            return res.status(200).json({
-                success: true,
-                token: AccessToken,
-                user: sanitizeUser(user)
-            })
+            
+        if (!user.isEmailVerified) {
+            throw new BadRequestError("Email is not verified. Please verify your email first.");
         }
+
+        const { AccessToken, RefreshToken } = GenerateToken({
+            _id: user._id,
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+            profileImg: user.profileImg?.url,
+            role: user.role,
+            username: user.username
+        })
+
+        user.refreshToken = RefreshToken;
+        await user.save();
+
+        res.cookie("token", AccessToken, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === "production", // true if on https
+            sameSite: "lax", // important for frontend <-> backend on different domains
+            maxAge: 15 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
+        });
+        ;
+        res.cookie("refreshToken", RefreshToken, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+        return res.status(200).json({
+            success: true,
+            token: AccessToken,
+            user: sanitizeUser(user)
+        })
 
     }
     catch (error) {
@@ -155,51 +158,65 @@ const loginUser = async (req, res, next) => {
 // const updateUSer
 
 const updateUser = async (req, res, next) => {
-  try {
-    const userId = req.user?._id;
-    const update = { ...req.body };
+    try {
+        const userId = req.user?._id;
+        const update = { ...req.body };
 
-    // Ensure files exist
-    if (!req.files || (!req.files.profileImg && !req.files.coverImg)) {
-      throw new NotFoundError("Files not uploaded");
+
+
+        if (update.password) {
+            update.password = await hashedPassword(update.password)
+        }
+        // Ensure files exist
+        // if (!req.files || (!req.files.profileImg && !req.files.coverImg)) {
+        //     throw new NotFoundError("Files not uploaded");
+        // }
+
+        // Upload profile image if provided
+        if (req.files?.profileImg) {
+            const cloudinaryResult = await uploadProfileImgToCloudinary(
+                req.files.profileImg[0].buffer
+            );
+            update.profileImg = {
+                url: cloudinaryResult.secure_url,
+                public_id: cloudinaryResult.public_id,
+            };
+        }
+
+        // Upload cover image if provided
+        if (req.files?.coverImg) {
+            const cloudinaryResult1 = await uploadCoverImgToCloudinary(
+                req.files.coverImg[0].buffer
+            );
+            update.coverImg = {
+                url: cloudinaryResult1.secure_url,
+                public_id: cloudinaryResult1.public_id,
+            };
+        }
+
+
+        // update email
+        if (update.email) {
+            await sendEmailVerificationCode({ _id: userId, email: update.email })
+            update.isEmailVerified = false
+        }
+
+        // Update user
+        const user = await UserModel.findByIdAndUpdate(userId, update, {
+            new: true,
+        }).select("-password");
+
+        if (!user) throw new NotFoundError("Invalid User");
+
+        return res.status(200).json({
+            success: true,
+            message: update.email ? `Verification code send ${update.email}` : `Updated Successfully`,
+            message: update.password ? `Password Update Successfully` : `Update password Failed`,
+            user,
+        });
+    } catch (error) {
+        next(error);
     }
-
-    // Upload profile image if provided
-    if (req.files.profileImg) {
-      const cloudinaryResult = await uploadProfileImgToCloudinary(
-        req.files.profileImg[0].buffer
-      );
-      update.profileImg = {
-        url: cloudinaryResult.secure_url,
-        public_id: cloudinaryResult.public_id,
-      };
-    }
-
-    // Upload cover image if provided
-    if (req.files.coverImg) {
-      const cloudinaryResult1 = await uploadCoverImgToCloudinary(
-        req.files.coverImg[0].buffer
-      );
-      update.coverImg = {
-        url: cloudinaryResult1.secure_url,
-        public_id: cloudinaryResult1.public_id,
-      };
-    }
-
-    // Update user
-    const user = await UserModel.findByIdAndUpdate(userId, update, {
-      new: true,
-    }).select("-password");
-
-    if (!user) throw new NotFoundError("Invalid User");
-
-    return res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    next(error);
-  }
 };
 
 

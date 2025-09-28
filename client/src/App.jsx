@@ -14,6 +14,7 @@ import ProtectedRoute from "./ProtectedRoutes";
 
 import { GetMe } from "./features/authSlice";
 import MyProfile from "./components/MyProfile";
+import Setting from "./pages/Setting";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -56,6 +57,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Notification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/setting"
+              element={
+                <ProtectedRoute>
+                  <Setting />
                 </ProtectedRoute>
               }
             />

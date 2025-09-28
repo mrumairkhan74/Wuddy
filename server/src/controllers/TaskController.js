@@ -72,33 +72,12 @@ const deleteTask = async (req, res, next) => {
     }
 }
 
-// Update Task
-const updateTask = async (req, res, next) => {
-    try {
-        const userId = req.user?._id;
-        const { id } = req.params
-        const update = req.body
 
-        const task = await TaskModel.findById(id)
-        if (task.user.toString() !== userId) throw new UnAuthorizedError("You Cannot Update Task")
-        const updated = await TaskModel.findByIdAndUpdate(id, update, { new: true })
-
-        return res.status(200).json({
-            success: true,
-            task: updated,
-            message: "Task Updated Successfully"
-        })
-
-    }
-    catch (error) {
-        next(error)
-    }
-}
 
 
 module.exports = {
     createTask,
     getTask,
     deleteTask,
-    updateTask
+
 }

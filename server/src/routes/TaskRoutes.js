@@ -3,7 +3,7 @@ const express = require('express')
 const { verifyAccessToken } = require('../middleware/verifyToken')
 
 // Controller
-const { createTask, getTask, updateTask, deleteTask } = require('../controllers/TaskController')
+const { createTask, getTask, deleteTask } = require('../controllers/TaskController')
 
 const router = express.Router()
 
