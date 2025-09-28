@@ -163,7 +163,7 @@ const Setting = () => {
                                     type="button" // NOT submit
                                     onClick={() => {
                                         if (!email) return alert("Enter email first");
-                                        dispatch(updatedUser({ userId: user._id, updateData: { email } }));
+                                        handleEmailUpdate()
                                         setShowModal(true); // show verification input
                                     }}
                                     className="bg-[#206059] mt-4 w-full rounded-md p-2 text-white hover:bg-[#184a44] transition"
