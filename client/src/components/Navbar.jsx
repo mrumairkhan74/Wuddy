@@ -9,11 +9,20 @@ import logo from '/logo.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/authSlice'
 import { toast } from 'react-toastify';
+import { getNotifications } from "../features/notificationSlice";
 
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState(null); // "profile" | "notify" | "message" | null
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth?.user)
+    const { notifications, loading, error } = useSelector(
+        (state) => state.notification
+    )
+
+    useEffect(() => {
+        dispatch(getNotifications());
+    }, [dispatch]);
+
     const navigate = useNavigate()
     const menuRef = useRef();
 
@@ -121,8 +130,8 @@ const Navbar = () => {
             {/* Mobile Profile Menu */}
             {activeMenu === "profile" && (
                 <div className="md:hidden flex flex-col bg-[#206059] mt-3 rounded-md">
-                    <Link 
-                        to={`/myprofile/${user?._id}`} 
+                    <Link
+                        to={`/myprofile/${user?._id}`}
                         onClick={() => setActiveMenu(null)}
                         className='text-xl text-[#EBF2FD] m-2 p-3 border-b-2 border-gray-500 flex gap-2 items-center'
                     >
@@ -142,8 +151,8 @@ const Navbar = () => {
             {/* Desktop Profile dropdown */}
             {activeMenu === "profile" && (
                 <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-4 bg-[#206059] w-[300px]">
-                    <Link 
-                        to={`/myprofile/${user?._id}`} 
+                    <Link
+                        to={`/myprofile/${user?._id}`}
                         onClick={() => setActiveMenu(null)}
                         className='text-[16px] text-[#EBF2FD] m-2 p-3 border-b-2 flex items-center gap-3'
                     >
@@ -158,18 +167,61 @@ const Navbar = () => {
             {/* Notifications dropdown */}
             {activeMenu === "notify" && (
                 <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
-                    <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Notification</h4>
+                    <h4 className="sticky text-xl text-center text-[#EBF2FD] w-full border-b-2">
+                        Latest Notification
+                    </h4>
+
                     <div className="flex flex-col mt-3">
-                        <div className="flex items-start justify-between bg-white p-2 rounded-md mb-3">
-                            <div className="flex flex-col">
-                                <h5 className="font-medium text-sm">Umair Khan</h5>
-                                <p className="text-[10px] text-gray-600">✅ Accepted your friend request</p>
-                            </div>
-                            <p className="text-[10px] text-gray-500">29-Sep</p>
-                        </div>
+                        {loading && (
+                            <p className="text-blue-200 text-center text-sm">Loading...</p>
+                        )}
+
+                        {error && (
+                            <p className="text-red-400 text-center text-sm">
+                                Failed to load notifications
+                            </p>
+                        )}
+
+                        {!loading && !error && notifications?.length === 0 && (
+                            <p className="text-gray-300 text-center text-sm">No notifications yet</p>
+                        )}
+
+                        {!loading &&
+                            !error &&
+                            notifications?.map((notifi) => (
+                                <div
+                                    key={notifi._id}
+                                    className="flex items-start justify-between bg-white p-2 rounded-md mb-3"
+                                >
+                                    {/* sender profile image */}
+                                    <img
+                                        src={notifi.sender?.profileImg?.url || "/default-avatar.png"}
+                                        className="object-cover w-10 h-10 rounded-full mr-2"
+                                        alt={`${notifi.sender?.firstName} ${notifi.sender?.lastName}`}
+                                    />
+
+                                    <div className="flex flex-col flex-1">
+                                        <h5 className="font-medium text-sm">
+                                            {notifi.sender?.firstName} {notifi.sender?.lastName}
+                                        </h5>
+                                        <p className="text-[10px] text-gray-600">
+                                            {notifi.message || "New notification"}
+                                        </p>
+                                    </div>
+
+                                    <p className="text-[10px] text-gray-500 whitespace-nowrap">
+                                        {new Date(notifi.createdAt).toLocaleDateString("en-GB", {
+                                            day: "2-digit",
+                                            month: "short",
+                                        })}
+                                    </p>
+                                </div>
+                            ))}
                     </div>
                 </div>
             )}
+
+
 
             {/* Messages dropdown */}
             {activeMenu === "message" && (

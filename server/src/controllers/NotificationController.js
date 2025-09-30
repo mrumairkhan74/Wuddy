@@ -9,7 +9,7 @@ const getNotification = async (req, res, next) => {
     try {
         const userId = req.user?._id
         const notification = await NotificationModel.find({ receiver: userId })
-            .populate('sender', 'firstName lastName')
+            .populate('sender', 'firstName lastName profileImg')
             .sort({ createdAt: -1 })
 
         return res.json(notification);

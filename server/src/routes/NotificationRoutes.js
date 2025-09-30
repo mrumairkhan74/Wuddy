@@ -1,5 +1,5 @@
 const express = require('express')
-const { getNotification, readNotification } = require('../controllers/NotificationModel')
+const { getNotification, readNotification } = require('../controllers/NotificationController')
 const { verifyAccessToken } = require('../middleware/verifyToken')
 const { notifyUser } = require('../utils/NotificationService')
 
@@ -10,7 +10,7 @@ router.put('/:id/read', verifyAccessToken, readNotification)
 router.post("/test", verifyAccessToken, async (req, res) => {
     try {
         const { receiver, message, type } = req.body;
-        const sender = req.user._id; // logged-in user as sender
+        const sender = req.user?._id; // logged-in user as sender
         const notification = await notifyUser(sender, receiver, type, message);
 
         res.json({ success: true, notification });

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as TaskApi from '../api/TaskApi'
+import * as TaskApi from '../api/taskApi'
 
 
 export const createTasks = createAsyncThunk('task/create', async (taskData, { rejectWithValue }) => {
