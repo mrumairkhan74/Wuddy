@@ -4,7 +4,7 @@ const express = require('express')
 const { createUser, loginUser, updateUser, getMe, logout } = require('../controllers/UserController')
 const { verifyEmail } = require('../controllers/VerifyController')
 const { verifyAccessToken } = require('../middleware/verifyToken')
-const uploadUserImages = require('../config/Upload')
+const { uploadUserImages } = require('../config/Upload')
 
 
 
