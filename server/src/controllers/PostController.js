@@ -69,7 +69,7 @@ const getPosts = async (req, res, next) => {
             .sort({ created: -1 })
         return res.status(200).json({
             success: true,
-            posts
+            posts: posts
         })
     }
     catch (error) {
@@ -103,8 +103,65 @@ const deletePost = async (req, res, next) => {
     }
 }
 
+// update post
+const updatePost = async (req, res, next) => {
+    try {
+        const userId = req.user?._id;
+        const { id } = req.params;
+        const { text } = req.body;
+
+        const post = await PostModel.findById(id);
+        if (!post) {
+            throw new NotFoundError("Post not found");
+        }
+
+        if (post.createdBy.toString() !== userId) {
+            throw new UnAuthorizedError("Unauthorized to update this post");
+        }
+
+        // Only update text
+        if (text) {
+            post.text = text;
+            await post.save();
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Post text successfully updated",
+            post
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+// all my post
+const myPosts = async (req, res, next) => {
+    try {
+        const userId = req.user?._id
+        const posts = await PostModel.find({ createdBy: userId })
+        .populate('createdBy','firstName lastName profileImg')
+        .sort({ createdAt: -1 })
+        if (posts.length === 0) throw new NotFoundError("No Post Available")
+
+        return res.status(200).json({
+            success: true,
+            message: "All Posts your Posts",
+            posts: posts
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createPost,
     getPosts,
-    deletePost
+    deletePost,
+    updatePost,
+    myPosts
 }

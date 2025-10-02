@@ -1,13 +1,21 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CoverSection from './forms/CoverFileUpload';
 import Profile from './Profile';
 import Info from './Info';
 import MyPost from './MyPost';
 import CreatePost from './CreatePost';
+import { myPosts } from '../features/postsSlice';
 
 const MyProfile = () => {
+  const dispatch = useDispatch()
   const { user, loading } = useSelector(state => state.auth);
+  const { posts } = useSelector((state) => state.post)
+
+  useEffect(() => {
+    dispatch(myPosts())
+  }, [dispatch])
+
 
   if (loading) {
     return <div className="p-10 text-center text-gray-500">Loading profile...</div>;
@@ -37,19 +45,14 @@ const MyProfile = () => {
         </div>
 
         {/* Posts Section */}
-        <div className="flex-[2] flex-col justify-center items-center gap-2">
+        {/* Posts Section */}
+        <div className="flex-[2] flex-col justify-center items-center gap-2 container mx-auto">
           <CreatePost />
 
           {/* Render user posts */}
-          {user.posts && user.posts.length > 0 ? (
-            user.posts.map((post, index) => (
-              <MyPost
-                key={index}
-                userName={user.firstName + ' ' + user.lastName}
-                userInitial={user.firstName?.charAt(0) || 'U'}
-                postText={post.text}
-                postImage={post.image}
-              />
+          {posts && posts.length > 0 ? (
+            posts.map((post) => (
+              <MyPost key={post._id} post={post} />
             ))
           ) : (
             <div className="text-gray-500 text-center mt-3">
@@ -57,6 +60,7 @@ const MyProfile = () => {
             </div>
           )}
         </div>
+
       </div>
     </div>
   );
