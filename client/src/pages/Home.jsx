@@ -5,8 +5,10 @@ import Friend from '../components/Friend'
 import Groups from '../components/Groups'
 import CreatePost from '../components/CreatePost'
 import PostPage from '../components/PostPage'
-
+import { useSelector } from 'react-redux'
 const Home = () => {
+  const { user } = useSelector((state) => state.auth)
+
   return (
     <div className="z-0 container mx-auto relative">
       <div className="flex flex-wrap items-start justify-center gap-3">
@@ -21,7 +23,7 @@ const Home = () => {
         <div className="flex-1 min-h-[700px] rounded-md p-3">
           {/* Create post stays fixed */}
           <div className="flex justify-center items-center mb-2">
-            <CreatePost />
+            <CreatePost user={user} />
           </div>
 
           {/* Posts container */}

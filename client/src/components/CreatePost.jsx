@@ -45,20 +45,32 @@ const CreatePost = ({ user }) => {
   // Create post handler
   const createPost = (e) => {
     e.preventDefault();
-    if (!newPost.text.trim()) return;
+    if (!newPost.text.trim() && !imageInputRef.current?.files?.length && !videoInputRef.current?.files?.length) return;
 
-    const post = {
-      text: newPost.text,
-      postImg: selectedImages,
-      postVideo: selectedVideo,
-    };
+    const formData = new FormData();
+    formData.append("text", newPost.text);
 
-    dispatch(createPosts(post));
+    // Append images
+    if (imageInputRef.current?.files?.length) {
+      Array.from(imageInputRef.current.files).forEach((file) => {
+        formData.append("postImg", file);
+      });
+    }
+
+    // Append video
+    if (videoInputRef.current?.files?.length) {
+      formData.append("postVideo", videoInputRef.current.files[0]);
+    }
+
+    dispatch(createPosts(formData));
+
+    // reset state
     setNewPost({ text: "", postImg: "", postVideo: "" });
     setSelectedImages([]);
     setSelectedVideo(null);
     setIsOpen(false);
   };
+
 
   return (
     <>
@@ -66,9 +78,10 @@ const CreatePost = ({ user }) => {
       <div className="sticky top-0 z-10 bg-white p-3 shadow-md w-full flex items-center gap-3 rounded-md">
         {/* Avatar */}
         <img
-          src={user.profileImg?.url}
+          src={user?.profileImg?.url}
           className="w-10 h-10 sm:w-12 sm:h-12 bg-[#206059] rounded-full object-cover shadow"
           alt="avatar"
+          loading="lazy"
         />
 
         {/* Input */}
@@ -126,6 +139,7 @@ const CreatePost = ({ user }) => {
                     key={idx}
                     src={img}
                     alt="Preview"
+                    loading="lazy"
                     className="w-full h-28 sm:h-32 object-cover rounded-md shadow"
                   />
                 ))}

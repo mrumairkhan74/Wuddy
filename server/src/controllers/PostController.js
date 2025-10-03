@@ -53,7 +53,7 @@ const createPost = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "Post Created Successfully",
-            posts: post
+            post: post
         });
     } catch (error) {
         next(error);
@@ -66,7 +66,7 @@ const getPosts = async (req, res, next) => {
     try {
         const posts = await PostModel.find()
             .populate('createdBy', 'firstName lastName username profileImg createdAt')
-            .sort({ created: -1 })
+            .sort({ createdAt: -1 })
         return res.status(200).json({
             success: true,
             posts: posts

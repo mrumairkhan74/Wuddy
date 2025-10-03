@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { getPosts } from "../features/postsSlice";
+import { deletePosts, getPosts } from "../features/postsSlice";
 
 const PostPage = () => {
   const { posts, loading, error } = useSelector((state) => state.post);
@@ -15,6 +15,10 @@ const PostPage = () => {
   const toggleMenu = (id) => {
     setOpenPostId(openPostId === id ? null : id);
   };
+
+  const handleDelete = (id) => {
+    dispatch(deletePosts(id))
+  }
 
   if (loading) return <p className="text-center">Loading posts...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -30,6 +34,7 @@ const PostPage = () => {
                 <img
                   src={post.createdBy?.profileImg?.url || "/default-avatar.png"}
                   alt="profile"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -48,26 +53,27 @@ const PostPage = () => {
             </div>
 
             {/* Menu button */}
-            <button onClick={() => toggleMenu(index)}>
-              {openPostId === index ? <BsThreeDotsVertical /> : <BsThreeDots />}
+            <button onClick={() => toggleMenu(post._id)}>
+              {openPostId === post._id ? <BsThreeDotsVertical /> : <BsThreeDots />}
             </button>
           </div>
 
           {/* Post Text */}
-          <div className="mt-3 text-sm text-gray-800">{post.text}</div>
+          <div className="mt-3 text-[18px] text-gray-800">{post.text}</div>
 
           {/* Post Media */}
           {post.postImg?.length > 0 && (
             <div
               className={`mt-3 ${post.postImg.length === 1
-                  ? "w-full"
-                  : "grid grid-cols-2 gap-2"
+                ? "w-full"
+                : "grid grid-cols-2 gap-2"
                 }`}
             >
               {post.postImg.length === 1 ? (
                 <img
                   src={post.postImg[0].url}
                   alt="post"
+                  loading="lazy"
                   className="rounded-md w-full h-96 object-cover"
                 />
               ) : (
@@ -76,6 +82,7 @@ const PostPage = () => {
                     key={i}
                     src={img.url}
                     alt={`post-${i}`}
+                    loading="lazy"
                     className="rounded-md w-full h-48 object-cover"
                   />
                 ))
@@ -102,12 +109,12 @@ const PostPage = () => {
           </div>
 
           {/* Post Menu */}
-          {openPostId === index && (
+          {openPostId === post._id && (
             <div className="absolute right-5 top-12 bg-white border shadow-md rounded-md w-40">
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">
                 ✏ Edit
               </button>
-              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+              <button onClick={() => handleDelete(post._id)} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
                 🗑 Delete
               </button>
             </div>

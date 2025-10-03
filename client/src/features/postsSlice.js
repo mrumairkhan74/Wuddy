@@ -95,8 +95,13 @@ const postsSlice = createSlice({
             })
             .addCase(createPosts.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload.posts;
+                if (Array.isArray(state.posts)) {
+                    state.posts.unshift(action.payload.post); // add new post at the top
+                } else {
+                    state.posts = [action.payload.post];
+                }
             })
+
             .addCase(createPosts.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.error
