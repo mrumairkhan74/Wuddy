@@ -101,6 +101,34 @@ const postsSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload?.error
             })
+
+            // updatePost
+            .addCase(updatePosts.pending, (state) => {
+                state.loading = true,
+                    state.error = null
+            })
+            .addCase(updatePosts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload.post
+            })
+            .addCase(updatePosts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error
+            })
+
+            // delete Post
+            .addCase(deletePosts.pending, (state) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(deletePosts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = state.posts.filter((post) => post._id !== action.payload)
+            })
+            .addCase(deletePosts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error
+            })
     }
 })
 
