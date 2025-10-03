@@ -21,6 +21,38 @@ export const myPosts = createAsyncThunk("posts/myPost", async (_, { rejectWithVa
     }
 })
 
+// create Post
+
+export const createPosts = createAsyncThunk("posts/createPost", async (postData, { rejectWithValue }) => {
+    try {
+        return await postsApi.createPost(postData);
+    }
+    catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+// updatePost
+export const updatePosts = createAsyncThunk("posts/update", async ({ id, updated }, { rejectWithValue }) => {
+    try {
+        return postsApi.updatePost(id, updated)
+    }
+    catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+// delete Post
+export const deletePosts = createAsyncThunk("posts/delete", async (id, { rejectWithValue }) => {
+    try {
+        return postsApi.deletePost(id)
+    }
+    catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+
 
 const postsSlice = createSlice({
     name: 'post',
@@ -52,6 +84,20 @@ const postsSlice = createSlice({
                 state.posts = action.payload
             })
             .addCase(myPosts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error
+            })
+
+            // createPost
+            .addCase(createPosts.pending, (state) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(createPosts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload.posts;
+            })
+            .addCase(createPosts.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.error
             })
