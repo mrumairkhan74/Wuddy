@@ -33,7 +33,7 @@ const Profile = ({ user }) => {
         <div className="flex gap-4 items-center justify-start md:px-5 ">
 
 
-          <img src={user.profileImg?.url} onClick={handleImageClick} className="border-2 border-[#206059] overflow-hidden md:w-24 md:h-24 w-18 h-18  object-cover rounded-full" alt="" />
+          <img src={user.profileImg?.url} onClick={handleImageClick} loading="lazy" className="border-2 border-[#206059] overflow-hidden md:w-24 md:h-24 w-18 h-18  object-cover rounded-full" alt="" />
 
           <div className="flex flex-col">
             <h1 className="md:text-4xl text-[#206059] text-2xl font-bold font-[Poppins]">{user.firstName} {user.lastName}</h1>

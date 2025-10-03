@@ -31,6 +31,7 @@ const CoverSection = ({ user }) => {
           <img
             src={user.coverImg?.url}
             alt="Cover"
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         ) : (
