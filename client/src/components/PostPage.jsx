@@ -74,7 +74,7 @@ const PostPage = () => {
                   src={post.postImg[0].url}
                   alt="post"
                   loading="lazy"
-                  className="rounded-md w-full h-96 object-cover"
+                  className="rounded-md w-full object-cover"
                 />
               ) : (
                 post.postImg.map((img, i) => (
