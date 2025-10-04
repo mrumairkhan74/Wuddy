@@ -17,7 +17,7 @@ const CoverSection = ({ user }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setPreview(URL.createObjectURL(file)); // preview imagea
+    setPreview(URL.createObjectURL(file)); // preview image
     const formData = new FormData();
     formData.append("coverImg", file);
 
