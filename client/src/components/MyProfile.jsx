@@ -53,7 +53,7 @@ const MyProfile = () => {
               {posts
                 .filter((post) => post.createdBy._id === user._id)
                 .map((post) => (
-                  <MyPost key={post._id} post={post} />
+                  <MyPost key={post._id} post={post} user={user} />
                 ))}
             </div>
           ) : (

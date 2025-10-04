@@ -94,11 +94,13 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null
             }))
-            .addCase(updatedUser.fulfilled, ((state, action) => {
+            .addCase(updatedUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload.user;
-
-            }))
+                state.user = {
+                    ...state.user,       // keep existing fields (name, email, etc.)
+                    ...action.payload.user, // overwrite with updated fields like coverImg
+                };
+            })
             .addCase(updatedUser.rejected, ((state, action) => {
                 state.loading = false;
                 state.error = action.payload?.error

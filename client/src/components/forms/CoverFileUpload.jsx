@@ -4,6 +4,7 @@ import { updatedUser } from '../../features/authSlice'
 import { useDispatch } from 'react-redux'
 
 const CoverSection = ({ user }) => {
+
   const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -16,7 +17,7 @@ const CoverSection = ({ user }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setPreview(URL.createObjectURL(file)); // preview image
+    setPreview(URL.createObjectURL(file)); // preview imagea
     const formData = new FormData();
     formData.append("coverImg", file);
 
@@ -27,9 +28,9 @@ const CoverSection = ({ user }) => {
   return (
     <>
       <div className="relative w-full md:h-64 h-38 overflow-hidden rounded-md z-0">
-        {user && user.coverImg ? (
+        {user && user?.coverImg ? (
           <img
-            src={user.coverImg?.url}
+            src={user?.coverImg?.url}
             alt="Cover"
             loading="lazy"
             className="w-full h-full object-cover"
@@ -50,7 +51,7 @@ const CoverSection = ({ user }) => {
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-            <h2 className="text-lg font-semibold mb-4">Update Profile Image</h2>
+            <h2 className="text-lg font-semibold mb-4">Update Cover Image</h2>
 
             {/* Preview */}
             {preview ? (

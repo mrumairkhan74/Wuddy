@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 
-const MyPost = ({ post }) => {
+const MyPost = ({ post,user }) => {
   const [openPostId, setOpenPostId] = useState(null);
 
   const toggleMenu = (id) => {
@@ -68,11 +68,10 @@ const MyPost = ({ post }) => {
         {/* Post Media */}
         {post.postImg?.length > 0 && (
           <div
-            className={`mt-3 ${
-              post.postImg.length === 1
-                ? "w-full"
-                : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2"
-            }`}
+            className={`mt-3 ${post.postImg.length === 1
+              ? "w-full"
+              : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2"
+              }`}
           >
             {post.postImg.length === 1 ? (
               <img
@@ -112,7 +111,7 @@ const MyPost = ({ post }) => {
         </div>
 
         {/* Dropdown Menu */}
-        {openPostId === post._id && (
+        {openPostId === post._id && post.createdBy?._id === user?._id && (
           <div className="absolute right-2 sm:right-5 top-12 bg-white border shadow-md rounded-md w-32 sm:w-40 z-10">
             <button className="w-full text-left px-3 sm:px-4 py-2 hover:bg-gray-100 border-b text-xs sm:text-sm">
               ✏ Edit

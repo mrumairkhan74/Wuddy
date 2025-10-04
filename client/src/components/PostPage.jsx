@@ -5,6 +5,7 @@ import { deletePosts, getPosts } from "../features/postsSlice";
 
 const PostPage = () => {
   const { posts, loading, error } = useSelector((state) => state.post);
+  const { user } = useSelector((state) => state.auth); // 👈 logged-in user
   const dispatch = useDispatch();
   const [openPostId, setOpenPostId] = useState(null);
 
@@ -20,7 +21,6 @@ const PostPage = () => {
     dispatch(deletePosts(id));
   };
 
-  // Helper to always request HD version from Cloudinary
   const getHDImage = (url) => {
     if (!url) return "/default-avatar.png";
     return url.replace("/upload/", "/upload/f_auto,q_auto:best/");
@@ -61,14 +61,16 @@ const PostPage = () => {
               </div>
             </div>
 
-            {/* Menu button */}
-            <button onClick={() => toggleMenu(post._id)}>
-              {openPostId === post._id ? (
-                <BsThreeDotsVertical />
-              ) : (
-                <BsThreeDots />
-              )}
-            </button>
+            {/* Menu button (only for post owner) */}
+            {post.createdBy?._id === user?._id && (
+              <button onClick={() => toggleMenu(post._id)}>
+                {openPostId === post._id ? (
+                  <BsThreeDotsVertical />
+                ) : (
+                  <BsThreeDots />
+                )}
+              </button>
+            )}
           </div>
 
           {/* Post Text */}
@@ -78,9 +80,7 @@ const PostPage = () => {
           {post.postImg?.length > 0 && (
             <div
               className={`mt-3 ${
-                post.postImg.length === 1
-                  ? "w-full"
-                  : "grid grid-cols-2 gap-2"
+                post.postImg.length === 1 ? "w-full" : "grid grid-cols-2 gap-2"
               }`}
             >
               {post.postImg.length === 1 ? (
@@ -120,8 +120,8 @@ const PostPage = () => {
             </button>
           </div>
 
-          {/* Post Menu */}
-          {openPostId === post._id && (
+          {/* Post Menu (only for owner) */}
+          {openPostId === post._id && post.createdBy?._id === user?._id && (
             <div className="absolute right-5 top-12 bg-white border shadow-md rounded-md w-40">
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">
                 ✏ Edit
