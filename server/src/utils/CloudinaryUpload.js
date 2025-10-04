@@ -10,7 +10,10 @@ const uploadProfileImgToCloudinary = (fileBuffer, folder = 'wuddy/ProfileImages'
         bufferStream.push(null);
 
         const stream = cloudinary.uploader.upload_stream(
-            { folder, resource_type: 'image' },
+            {
+                folder, resource_type: 'image', quality: "auto:best",   // ensures best possible quality
+                fetch_format: "auto"
+            },
             (error, result) => {
                 if (error) return reject(error)
                 resolve(result);
@@ -28,7 +31,10 @@ const uploadCoverImgToCloudinary = (fileBuffer, folder = 'wuddy/CoversImages') =
         bufferStream.push(null);
 
         const stream = cloudinary.uploader.upload_stream(
-            { folder, resource_type: 'image' },
+            {
+                folder, resource_type: 'image', quality: "auto:best",   // ensures best possible quality
+                fetch_format: "auto"
+            },
             (error, result) => {
                 if (error) return reject(error)
                 resolve(result);
@@ -46,7 +52,10 @@ const uploadPostsImagesToCloudinary = (fileBuffer, folder = 'wuddy/posts/images'
         bufferStream.push(null);
 
         const stream = cloudinary.uploader.upload_stream(
-            { folder, resource_type: 'image' },
+            {
+                folder, resource_type: 'image', quality: "auto:best",   // ensures best possible quality
+                fetch_format: "auto"
+            },
             (error, result) => {
                 if (error) return reject(error)
                 resolve(result);

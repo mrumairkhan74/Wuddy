@@ -7,7 +7,7 @@ import { updatedUser } from "../features/authSlice";
 
 const Info = () => {
   const dispatch = useDispatch()
-  const { user, loading, error } = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth)
   const [info, setInfo] = useState(false);
   const [details, setDetails] = useState(false);
   const [form, setForm] = useState({ bio: user?.bio || "", address: user?.address, city: user?.city, country: user?.country, phoneNo: user?.phoneNo, education: user?.education, zipCode: user?.zipCode })
