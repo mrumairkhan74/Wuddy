@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
         url: String,
         public_id: String
     },
-    intro:{
+    bio:{
         type:String
     },
     education:{
