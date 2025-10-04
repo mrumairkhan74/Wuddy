@@ -57,6 +57,9 @@ const userSchema = new mongoose.Schema({
     country: {
         type: String,
     },
+    zipCode: {
+        type: Number,
+    },
     phoneNo: {
         type: Number,
         minlength: 8,
@@ -91,18 +94,18 @@ const userSchema = new mongoose.Schema({
         url: String,
         public_id: String
     },
-    bio:{
-        type:String
+    bio: {
+        type: String
     },
-    education:{
-        type:String
+    education: {
+        type: String
     },
-    status:{
-        type:String,
-        enum:['single','married','engaged'],
-        default:'single'
+    status: {
+        type: String,
+        enum: ['single', 'married', 'engaged'],
+        default: 'single'
     },
-    
+
     // all this user created Details
     tasks: [
         {

@@ -123,10 +123,28 @@ const Info = () => {
 
 
 
+            <div className="flex items-center justify-center">
+              <form className="flex flex-col items-center justify-center p-5">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col md:flex-row gap-2">
+                    <div className="flex-col gap-2 items-center">
+                      <label htmlFor="address">Address:</label>
+                      <input type="text" className="bg-white w-full border p-2 rounded-md" />
+                    </div>
+                    <div className="flex-col gap-2 items-center">
+                      <label htmlFor="address">City:</label>
+                      <input type="text" className="bg-white w-full border p-2 rounded-md" />
+                    </div>
+                  </div>
+                  <input type="text" className="bg-white w-full border p-2 rounded-md" />
 
-            <button className="mt-4 bg-[#206059] text-white px-4 py-2 rounded-md" onClick={handleUpdate}>
-              Save
-            </button>
+
+                </div>
+                <button className="mt-4 bg-[#206059] text-white px-4 py-2 rounded-md" onClick={handleUpdate}>
+                  Save
+                </button>
+              </form>
+            </div>
 
           </div>
         </div>
