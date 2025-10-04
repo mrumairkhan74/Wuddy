@@ -3,8 +3,15 @@ import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 
 const MyPost = ({ post }) => {
   const [openPostId, setOpenPostId] = useState(null);
+
   const toggleMenu = (id) => {
     setOpenPostId(openPostId === id ? null : id);
+  };
+
+  // Helper: force Cloudinary to return optimized HD images
+  const getHDImage = (url) => {
+    if (!url) return "/default-avatar.png";
+    return url.replace("/upload/", "/upload/f_auto,q_auto:best/");
   };
 
   return (
@@ -17,9 +24,10 @@ const MyPost = ({ post }) => {
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#206059] rounded-full overflow-hidden flex items-center justify-center text-white font-semibold">
               {post.createdBy?.profileImg?.url ? (
                 <img
-                  src={post.createdBy.profileImg.url}
+                  src={getHDImage(post.createdBy.profileImg.url)}
                   alt="profile"
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               ) : (
                 <span className="text-sm sm:text-base">
@@ -68,17 +76,19 @@ const MyPost = ({ post }) => {
           >
             {post.postImg.length === 1 ? (
               <img
-                src={post.postImg[0].url}
+                src={getHDImage(post.postImg[0].url)}
                 alt="post"
-                className="rounded-md w-full md:h-[400px] h-[300px]  object-cover"
+                className="rounded-md w-full max-h-[500px] object-contain"
+                loading="lazy"
               />
             ) : (
               post.postImg.map((img, i) => (
                 <img
                   key={i}
-                  src={img.url}
+                  src={getHDImage(img.url)}
                   alt={`post-${i}`}
-                  className="rounded-md w-full h-32 sm:h-40 md:h-48 object-cover"
+                  className="rounded-md w-full max-h-[300px] object-contain"
+                  loading="lazy"
                 />
               ))
             )}

@@ -17,8 +17,14 @@ const PostPage = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deletePosts(id))
-  }
+    dispatch(deletePosts(id));
+  };
+
+  // Helper to always request HD version from Cloudinary
+  const getHDImage = (url) => {
+    if (!url) return "/default-avatar.png";
+    return url.replace("/upload/", "/upload/f_auto,q_auto:best/");
+  };
 
   if (loading) return <p className="text-center">Loading posts...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -26,13 +32,16 @@ const PostPage = () => {
   return (
     <div className="w-full max-w-xl mx-auto my-5 space-y-6">
       {posts.map((post, index) => (
-        <div key={post._id || index} className="p-5 shadow-md rounded-md bg-white relative">
+        <div
+          key={post._id || index}
+          className="p-5 shadow-md rounded-md bg-white relative"
+        >
           {/* Top Section: Profile */}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <img
-                  src={post.createdBy?.profileImg?.url || "/default-avatar.png"}
+                  src={getHDImage(post.createdBy?.profileImg?.url)}
                   alt="profile"
                   loading="lazy"
                   className="w-full h-full object-cover"
@@ -54,7 +63,11 @@ const PostPage = () => {
 
             {/* Menu button */}
             <button onClick={() => toggleMenu(post._id)}>
-              {openPostId === post._id ? <BsThreeDotsVertical /> : <BsThreeDots />}
+              {openPostId === post._id ? (
+                <BsThreeDotsVertical />
+              ) : (
+                <BsThreeDots />
+              )}
             </button>
           </div>
 
@@ -64,33 +77,32 @@ const PostPage = () => {
           {/* Post Media */}
           {post.postImg?.length > 0 && (
             <div
-              className={`mt-3 ${post.postImg.length === 1
-                ? "w-full"
-                : "grid grid-cols-2 gap-2"
-                }`}
+              className={`mt-3 ${
+                post.postImg.length === 1
+                  ? "w-full"
+                  : "grid grid-cols-2 gap-2"
+              }`}
             >
               {post.postImg.length === 1 ? (
                 <img
-                  src={post.postImg[0].url}
+                  src={getHDImage(post.postImg[0].url)}
                   alt="post"
                   loading="lazy"
-                  className="rounded-md w-full object-cover"
+                  className="rounded-md w-full max-h-[600px] object-contain"
                 />
               ) : (
                 post.postImg.map((img, i) => (
                   <img
                     key={i}
-                    src={img.url}
+                    src={getHDImage(img.url)}
                     alt={`post-${i}`}
                     loading="lazy"
-                    className="rounded-md w-full h-48 object-cover"
+                    className="rounded-md w-full max-h-[400px] object-contain"
                   />
                 ))
               )}
             </div>
           )}
-
-
 
           {/* Divider */}
           <div className="border-t mt-3"></div>
@@ -114,7 +126,10 @@ const PostPage = () => {
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">
                 ✏ Edit
               </button>
-              <button onClick={() => handleDelete(post._id)} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+              <button
+                onClick={() => handleDelete(post._id)}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+              >
                 🗑 Delete
               </button>
             </div>
