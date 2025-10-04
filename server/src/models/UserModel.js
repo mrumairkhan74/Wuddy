@@ -91,6 +91,18 @@ const userSchema = new mongoose.Schema({
         url: String,
         public_id: String
     },
+    intro:{
+        type:String
+    },
+    education:{
+        type:String
+    },
+    status:{
+        type:String,
+        enum:['single','married','engaged'],
+        default:'single'
+    },
+    
     // all this user created Details
     tasks: [
         {
