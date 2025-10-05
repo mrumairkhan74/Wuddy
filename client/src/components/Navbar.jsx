@@ -88,9 +88,9 @@ const Navbar = () => {
                         title='Messages'
                         onClick={() => {
                             if (window.innerWidth < 768) {
-                                window.location.href = '/message';
+                                window.location.href = '/chat';
                             } else {
-                                toggleMenu("message")
+                                toggleMenu("chat")
                             }
                         }}
                     />
@@ -224,7 +224,7 @@ const Navbar = () => {
 
 
             {/* Messages dropdown */}
-            {activeMenu === "message" && (
+            {activeMenu === "chat" && (
                 <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                     <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Message</h4>
                     <div className="flex flex-col mt-3">
