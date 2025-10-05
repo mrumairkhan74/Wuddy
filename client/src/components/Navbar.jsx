@@ -75,6 +75,7 @@ const Navbar = () => {
                 {/* Desktop menu */}
                 <div className="hidden md:flex items-center justify-center">
                     <Link to='/home' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Home</Link>
+                    <Link to='/chat' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Chats</Link>
                     <Link to='/meeting' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Meeting</Link>
                     <Link to='/group' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Groups</Link>
                     <Link to='/notes' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Notes</Link>

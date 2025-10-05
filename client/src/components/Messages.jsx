@@ -62,7 +62,7 @@ const Messages = () => {
 
 
                 {/* Chat input bar */}
-                <div className="absolute fixed bottom-0 flex items-center gap-3 bottom-2 left-1/2 -translate-x-1/2 w-[90%] max-w-[850px] bg-white m-2 rounded-md p-2 shadow-md">
+                <div className="absolute flex items-center gap-3 bottom-2 left-1/2 -translate-x-1/2 w-[90%] max-w-[850px] bg-white m-2 rounded-md p-2 shadow-md">
                     {/* Emoji button */}
                     <div className="relative">
                         <FaSmile
