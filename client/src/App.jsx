@@ -16,6 +16,7 @@ import { GetMe } from "./features/authSlice";
 import MyProfile from "./components/MyProfile";
 import Setting from "./pages/Setting";
 import Chat from "./pages/Chat";
+import Messages from "./components/Messages";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -74,6 +75,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Chat />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <Messages />
                 </ProtectedRoute>
               }
             />

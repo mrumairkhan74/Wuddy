@@ -1,9 +1,28 @@
 import React, { useState } from 'react'
 import { IoSearch } from "react-icons/io5";
+import { BsFillSendFill } from "react-icons/bs";
+import { FaSmile } from "react-icons/fa";
+import EmojiPicker from "emoji-picker-react";
 import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import Messages from './Messages';
+
 const ChatPage = () => {
-  const [search, setSearch] = useState(false)
-  const { user } = useSelector((state) => state.auth)
+  const [search, setSearch] = useState(false);
+  const [showMessages, setShowMessages] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  const handleOpenChat = () => {
+    if (window.innerWidth < 768) {
+      // On mobile — navigate to /messages
+      navigate('/messages');
+    } else {
+      // On laptop — show messages beside
+      setShowMessages(true);
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -26,49 +45,53 @@ const ChatPage = () => {
         )}
       </div>
 
-      {/* main notes contents */}
+      {/* Recent chat bubbles */}
       <div className="w-full flex items-center gap-10 shadow-md p-3 overflow-x-auto rounded-md">
         <div className="relative flex items-center justify-center h-25 p-2">
-          <img src={user?.profileImg?.url} className=" object-cover rounded-full w-14 h-14 mt-3 bg-white shadow-md" />
-          <div className="absolute -top-1 -right-10 w-20 h-10 rounded-t-[10px] rounded-br-[10px] bg-white shadow-md border border-gray-300">
-          </div>
+          <img
+            src={user?.profileImg?.url}
+            className="object-cover rounded-full w-14 h-14 mt-3 bg-white shadow-md"
+            alt=""
+          />
+          <div className="absolute -top-1 -right-10 w-20 h-10 rounded-t-[10px] rounded-br-[10px] bg-white shadow-md border border-gray-300"></div>
         </div>
       </div>
 
-      {/* messages */}
-      <div className="flex items-center justify-center gap-1 mt-2">
-        {/* person names  */}
-        <div className="flex flex-col gap-1 shadow-md h-[550px] md:w-[600px]  overflow-y-auto p-1 overflow-hidden shadow-md container mx-auto rounded-md ">
-          <div className="flex justify-between bg-white w-full h-[70px] rounded-md shadow-md">
+      {/* Chat list + message view */}
+      <div className="flex items-start justify-center gap-2 mt-3 flex-wrap md:flex-nowrap">
+        {/* Chat list */}
+        <div className="flex flex-col gap-2 shadow-md w-full h-[550px] md:w-[600px] overflow-y-auto p-2 rounded-md bg-white">
+          <div
+            onClick={handleOpenChat}
+            className="flex justify-between items-center bg-white w-full h-[70px] rounded-md shadow-md cursor-pointer hover:bg-gray-100 transition"
+          >
             {/* user details */}
             <div className="flex items-center gap-2 m-2">
-
-              <img src={user?.profileImg?.url} className="w-15 h-15 object-cover bg-[#206059] rounded-full" alt="" />
-
+              <img
+                src={user?.profileImg?.url}
+                className="w-14 h-14 object-cover bg-[#206059] rounded-full"
+                alt=""
+              />
               <div className="flex flex-col">
-                <h5 className='font-[Poppins] font-bold'>{user?.firstName} {user?.lastName}</h5>
-                <p className='px-2 text-gray-600 text-[12px]'>Hellow ??</p>
+                <h5 className="font-[Poppins] font-bold">
+                  {user?.firstName} {user?.lastName}
+                </h5>
+                <p className="px-2 text-gray-600 text-[12px]">Hello 👋</p>
               </div>
             </div>
             <div className="time p-2 text-[10px] ">
               {new Date().toLocaleTimeString()}
             </div>
           </div>
-          {/* devider */}
-          <div className="bg-gray-300 w-full"></div>
-
-
         </div>
 
-        {/* messages area */}
-        <div className="w-full hidden md:block bg-[#206059]/20 h-[500px] rounded-lg ">
-          <div className="absolute -bottom-2 w-[800px] p-2 ">
-            <input type="text" className='w-full bg-white p-2 rounded-md' name="" id="" />
-          </div>
+        {/* Message area (only visible on large screens) */}
+        <div className={`hidden md:block md:flex-1 ${showMessages ? 'block' : 'hidden'}`}>
+          <Messages />
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ChatPage
+export default ChatPage;
