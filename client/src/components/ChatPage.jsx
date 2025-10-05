@@ -58,9 +58,9 @@ const ChatPage = () => {
       </div>
 
       {/* Chat list + message view */}
-      <div className="flex items-start justify-center gap-2 mt-3 flex-wrap md:flex-nowrap">
+      <div className="flex items-start justify-center  gap-2 mt-3 flex-wrap md:flex-nowrap">
         {/* Chat list */}
-        <div className="flex flex-col gap-2 shadow-md w-full h-[550px] md:w-[600px] overflow-y-auto p-2 rounded-md bg-white">
+        <div className="flex flex-col gap-2 shadow-md w-full min-h-screen md:w-[600px] overflow-y-auto p-2 rounded-md bg-white">
           <div
             onClick={handleOpenChat}
             className="flex justify-between items-center bg-white w-full h-[70px] rounded-md shadow-md cursor-pointer hover:bg-gray-100 transition"
