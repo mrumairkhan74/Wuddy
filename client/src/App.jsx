@@ -17,6 +17,7 @@ import MyProfile from "./components/MyProfile";
 import Setting from "./pages/Setting";
 import Chat from "./pages/Chat";
 import Messages from "./components/Messages";
+import UserDetail from "./components/UserDetail";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -83,6 +84,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Messages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:id"
+              element={
+                <ProtectedRoute>
+                  <UserDetail />
                 </ProtectedRoute>
               }
             />

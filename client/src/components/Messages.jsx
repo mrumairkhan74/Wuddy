@@ -4,6 +4,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { FaSmile } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 const Messages = () => {
     const { user } = useSelector((state) => state.auth)
     const [message, setMessage] = useState("");
@@ -17,7 +18,7 @@ const Messages = () => {
         <>
 
             <div className="w-full container mx-auto bg-[#206059]/20 min-h-screen rounded-lg relative">
-                <div className="flex sticky items-center justify-between bg-white mt-2 h-20 p-5 shadow-md ">
+                <Link to={`/user/${user?._id}`} className="flex sticky items-center justify-between bg-white mt-2 h-20 p-5 shadow-md ">
                     <div className="flex items-center justify-start gap-2">
                         <img src={user?.profileImg?.url} className='w-15 h-15 object-cover rounded-full shadow-md' alt="" />
                         <div className="flex flex-col gap-1">
@@ -29,7 +30,7 @@ const Messages = () => {
                         <IoCall className='text-3xl text-[#206059]' />
                         <IoVideocam className='text-3xl text-[#206059]' />
                     </div>
-                </div>
+                </Link>
                 <div className="flex flex-col overflow-y-auto ">
                     {/* first user */}
                     <div className="flex items-end justify-end m-2 gap-2 absolute  top-20 left-0 ">
