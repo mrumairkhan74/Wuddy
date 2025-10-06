@@ -111,7 +111,7 @@ const loginUser = async (req, res, next) => {
 
         const comparePassword = await bcrypt.compare(password, user.password)
         if (!comparePassword) throw new BadRequestError("Invalid Password")
-            
+
         if (!user.isEmailVerified) {
             throw new BadRequestError("Email is not verified. Please verify your email first.");
         }
@@ -259,6 +259,21 @@ const logout = async (req, res) => {
     }
 };
 
+// getUserById
+const getUserById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await UserModel.findById(id)
+        if (!user) throw new NotFoundError("Invalid User")
+        return res.status(200).json({
+            success: true,
+            user
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
 
 
 module.exports = {
@@ -266,5 +281,6 @@ module.exports = {
     loginUser,
     updateUser,
     getMe,
-    logout
+    logout,
+    getUserById
 }
