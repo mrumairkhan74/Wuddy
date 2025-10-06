@@ -18,7 +18,7 @@ const Messages = () => {
         <>
 
             <div className="w-full container mx-auto bg-[#206059]/20 min-h-screen rounded-lg relative">
-                <Link to={`/user/${user?._id}`} className="flex sticky items-center justify-between bg-white mt-2 h-20 p-5 shadow-md ">
+                <Link to={`/message/${user?._id}`} className="flex sticky items-center justify-between bg-white mt-2 h-20 p-5 shadow-md ">
                     <div className="flex items-center justify-start gap-2">
                         <img src={user?.profileImg?.url} className='w-15 h-15 object-cover rounded-full shadow-md' alt="" />
                         <div className="flex flex-col gap-1">

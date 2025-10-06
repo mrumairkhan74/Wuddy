@@ -47,7 +47,7 @@ const PostPage = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <Link to={`/myprofile/${post.createdBy?._id}`} className="flex flex-col">
+              <Link to={`/user/${post.createdBy?._id}`} className="flex flex-col">
                 <h4 className="font-semibold text-sm">
                   {post.createdBy?.firstName} {post.createdBy?.lastName}
                 </h4>

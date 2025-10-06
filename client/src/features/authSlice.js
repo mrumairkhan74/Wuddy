@@ -36,7 +36,8 @@ export const GetMe = createAsyncThunk("auth/me", async (_, { rejectWithValue }) 
 // getUSerByID
 export const getUserById = createAsyncThunk("auth/getById", async (userId, { rejectWithValue }) => {
     try {
-        return await authApi.getById(userId)
+        const res = await authApi.getById(userId)
+        return res.user
     }
     catch (error) {
         return rejectWithValue(error.response?.data)
@@ -67,7 +68,7 @@ export const updatedUser = createAsyncThunk("auth/update", async ({ userId, upda
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: { user: null, token: null, loading: false, error: null },
+    initialState: { user: null, profile: null, token: null, loading: false, error: null },
     reducers: {
         logout: (state) => { state.user = null; state.token = null },
         updateUser: (state, action) => { state.user = action.payload }
@@ -140,7 +141,7 @@ const authSlice = createSlice({
             })
             .addCase(getUserById.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload
+                state.profile = action.payload
             })
             .addCase(getUserById.rejected, (state, action) => {
                 state.loading = false

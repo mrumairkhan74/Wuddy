@@ -27,7 +27,7 @@ const Home = () => {
           </div>
 
           {/* Posts container */}
-          <div className="bg-white shadow-md rounded-md h-[600px] overflow-y-auto">
+          <div className="bg-white shadow-md rounded-md min-h-screen overflow-y-auto">
             <PostPage />
           </div>
         </div>

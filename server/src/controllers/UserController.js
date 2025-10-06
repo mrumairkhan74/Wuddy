@@ -264,6 +264,7 @@ const getUserById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const user = await UserModel.findById(id)
+            .select("firstName lastName username profileImg coverImg bio address city country status")
         if (!user) throw new NotFoundError("Invalid User")
         return res.status(200).json({
             success: true,
