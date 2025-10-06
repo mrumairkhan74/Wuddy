@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePosts, getPosts } from "../features/postsSlice";
-
+import { Link } from 'react-router-dom'
 const PostPage = () => {
   const { posts, loading, error } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.auth); // 👈 logged-in user
@@ -47,7 +47,7 @@ const PostPage = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex flex-col">
+              <Link to={`/myprofile/${post.createdBy?._id}`} className="flex flex-col">
                 <h4 className="font-semibold text-sm">
                   {post.createdBy?.firstName} {post.createdBy?.lastName}
                 </h4>
@@ -58,7 +58,7 @@ const PostPage = () => {
                     year: "numeric",
                   })}
                 </p>
-              </div>
+              </Link>
             </div>
 
             {/* Menu button (only for post owner) */}
@@ -79,9 +79,8 @@ const PostPage = () => {
           {/* Post Media */}
           {post.postImg?.length > 0 && (
             <div
-              className={`mt-3 ${
-                post.postImg.length === 1 ? "w-full" : "grid grid-cols-2 gap-2"
-              }`}
+              className={`mt-3 ${post.postImg.length === 1 ? "w-full" : "grid grid-cols-2 gap-2"
+                }`}
             >
               {post.postImg.length === 1 ? (
                 <img

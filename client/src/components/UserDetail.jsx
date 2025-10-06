@@ -1,142 +1,117 @@
-import React, { useState } from 'react';
-import { IoCall, IoVideocam, IoPerson } from "react-icons/io5";
-import { BsThreeDots } from "react-icons/bs";
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getUserById } from "../features/authSlice";
+import { myPosts } from "../features/postsSlice";
+import MyPost from "./MyPost";
+import Info from "./Info";
 
 const UserDetail = () => {
-    const { user } = useSelector((state) => state.auth);
-    const [activeTab, setActiveTab] = useState("images");
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { selectedUser, loading } = useSelector((state) => state.auth);
+  const { posts } = useSelector((state) => state.post);
 
-    // Example placeholder data (replace with actual user data later)
-    const images = [
-        "https://source.unsplash.com/random/200x200?sig=1",
-        "https://source.unsplash.com/random/200x200?sig=2",
-        "https://source.unsplash.com/random/200x200?sig=3",
-        "https://source.unsplash.com/random/200x200?sig=4",
-    ];
+  useEffect(() => {
+    if (id) {
+      dispatch(getUserById(id)); // Fetch user by ID (you'll need to define this in authSlice)
+      dispatch(myPosts()); // Get all posts (or create a getUserPosts(id) API)
+    }
+  }, [dispatch, id]);
 
-    const videos = [
-        "https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4",
-        "https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_2mb.mp4"
-    ];
-
-    const others = [
-        { name: "Document.pdf", type: "PDF" },
-        { name: "Notes.txt", type: "Text File" }
-    ];
-
+  if (loading || !selectedUser) {
     return (
-        <div className="flex flex-col items-center w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mt-5">
-            {/* Profile Section */}
-            <div className="flex flex-col items-center justify-center w-full p-6 bg-[#f9fafa]">
-                <img
-                    src={user?.profileImg?.url || "https://via.placeholder.com/120"}
-                    alt="User profile"
-                    className="w-32 h-32 rounded-full object-cover shadow-md border border-gray-200"
-                />
-                <h2 className="text-2xl font-semibold mt-3 text-gray-700">
-                    {user?.firstName} {user?.lastName}
-                </h2>
-                <p className="text-gray-500 text-sm mb-4">
-                    @{user?.username || "@username"}
-                </p>
-
-                {/* Icons */}
-                <div className="flex justify-center items-center gap-5 mt-2">
-                    <IoPerson className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
-                    <IoCall className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
-                    <IoVideocam className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
-                    <BsThreeDots className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
-                </div>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="w-full border-t border-gray-100 flex flex-col divide-y divide-gray-100">
-                <Link to="#" className="p-5 text-lg text-gray-600 hover:bg-gray-50 transition">Messages</Link>
-                <Link to="#" className="p-5 text-lg text-gray-600 hover:bg-gray-50 transition">Chat</Link>
-                <Link to="#" className="p-5 text-lg text-gray-600 hover:bg-gray-50 transition">Privacy & Security</Link>
-            </div>
-
-            {/* Media Tabs */}
-            <div className="w-full p-5">
-                <div className="flex justify-around mb-5">
-                    <button
-                        onClick={() => setActiveTab("images")}
-                        className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "images"
-                                ? "bg-[#206059] text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                    >
-                        Images
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("videos")}
-                        className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "videos"
-                                ? "bg-[#206059] text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                    >
-                        Videos
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("others")}
-                        className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "others"
-                                ? "bg-[#206059] text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                    >
-                        Others
-                    </button>
-                </div>
-
-                {/* Tab Content */}
-                <div className="min-h-[150px]">
-                    {activeTab === "images" && (
-                        <div className="grid grid-cols-3 gap-3">
-                            {images.map((src, i) => (
-                                <img
-                                    key={i}
-                                    src={src}
-                                    alt="User media"
-                                    className="w-full h-24 object-cover rounded-lg shadow-sm cursor-pointer hover:opacity-90 transition"
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {activeTab === "videos" && (
-                        <div className="flex flex-col gap-3">
-                            {videos.map((src, i) => (
-                                <video
-                                    key={i}
-                                    controls
-                                    className="w-full rounded-lg shadow-sm"
-                                >
-                                    <source src={src} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            ))}
-                        </div>
-                    )}
-
-                    {activeTab === "others" && (
-                        <div className="flex flex-col gap-2">
-                            {others.map((file, i) => (
-                                <div
-                                    key={i}
-                                    className="p-3 bg-gray-50 border rounded-lg flex justify-between items-center hover:bg-gray-100 transition"
-                                >
-                                    <span className="text-gray-700">{file.name}</span>
-                                    <span className="text-sm text-gray-500">{file.type}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
+      <div className="p-6 sm:p-10 text-center text-gray-500">
+        Loading user profile...
+      </div>
     );
+  }
+
+  const userPosts = posts?.filter(
+    (post) => post.createdBy._id === selectedUser._id
+  );
+
+  return (
+    <div className="max-w-6xl mx-auto flex flex-col">
+      {/* Cover */}
+      <div className="p-2 sm:p-4">
+        <div className="relative w-full h-52 md:h-72 bg-gray-200 rounded-xl overflow-hidden">
+          {selectedUser.coverImg?.url ? (
+            <img
+              src={selectedUser.coverImg.url}
+              alt="cover"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600">
+              No Cover Image
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Profile */}
+      <div className="p-2 sm:p-4 border-b border-gray-300">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-4 items-center">
+            <img
+              src={selectedUser.profileImg?.url || "/default.png"}
+              alt={selectedUser.firstName}
+              className="border-2 border-[#206059] md:w-24 md:h-24 w-18 h-18 object-cover rounded-full"
+            />
+            <div>
+              <h1 className="md:text-4xl text-[#206059] text-2xl font-bold font-[Poppins]">
+                {selectedUser.firstName} {selectedUser.lastName}
+              </h1>
+              <p className="text-gray-500">@{selectedUser.username}</p>
+            </div>
+          </div>
+          <div className="bg-green-700 rounded-full p-2 capitalize text-white">
+            active
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex justify-start items-start p-2 container font-[Poppins] mx-auto">
+        <p className="text-xl p-2 hover:bg-gray-300 rounded-md tracking-wide hover:text-[#206059]">
+          Posts
+        </p>
+        <p className="text-xl p-2 hover:bg-gray-300 rounded-md tracking-wide hover:text-[#206059]">
+          About
+        </p>
+        <p className="text-xl p-2 hover:bg-gray-300 rounded-md tracking-wide hover:text-[#206059]">
+          Reels
+        </p>
+        <p className="text-xl p-2 hover:bg-gray-300 rounded-md tracking-wide hover:text-[#206059]">
+          Photos
+        </p>
+      </div>
+
+      {/* Info + Posts */}
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-6 mt-4 sm:mt-6 px-2 sm:px-4">
+        {/* Sidebar Info */}
+        <div className="w-full md:w-1/2 lg:w-1/3">
+          <Info user={selectedUser} />
+        </div>
+
+        {/* User Posts */}
+        <div className="w-full md:flex-1">
+          {userPosts && userPosts.length > 0 ? (
+            <div className="mt-4 space-y-4">
+              {userPosts.map((post) => (
+                <MyPost key={post._id} post={post} user={selectedUser} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-gray-500 text-center mt-4">
+              No posts yet.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default UserDetail;

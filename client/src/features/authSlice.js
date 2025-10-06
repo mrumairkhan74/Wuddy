@@ -33,7 +33,17 @@ export const GetMe = createAsyncThunk("auth/me", async (_, { rejectWithValue }) 
     }
 })
 
+// getUSerByID
+export const getUserById = createAsyncThunk("auth/getById", async (userId, { rejectWithValue }) => {
+    try {
+        return await authApi.getById(userId)
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
 
+// logout User
 export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
     try {
         return await authApi.logout();
@@ -44,6 +54,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, { rejectWith
 
 })
 
+// update User
 export const updatedUser = createAsyncThunk("auth/update", async ({ userId, updateData }, { rejectWithValue }) => {
     try {
         return await authApi.updateUser(userId, updateData)
@@ -121,7 +132,20 @@ const authSlice = createSlice({
             .addCase(logoutUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.error;
-            });
+            })
+            // getByID
+            .addCase(getUserById.pending, (state) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(getUserById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload
+            })
+            .addCase(getUserById.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload?.error
+            })
     }
 
 })
