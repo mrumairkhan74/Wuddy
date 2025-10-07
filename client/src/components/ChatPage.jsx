@@ -10,15 +10,14 @@ import Messages from './Messages';
 const ChatPage = () => {
   const [search, setSearch] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
+  const [activeTab, setActiveTab] = useState('messages'); // 👈 new state for toggle
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const handleOpenChat = () => {
     if (window.innerWidth < 768) {
-      // On mobile — navigate to /messages
       navigate('/messages');
     } else {
-      // On laptop — show messages beside
       setShowMessages(true);
     }
   };
@@ -58,31 +57,71 @@ const ChatPage = () => {
       </div>
 
       {/* Chat list + message view */}
-      <div className="flex items-start justify-center  gap-2 mt-3 flex-wrap md:flex-nowrap">
-        {/* Chat list */}
+      <div className="flex items-start justify-center gap-2 mt-3 flex-wrap md:flex-nowrap">
+        {/* Sidebar Info */}
         <div className="flex flex-col gap-2 shadow-md w-full min-h-screen md:w-[600px] overflow-y-auto p-2 rounded-md bg-white">
-          <div
-            onClick={handleOpenChat}
-            className="flex justify-between items-center bg-white w-full h-[70px] rounded-md shadow-md cursor-pointer hover:bg-gray-100 transition"
-          >
-            {/* user details */}
-            <div className="flex items-center gap-2 m-2">
-              <img
-                src={user?.profileImg?.url}
-                className="w-14 h-14 object-cover bg-[#206059] rounded-full"
-                alt=""
-              />
-              <div className="flex flex-col">
-                <h5 className="font-[Poppins] font-bold">
-                  {user?.firstName} {user?.lastName}
-                </h5>
-                <p className="px-2 text-gray-600 text-[12px]">Hello 👋</p>
+          {/* Tabs */}
+          <div className="flex items-center justify-between rounded-t-md shadow-md mb-2">
+            <button
+              onClick={() => setActiveTab('messages')}
+              className={`p-4 text-xl w-full text-center rounded-t-md transition ${
+                activeTab === 'messages'
+                  ? 'bg-[#206059] text-white'
+                  : 'hover:bg-[#206059]/20 text-gray-700'
+              }`}
+            >
+              Messages
+            </button>
+            <button
+              onClick={() => setActiveTab('groups')}
+              className={`p-4 text-xl w-full text-center rounded-t-md transition ${
+                activeTab === 'groups'
+                  ? 'bg-[#206059] text-white'
+                  : 'hover:bg-[#206059]/20 text-gray-700'
+              }`}
+            >
+              Groups
+            </button>
+          </div>
+
+          {/* Content depending on tab */}
+          {activeTab === 'messages' ? (
+            <div
+              onClick={handleOpenChat}
+              className="flex justify-between items-center bg-white w-full h-[70px] rounded-md shadow-md cursor-pointer hover:bg-gray-100 transition"
+            >
+              {/* user details */}
+              <div className="flex items-center gap-2 m-2">
+                <img
+                  src={user?.profileImg?.url}
+                  className="w-14 h-14 object-cover bg-[#206059] rounded-full"
+                  alt=""
+                />
+                <div className="flex flex-col">
+                  <h5 className="font-[Poppins] font-bold">
+                    {user?.firstName} {user?.lastName}
+                  </h5>
+                  <p className="px-2 text-gray-600 text-[12px]">Hello 👋</p>
+                </div>
+              </div>
+              <div className="time p-2 text-[10px] ">
+                {new Date().toLocaleTimeString()}
               </div>
             </div>
-            <div className="time p-2 text-[10px] ">
-              {new Date().toLocaleTimeString()}
+          ) : (
+            <div className="flex flex-col gap-3 p-3">
+              {/* Example Group Cards */}
+              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
+                🧑‍💻 Developers Group
+              </div>
+              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
+                🧠 Study Buddies
+              </div>
+              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
+                🎮 Gamers Chat
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Message area (only visible on large screens) */}
