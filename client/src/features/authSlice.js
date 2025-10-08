@@ -36,8 +36,8 @@ export const GetMe = createAsyncThunk("auth/me", async (_, { rejectWithValue }) 
 // getUSerByID
 export const getUserById = createAsyncThunk("auth/getById", async (userId, { rejectWithValue }) => {
     try {
-        const res = await authApi.getById(userId)
-        return res.user
+        const user = await authApi.getById(userId)
+        return user
     }
     catch (error) {
         return rejectWithValue(error.response?.data)

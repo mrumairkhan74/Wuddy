@@ -35,5 +35,5 @@ export const logout = async () => {
 // getUserById
 export const getById = async (userId) => {
     const res = await axios.get(`${apiUrl}/user/${userId}`, { withCredentials: true })
-    return res.data
+    return res.data.users
 }

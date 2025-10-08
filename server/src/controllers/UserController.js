@@ -263,12 +263,11 @@ const logout = async (req, res) => {
 const getUserById = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const user = await UserModel.findById(id)
-            .select("firstName lastName username profileImg coverImg bio address city country status")
+        const user = await UserModel.findById(id).select("-password")
         if (!user) throw new NotFoundError("Invalid User")
         return res.status(200).json({
             success: true,
-            user
+            users:user
         })
     }
     catch (error) {
@@ -276,6 +275,20 @@ const getUserById = async (req, res, next) => {
     }
 }
 
+// getAll User
+
+const getAll = async (req, res, next) => {
+    try {
+        const user = await UserModel.find()
+        if (!user) throw new NotFoundError("No user available")
+        return res.status(200).json({
+            success: true,
+            users: user
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 
 module.exports = {
     createUser,
@@ -283,5 +296,6 @@ module.exports = {
     updateUser,
     getMe,
     logout,
-    getUserById
+    getUserById,
+    getAll
 }
