@@ -32,85 +32,82 @@ const App = () => {
   return (
     <BrowserRouter>
       {user && <Navbar />}
-
       <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verify-email/:userId" element={<VerifyEmail />} />
-
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/myprofile/:id"
-            element={
-              <ProtectedRoute>
-                <MyProfile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/notification"
-            element={
-              <ProtectedRoute>
-                <Notification />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/setting"
-            element={
-              <ProtectedRoute>
-                <Setting />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                <Chat />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/messages"
-            element={
-              <ProtectedRoute>
-                <Messages />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/message/:id"
-            element={
-              <ProtectedRoute>
-                <MessageProfile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/user/:id"
-            element={
-              <ProtectedRoute>
-                <UserDetail />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-
-        {(showSplash || loading) && (
+        {showSplash || loading ? (
           <Loading key="splash" onFinish={() => setShowSplash(false)} />
+        ) : (
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email/:userId" element={<VerifyEmail />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/myprofile/:id"
+              element={
+                <ProtectedRoute>
+                  <MyProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <ProtectedRoute>
+                  <Notification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/setting"
+              element={
+                <ProtectedRoute>
+                  <Setting />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <Messages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/message/:id"
+              element={
+                <ProtectedRoute>
+                  <MessageProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:id"
+              element={
+                <ProtectedRoute>
+                  <UserDetail />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
         )}
       </AnimatePresence>
     </BrowserRouter>
-
   );
 };
 

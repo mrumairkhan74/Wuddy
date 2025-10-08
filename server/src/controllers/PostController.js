@@ -143,8 +143,8 @@ const myPosts = async (req, res, next) => {
     try {
         const userId = req.user?._id
         const posts = await PostModel.find({ createdBy: userId })
-        .populate('createdBy','firstName lastName profileImg')
-        .sort({ createdAt: -1 })
+            .populate('createdBy', 'firstName lastName profileImg')
+            .sort({ createdAt: -1 })
         if (posts.length === 0) throw new NotFoundError("No Post Available")
 
         return res.status(200).json({
@@ -158,10 +158,25 @@ const myPosts = async (req, res, next) => {
     }
 }
 
+const getPostByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const posts = await PostModel.find({ createdBy: id }).populate("createdBy", "firstName lastName createdAt profileImg")
+        return res.status(200).json({
+            success: true,
+            posts
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createPost,
     getPosts,
     deletePost,
     updatePost,
-    myPosts
+    myPosts,
+    getPostByUserId
 }

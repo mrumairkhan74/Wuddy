@@ -10,8 +10,8 @@ const UserProfile = ({profile}) => {
                 <img src={profile.profileImg?.url} loading="lazy" className="border-2 border-[#206059] overflow-hidden md:w-24 md:h-24 w-18 h-18  object-cover rounded-full" alt="" />
 
                 <div className="flex flex-col">
-                    <h1 className="md:text-4xl text-[#206059] text-2xl font-bold font-[Poppins]">{profile.firstName} {profile.lastName}</h1>
-                    <p className="text-gray-500">@{profile.username}</p>
+                    <h1 className="md:text-4xl text-[#206059] text-2xl font-bold font-[Poppins]">{profile?.firstName} {profile?.lastName}</h1>
+                    <p className="text-gray-500">@{profile?.username}</p>
                 </div>
             </div>
             {/* active */}

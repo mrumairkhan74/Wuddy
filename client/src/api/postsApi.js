@@ -33,3 +33,9 @@ export const myPost = async () => {
     const res = await axios.get(`${apiUrl}/post/myPosts`, { withCredentials: true })
     return res.data.posts
 }
+
+// gtePost by userId
+export const PostByUser = async (id) => {
+    const res = await axios.get(`${apiUrl}/post/user/${id}`, { withCredentials: true })
+    return res.data.posts
+}

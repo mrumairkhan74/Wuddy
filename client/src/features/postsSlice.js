@@ -52,7 +52,15 @@ export const deletePosts = createAsyncThunk("posts/delete", async (id, { rejectW
     }
 })
 
-
+// get post by userId
+export const GetPostByUser = createAsyncThunk("posts/getPostByUser", async (id, { rejectWithValue }) => {
+    try {
+        return await postsApi.PostByUser(id)
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
 
 const postsSlice = createSlice({
     name: 'post',
@@ -132,6 +140,19 @@ const postsSlice = createSlice({
             })
             .addCase(deletePosts.rejected, (state, action) => {
                 state.loading = false;
+                state.error = action.payload?.error
+            })
+            // getPost byUSer
+            .addCase(GetPostByUser.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(GetPostByUser.fulfilled, (state, action) => {
+                state.loading = false
+                state.posts = action.payload
+            })
+            .addCase(GetPostByUser.rejected, (state, action) => {
+                state.loading = false
                 state.error = action.payload?.error
             })
     }

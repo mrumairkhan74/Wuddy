@@ -1,33 +1,37 @@
-
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { getUserById } from '../features/authSlice'
+import { GetPostByUser } from '../features/postsSlice'
 import UserCover from '../components/forms/UserCover'
 import UserInfo from '../components/UserInfo'
 import UserProfile from '../components/UserProfile'
-import { myPosts } from '../features/postsSlice'
 import UserPosts from '../components/UserPosts'
 
 const UserDetail = () => {
     const dispatch = useDispatch()
     const { id } = useParams()
     const { profile, loading } = useSelector((state) => state.auth)
-    const { posts } = useSelector((state) => state.post);
+    const { posts } = useSelector((state) => state.post)
 
+    // ✅ Fetch user only when needed
     useEffect(() => {
         if (id && (!profile || profile._id !== id)) {
             dispatch(getUserById(id))
         }
-    }, [id, profile, dispatch])
+    }, [id, dispatch])  // <-- only depends on id, not profile
 
+    // ✅ Fetch posts only once when id changes
     useEffect(() => {
-        if (id && (!profile || profile._id !== id)) {
-            dispatch(myPosts(id))
+        if (id) {
+            dispatch(GetPostByUser(id))
         }
-    }, [id, profile, dispatch])
+    }, [id, dispatch])
 
-    if (loading) return <p>Loading...</p>
+    // ✅ Prevent endless "Loading..." render
+    if (loading && !profile) return <p className="text-center py-10">Loading...</p>
+
+    if (!profile) return <p className="text-center py-10">User not found.</p>
 
     return (
         <div className="max-w-6xl mx-auto flex flex-col">
@@ -50,15 +54,18 @@ const UserDetail = () => {
 
                 {/* Posts Section */}
                 <div className="w-full md:flex-1">
+                    <div className="flex items-start justify-center gap-4">
+                        <Link className="font-semibold text-[#206059]">Posts</Link>
+                        <Link className="text-gray-500 hover:text-[#206059]">Reels</Link>
+                        <Link className="text-gray-500 hover:text-[#206059]">Others</Link>
+                    </div>
 
                     {/* User posts */}
                     {posts && posts.length > 0 ? (
                         <div className="mt-4 space-y-4">
-                            {posts
-                                .filter((post) => post?.createdBy?._id === profile?._id)
-                                .map((post) => (
-                                    <UserPosts key={post._id} post={post} user={profile} />
-                                ))}
+                            {posts.map((post) => (
+                                <UserPosts key={post._id} post={post} profile={profile} />
+                            ))}
                         </div>
                     ) : (
                         <div className="text-gray-500 text-center mt-4">
