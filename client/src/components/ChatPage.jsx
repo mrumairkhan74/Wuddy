@@ -45,7 +45,7 @@ const ChatPage = () => {
         </div>
         {
           group && (
-            <div className="absolute right-10 top-15 bg-white  w-[300px] h-[200px] rounded-md z-50">
+            <div className="absolute right-10 top-16 bg-white  w-[300px] h-[200px] rounded-md z-50">
 
               <div className="flex flex-col justify-center gap-2 items-center">
                 <h5 className='text-white bg-[#206059] w-full text-center p-2 rounded-t-md text-xl'>Create Group</h5>
