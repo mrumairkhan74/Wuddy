@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Messages from './Messages';
 
+
 const ChatPage = () => {
   const [search, setSearch] = useState(false);
+  const [group, setGroup] = useState(false)
   const [showMessages, setShowMessages] = useState(false);
   const [activeTab, setActiveTab] = useState('messages'); // 👈 new state for toggle
   const { user } = useSelector((state) => state.auth);
@@ -38,8 +40,27 @@ const ChatPage = () => {
           <FaUserEdit
             className="text-2xl cursor-pointer text-[#206059] hover:opacity-70 transition"
             title='Create Group'
+            onClick={() => setGroup(!group)}
           />
         </div>
+        {
+          group && (
+            <div className="absolute right-10 top-15 bg-white  w-[300px] h-[200px] rounded-md z-50">
+
+              <div className="flex flex-col justify-center gap-2 items-center">
+                <h5 className='text-white bg-[#206059] w-full text-center p-2 rounded-t-md text-xl'>Create Group</h5>
+                <input type='text' placeholder='GroupName' className='text-xl rounded-md border p-2' />
+                <div className="flex gap-2 justify-center items-center m-2">
+                  <select name="" id="" className='text-sm rounded-md border p-2'>
+                    <option value="">Add Member</option>
+                  </select>
+                  <button className='bg-[#206059] text-white  p-2 rounded-md'>Create </button>
+                </div>
+              </div>
+
+            </div>
+          )
+        }
 
         {search && (
           <input
