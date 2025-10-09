@@ -82,3 +82,9 @@ const renameGroup = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports = {
+    createOrGetMessage,
+    createGroup,
+    renameGroup
+}
