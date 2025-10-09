@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { IoSearch } from "react-icons/io5";
 import { BsFillSendFill } from "react-icons/bs";
-import { FaSmile } from "react-icons/fa";
+import { FaSmile, FaUserEdit } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -29,17 +29,23 @@ const ChatPage = () => {
         <h3 className="text-[#206059] tracking-wide text-xl md:text-2xl font-bold font-[Poppins]">
           Messages
         </h3>
-
-        <IoSearch
-          className="text-2xl cursor-pointer text-[#206059] hover:opacity-70 transition"
-          onClick={() => setSearch(!search)}
-        />
+        <div className="flex items-center justify-center gap-2">
+          <IoSearch
+            className="text-2xl cursor-pointer text-[#206059] hover:opacity-70 transition"
+            onClick={() => setSearch(!search)}
+            title='search'
+          />
+          <FaUserEdit
+            className="text-2xl cursor-pointer text-[#206059] hover:opacity-70 transition"
+            title='Create Group'
+          />
+        </div>
 
         {search && (
           <input
             type="text"
             placeholder="Search messages..."
-            className="absolute right-15 top-2 mt-2 w-64 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#206059] transition-all ease-in-out duration-500"
+            className="absolute right-20 top-2 mt-2 w-64 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#206059] transition-all ease-in-out duration-500"
           />
         )}
       </div>
@@ -64,21 +70,19 @@ const ChatPage = () => {
           <div className="flex items-center justify-between rounded-t-md shadow-md mb-2">
             <button
               onClick={() => setActiveTab('messages')}
-              className={`p-4 text-xl w-full text-center rounded-t-md transition ${
-                activeTab === 'messages'
-                  ? 'bg-[#206059] text-white'
-                  : 'hover:bg-[#206059]/20 text-gray-700'
-              }`}
+              className={`p-4 text-xl w-full text-center rounded-t-md transition ${activeTab === 'messages'
+                ? 'bg-[#206059] text-white'
+                : 'hover:bg-[#206059]/20 text-gray-700'
+                }`}
             >
               Messages
             </button>
             <button
               onClick={() => setActiveTab('groups')}
-              className={`p-4 text-xl w-full text-center rounded-t-md transition ${
-                activeTab === 'groups'
-                  ? 'bg-[#206059] text-white'
-                  : 'hover:bg-[#206059]/20 text-gray-700'
-              }`}
+              className={`p-4 text-xl w-full text-center rounded-t-md transition ${activeTab === 'groups'
+                ? 'bg-[#206059] text-white'
+                : 'hover:bg-[#206059]/20 text-gray-700'
+                }`}
             >
               Groups
             </button>
