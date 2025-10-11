@@ -4,6 +4,7 @@ const userRoutes = require('./UserRoutes')
 const taskRoutes = require('./TaskRoutes')
 const NotificationRoutes = require('./NotificationRoutes')
 const PostRoutes = require('./PostRoutes')
+const ChatRoutes = require('./ChatRoutes')
 
 
 
@@ -16,6 +17,7 @@ router.use('/user', userRoutes)
 router.use('/task', taskRoutes)
 router.use('/notification', NotificationRoutes)
 router.use('/post', PostRoutes)
+router.use('/chat', ChatRoutes)
 
 
 
