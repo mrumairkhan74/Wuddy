@@ -2,7 +2,7 @@ const express = require('express')
 
 
 //chat controllers
-const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup } = require('../controllers/ChatController')
+const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup, getGroups } = require('../controllers/ChatController')
 
 // middle ware
 const { verifyAccessToken } = require('../middleware/verifyToken')
@@ -10,6 +10,7 @@ const { verifyAccessToken } = require('../middleware/verifyToken')
 const router = express.Router();
 
 
+router.get('/all', verifyAccessToken, getGroups)
 router.post('/createGroup', verifyAccessToken, createGroup)
 router.post('/messages', verifyAccessToken, createOrGetMessage)
 router.post('/addToGroup', verifyAccessToken, addToGroup)

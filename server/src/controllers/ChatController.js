@@ -1,6 +1,8 @@
 const ChatModel = require('../models/ChatModel')
 const MessageModel = require('../models/MessageModel')
 const { BadRequestError, UnAuthorizedError, NotFoundError } = require('../middleware/errors/httpErrors')
+const UserModel = require('../models/UserModel')
+const { notifyUser } = require('../utils/NotificationService')
 
 // create chat and get old messages
 const createOrGetMessage = async (req, res, next) => {
@@ -62,12 +64,24 @@ const createGroup = async (req, res, next) => {
             groupAdmin: userId
         })
 
-        await UserModel.findByIdAndUpdate(userId,
+        await UserModel.updateMany(
+            { _id: { $in: allMembers } },
             { $push: { groups: groupChat._id } },
             { new: true }
         )
+        for (const memberId of members) {
+            await notifyUser(
+                userId,
+                memberId,
+                "Group_Added",
+                `You have been Added in ${groupChat.chatName}`
+            )
+        }
         // check all members in group
-        const populatedGroup = await groupChat.populate('members', 'firstName lastName username profileImg')
+        const populatedGroup = await groupChat.populate([
+            { path: 'members', select: 'firstName lastName username profileImg' },
+            { path: 'groupAdmin', select: 'firstName lastName username profileImg' }
+        ])
 
         // result
         return res.status(200).json({
@@ -189,10 +203,27 @@ const removeFromGroup = async (req, res, next) => {
     }
 }
 
+const getGroups = async (req, res, next) => {
+    try {
+        const userId = req.user?._id
+        const chat = await ChatModel.find({ members: userId }).populate("members", 'firstName lastName username profileImg')
+        if (!chat) throw new NotFoundError("ChatGroup Not Found")
+        return res.status(200).json({
+            success: true,
+            chat: chat
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     createOrGetMessage,
     createGroup,
     renameGroup,
     addToGroup,
-    removeFromGroup
+    removeFromGroup,
+    getGroups
 }
