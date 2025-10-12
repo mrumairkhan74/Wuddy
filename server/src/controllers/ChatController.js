@@ -62,6 +62,10 @@ const createGroup = async (req, res, next) => {
             groupAdmin: userId
         })
 
+        await UserModel.findByIdAndUpdate(userId,
+            { $push: { groups: groupChat._id } },
+            { new: true }
+        )
         // check all members in group
         const populatedGroup = await groupChat.populate('members', 'firstName lastName username profileImg')
 
@@ -130,6 +134,10 @@ const addToGroup = async (req, res, next) => {
             { new: true }
         ).populate('members', 'firstName lastName username profileImg')
 
+        await UserModel.findByIdAndUpdate(memberId,
+            { $push: { groups: updateChat._id } },
+            { new: true }
+        )
         // result
         return res.status(200).json({
             success: true,
@@ -164,6 +172,12 @@ const removeFromGroup = async (req, res, next) => {
             { new: true }
         ).populate('members', ' firstName lastName username profileImg')
 
+        await UserModel.findByIdAndUpdate(memberId,
+            {
+                $pull: { groups: updateChat._id }
+            },
+            { new: true }
+        )
         return res.status(200).json({
             success: true,
             message: `${member.username} has been remove successfully`,

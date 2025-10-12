@@ -118,6 +118,12 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Posts'
         }
+    ],
+    groups: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Chat'
+        }
     ]
 
 }, { timestamps: true })
