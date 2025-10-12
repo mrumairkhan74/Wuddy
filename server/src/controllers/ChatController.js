@@ -143,6 +143,8 @@ const addToGroup = async (req, res, next) => {
         // check login user id admin or not 
         if (chat.groupAdmin.toString() !== userId.toString()) throw new UnAuthorizedError("You Cannot Add Member! Only Admin Can")
 
+        // check member is already added or not
+        if (chat.members.includes(memberId)) throw new BadRequestError("User Already added")
         // add members to group and update 
         const updateChat = await ChatModel.findByIdAndUpdate(chatId,
             { $addToSet: { members: memberId } },
@@ -150,7 +152,7 @@ const addToGroup = async (req, res, next) => {
         ).populate('members', 'firstName lastName username profileImg')
 
         await UserModel.findByIdAndUpdate(memberId,
-            { $push: { groups: updateChat._id } },
+            { $addToSet: { groups: updateChat._id } },
             { new: true }
         )
         await notifyUser(
@@ -210,10 +212,24 @@ const removeFromGroup = async (req, res, next) => {
     }
 }
 
-const getGroups = async (req, res, next) => {
+const getGroupsByUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
         const chat = await ChatModel.find({ members: userId }).populate("members", 'firstName lastName username profileImg')
+        if (!chat) throw new NotFoundError("ChatGroup Not Found")
+        return res.status(200).json({
+            success: true,
+            chat: chat
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+const getGroups = async (req, res, next) => {
+    try {
+        // const userId = req.user?._id
+        const chat = await ChatModel.find()
         if (!chat) throw new NotFoundError("ChatGroup Not Found")
         return res.status(200).json({
             success: true,
@@ -232,5 +248,6 @@ module.exports = {
     renameGroup,
     addToGroup,
     removeFromGroup,
-    getGroups
+    getGroups,
+    getGroupsByUser
 }

@@ -2,7 +2,7 @@ const express = require('express')
 
 
 //chat controllers
-const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup, getGroups } = require('../controllers/ChatController')
+const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup, getGroups, getGroupsByUser } = require('../controllers/ChatController')
 
 // middle ware
 const { verifyAccessToken } = require('../middleware/verifyToken')
@@ -10,12 +10,26 @@ const { verifyAccessToken } = require('../middleware/verifyToken')
 const router = express.Router();
 
 
+// all groups
 router.get('/all', verifyAccessToken, getGroups)
-router.post('/createGroup', verifyAccessToken, createGroup)
+
+// on logged in user can see groups if he is added in 
+router.get('/allByUser', verifyAccessToken, getGroupsByUser)
+
+// create groups
+router.post('/create-group', verifyAccessToken, createGroup)
+
+// create one-to-one chat messages
 router.post('/messages', verifyAccessToken, createOrGetMessage)
-router.post('/addToGroup', verifyAccessToken, addToGroup)
-router.put('/:chatId', verifyAccessToken, renameGroup)
-router.delete('/:chatId/member/:memberId', verifyAccessToken, removeFromGroup)
+
+// add member
+router.post('/:chatId/add-member', verifyAccessToken, addToGroup)
+
+// update group name
+router.put('/:chatId/rename', verifyAccessToken, renameGroup)
+
+// remove member
+router.delete('/:chatId/remove/:memberId', verifyAccessToken, removeFromGroup)
 
 
 
