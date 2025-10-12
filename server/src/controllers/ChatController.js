@@ -128,6 +128,7 @@ const renameGroup = async (req, res, next) => {
 // add member to group 
 const addToGroup = async (req, res, next) => {
     try {
+        const userId = req.user?._id
         const { chatId } = req.params;
         const { memberId } = req.body
 
@@ -151,6 +152,12 @@ const addToGroup = async (req, res, next) => {
         await UserModel.findByIdAndUpdate(memberId,
             { $push: { groups: updateChat._id } },
             { new: true }
+        )
+        await notifyUser(
+            userId,
+            memberId,
+            "Group_Added",
+            `You have been Added in ${chat.chatName}`
         )
         // result
         return res.status(200).json({
