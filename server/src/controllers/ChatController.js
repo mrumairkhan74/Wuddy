@@ -215,11 +215,14 @@ const removeFromGroup = async (req, res, next) => {
 const getGroupsByUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const chat = await ChatModel.find({ members: userId }).populate("members", 'firstName lastName username profileImg')
-        if (!chat) throw new NotFoundError("ChatGroup Not Found")
+        const chat = await ChatModel.find({ members: userId, isGroupChat: true }).populate("members", 'firstName lastName username profileImg').lean()
+        const uniqueChats = chat.filter(
+            (v, i, a) => a.findIndex(t => t._id.toString() === v._id.toString()) === i
+        );
+        if (!uniqueChats.length) throw new NotFoundError("ChatGroup Not Found for this user")
         return res.status(200).json({
             success: true,
-            chat: chat
+            chat: uniqueChats
         })
     }
     catch (error) {

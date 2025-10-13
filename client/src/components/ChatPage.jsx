@@ -1,20 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoSearch } from "react-icons/io5";
 import { BsFillSendFill } from "react-icons/bs";
 import { FaSmile, FaUserEdit } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Messages from './Messages';
+import { getGroupsByUser } from '../features/chatSlice'
 
 
 const ChatPage = () => {
+  const dispatch = useDispatch()
   const [search, setSearch] = useState(false);
   const [group, setGroup] = useState(false)
   const [showMessages, setShowMessages] = useState(false);
   const [activeTab, setActiveTab] = useState('messages'); // 👈 new state for toggle
   const { user } = useSelector((state) => state.auth);
+  const { groups, loading } = useSelector((state) => state.chat)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?._id) {
+      dispatch(getGroupsByUser())
+    }
+  }, [dispatch, user])
+
 
   const handleOpenChat = () => {
     if (window.innerWidth < 768) {
@@ -135,16 +145,23 @@ const ChatPage = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-3 p-3">
-              {/* Example Group Cards */}
-              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
-                🧑‍💻 Developers Group
-              </div>
-              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
-                🧠 Study Buddies
-              </div>
-              <div className="p-3 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 cursor-pointer">
-                🎮 Gamers Chat
-              </div>
+              {loading ? (
+                <p className="text-center text-gray-500">Loading groups...</p>
+              ) : groups?.length > 0 ? (
+                groups.map((group) => (
+                  <div
+                    key={group._id}
+                    className="bg-gray-200 rounded-md p-2 cursor-pointer hover:bg-gray-300 transition"
+                    onClick={handleOpenChat}
+                  >
+                    <h5 className="font-semibold">{group?.chatName}</h5>
+                    <p className="text-sm text-gray-600">Members: {group?.members?.length}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-400">No groups found</p>
+              )}
+
             </div>
           )}
         </div>
