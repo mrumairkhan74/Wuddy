@@ -3,7 +3,7 @@ const MessageModel = require('../models/MessageModel')
 const { BadRequestError, UnAuthorizedError, NotFoundError } = require('../middleware/errors/httpErrors')
 const UserModel = require('../models/UserModel')
 const { notifyUser } = require('../utils/NotificationService')
-
+const { uploadGroupImgToCloudinary } = require('../utils/CloudinaryUpload')
 // create chat and get old messages
 const createOrGetMessage = async (req, res, next) => {
     try {
@@ -44,22 +44,27 @@ const createOrGetMessage = async (req, res, next) => {
 // create group
 const createGroup = async (req, res, next) => {
     try {
-        const { chatName, members } = req.body
+        let { chatName, members } = req.body
         const userId = req.user?._id;
 
         if (typeof members === "string") {
             members = JSON.parse(members)
         }
         //    checking input fields
-        if (!chatName || !members || members.length + 1 < 2) {
+        if (!chatName || !members || !Array.isArray(members) || members.length + 1 < 2) {
             throw new BadRequestError('At Least 2 members request to create a group')
         }
         const allMembers = [...members, userId]
+        const cloudinaryResult = await uploadGroupImgToCloudinary(req.file.buffer)
 
         // create group
         const groupChat = await ChatModel.create({
             chatName,
             members: allMembers,
+            groupProfile: {
+                url: cloudinaryResult.secure_url,
+                public_id: cloudinaryResult.public_id
+            },
             isGroupChat: true,
             groupAdmin: userId
         })
@@ -215,7 +220,9 @@ const removeFromGroup = async (req, res, next) => {
 const getGroupsByUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const chat = await ChatModel.find({ members: userId, isGroupChat: true }).populate("members", 'firstName lastName username profileImg').lean()
+        const chat = await ChatModel.find({ members: userId, isGroupChat: true }).populate("members", 'firstName lastName username profileImg')
+        .populate('lastMessage','firstName lastName')
+        .lean()
         const uniqueChats = chat.filter(
             (v, i, a) => a.findIndex(t => t._id.toString() === v._id.toString()) === i
         );

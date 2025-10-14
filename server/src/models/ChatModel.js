@@ -9,6 +9,10 @@ const chatSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    groupProfile: {
+        url: String,
+        public_id: String
+    },
     members: [
         {
             type: mongoose.Schema.Types.ObjectId,

@@ -14,4 +14,7 @@ const uploadPostMedia = upload.fields([
     { name: 'postImg', maxCount: 1 },
     { name: 'postVideo', maxCount: 1 },
 ])
-module.exports = {uploadUserImages,uploadPostMedia} 
+const uploadGroupProfile = upload.fields([
+    { name: 'groupProfile', maxCount: 1 }
+])
+module.exports = { uploadUserImages, uploadPostMedia, upload } 

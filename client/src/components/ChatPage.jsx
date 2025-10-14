@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoSearch } from "react-icons/io5";
-import { BsFillSendFill } from "react-icons/bs";
-import { FaSmile, FaUserEdit } from "react-icons/fa";
-import EmojiPicker from "emoji-picker-react";
+
+import { FaUserEdit } from "react-icons/fa";
+
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Messages from './Messages';
 import { getGroupsByUser } from '../features/chatSlice'
 
@@ -151,11 +151,16 @@ const ChatPage = () => {
                 groups.map((group) => (
                   <div
                     key={group._id}
-                    className="bg-gray-200 rounded-md p-2 cursor-pointer hover:bg-gray-300 transition"
+                    className="bg-gray-200 flex justify-between items-center rounded-md p-2 cursor-pointer hover:bg-gray-300 transition"
                     onClick={handleOpenChat}
                   >
-                    <h5 className="font-semibold">{group?.chatName}</h5>
-                    <p className="text-sm text-gray-600">Members: {group?.members?.length}</p>
+                    <div className="flex items-center gap-2 justify-center">
+                      <img src={group.groupProfile?.url} className='w-15 h-15 object-cover rounded-full' alt="" />
+                      <div className="flex flex-col gap-2 p-2">
+                        <h5 className='font-[Poppins] font-bold tracking-[2px] text-xl'>{group.chatName}</h5>
+                        <p>{group.lastMessage?.firstName} {group.lastMessage?.lastName}</p>
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (

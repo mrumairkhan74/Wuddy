@@ -6,7 +6,7 @@ const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGrou
 
 // middle ware
 const { verifyAccessToken } = require('../middleware/verifyToken')
-
+const { upload } = require('../config/Upload')
 const router = express.Router();
 
 
@@ -17,7 +17,7 @@ router.get('/all', verifyAccessToken, getGroups)
 router.get('/allByUser', verifyAccessToken, getGroupsByUser)
 
 // create groups
-router.post('/create-group', verifyAccessToken, createGroup)
+router.post('/create-group', upload.single("groupProfile"), verifyAccessToken, createGroup)
 
 // create one-to-one chat messages
 router.post('/messages', verifyAccessToken, createOrGetMessage)

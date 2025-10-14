@@ -22,6 +22,25 @@ const uploadProfileImgToCloudinary = (fileBuffer, folder = 'wuddy/ProfileImages'
         bufferStream.pipe(stream);
     })
 }
+const uploadGroupImgToCloudinary = (fileBuffer, folder = 'wuddy/Chat/GroupProfile') => {
+    return new Promise((resolve, reject) => {
+        const bufferStream = new Readable();
+        bufferStream.push(fileBuffer);
+        bufferStream.push(null);
+
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder, resource_type: 'image', quality: "auto:best",   // ensures best possible quality
+                fetch_format: "auto"
+            },
+            (error, result) => {
+                if (error) return reject(error)
+                resolve(result);
+            }
+        );
+        bufferStream.pipe(stream);
+    })
+}
 
 // cover images of profile
 const uploadCoverImgToCloudinary = (fileBuffer, folder = 'wuddy/CoversImages') => {
@@ -87,5 +106,6 @@ module.exports = {
     uploadCoverImgToCloudinary,
     uploadProfileImgToCloudinary,
     uploadPostsImagesToCloudinary,
-    uploadPostVideosToCloudinary
+    uploadPostVideosToCloudinary,
+    uploadGroupImgToCloudinary
 }
