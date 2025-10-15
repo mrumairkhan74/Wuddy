@@ -221,8 +221,15 @@ const getGroupsByUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
         const chat = await ChatModel.find({ members: userId, isGroupChat: true }).populate("members", 'firstName lastName username profileImg')
-        .populate('lastMessage','firstName lastName')
-        .lean()
+            .populate({
+                path: 'lastMessage',
+                populate: {
+                    path: 'sender',
+                    select: 'firstName lastName username profileImg'
+                }
+            })
+            .sort({ updatedAt: -1 })
+            .lean()
         const uniqueChats = chat.filter(
             (v, i, a) => a.findIndex(t => t._id.toString() === v._id.toString()) === i
         );

@@ -23,13 +23,13 @@ router.post('/create-group', upload.single("groupProfile"), verifyAccessToken, c
 router.post('/messages', verifyAccessToken, createOrGetMessage)
 
 // add member
-router.post('/:chatId/add-member', verifyAccessToken, addToGroup)
+router.put('/:chatId/add-member', verifyAccessToken, addToGroup)
 
 // update group name
-router.put('/:chatId/rename', verifyAccessToken, renameGroup)
+router.put('/:chatId/rename-group', verifyAccessToken, renameGroup)
 
 // remove member
-router.delete('/:chatId/remove/:memberId', verifyAccessToken, removeFromGroup)
+router.delete('/:chatId/remove-member/:memberId', verifyAccessToken, removeFromGroup)
 
 
 
