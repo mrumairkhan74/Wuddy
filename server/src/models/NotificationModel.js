@@ -17,7 +17,7 @@ const notificationSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['friendRequest', 'BirthdayNotification', 'error', 'AcceptRequest', 'meeting', 'message', 'general','Group_Added','Group_Message'],
+        enum: ['Friend_Request', 'BirthdayNotification', 'error', 'Accept_Friend_Request', 'meeting', 'message', 'general','Group_Added','Group_Message'],
         default: 'general'
     },
     read: {
