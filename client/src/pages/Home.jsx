@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Task from '../components/Task'
 import Birthday from '../components/Birthday'
 import Friend from '../components/Friend'
@@ -6,18 +6,30 @@ import Groups from '../components/Groups'
 import CreatePost from '../components/CreatePost'
 import PostPage from '../components/PostPage'
 import { useSelector } from 'react-redux'
+import { LuPanelLeftOpen, LuPanelRightOpen } from "react-icons/lu";
+import { MdOutlineMenuOpen } from "react-icons/md";
+
 const Home = () => {
   const { user } = useSelector((state) => state.auth)
+  const [isTaskOpen, setIsTaskOpen] = useState(false)
 
   return (
     <div className="z-0 container mx-auto relative">
       <div className="flex flex-wrap items-start justify-center gap-3">
 
+        <button onClick={() => setIsTaskOpen(!isTaskOpen)} className=' flex items-start cursor-pointer justify-center text-3xl text-[#206059]'>
+          {isTaskOpen ? <LuPanelRightOpen /> : <LuPanelLeftOpen />}
+        </button>
         {/* Left Sidebar (hidden on mobile) */}
-        <aside className="hidden md:flex flex-col shadow-md rounded-md">
-          <Task className="" />
-          <Birthday />
-        </aside>
+        {
+          isTaskOpen &&
+          <div className="hidden md:flex flex-col shadow-md rounded-md">
+            <Task />
+            <Birthday />
+            <Friend />
+            <Groups />
+          </div>
+        }
 
         {/* Main Content (always visible) */}
         <div className="flex-1 min-h-[700px] rounded-md p-3">
@@ -27,7 +39,7 @@ const Home = () => {
           </div>
 
           {/* Posts container */}
-          <h1 className='text-center md:block hidden  bg-[#206059] rounded-t-md shadow-md p-2 text-white text-2xl  z-20 w-full'>All Posts</h1>
+          <h1 className='text-center md:block hidden  bg-[#206059] rounded-t-md shadow-md p-2 text-white text-2xl  z-20 '>All Posts</h1>
 
           <div className="bg-white shadow-md rounded-md h-[550px] overflow-y-auto">
 
@@ -38,8 +50,7 @@ const Home = () => {
 
         {/* Right Sidebar (hidden on mobile) */}
         <div className="hidden md:flex flex-col shadow-md rounded-md">
-          <Friend />
-          <Groups />
+
         </div>
 
       </div>
