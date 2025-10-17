@@ -105,7 +105,11 @@ const userSchema = new mongoose.Schema({
         enum: ['single', 'married', 'engaged'],
         default: 'single'
     },
-
+    activeStatus: {
+        type: String,
+        enum: ['online', 'offline'],
+        default: 'offline'
+    },
     // all this user created Details
     tasks: [
         {
@@ -125,7 +129,7 @@ const userSchema = new mongoose.Schema({
             ref: 'Chat'
         }
     ],
-    friends:[{
+    friends: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],

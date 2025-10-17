@@ -17,7 +17,7 @@ const Home = () => {
     <div className="z-0 container mx-auto relative">
       <div className="flex flex-wrap items-start justify-center gap-3">
 
-        <button onClick={() => setIsTaskOpen(!isTaskOpen)} className=' flex items-start cursor-pointer justify-center text-3xl text-[#206059]'>
+        <button onClick={() => setIsTaskOpen(!isTaskOpen)} className='hidden md:flex items-start cursor-pointer justify-center text-3xl text-[#206059]'>
           {isTaskOpen ? <LuPanelRightOpen /> : <LuPanelLeftOpen />}
         </button>
         {/* Left Sidebar (hidden on mobile) */}
@@ -26,8 +26,8 @@ const Home = () => {
           <div className="hidden md:flex flex-col shadow-md rounded-md">
             <Task />
             <Birthday />
-            <Friend />
-            <Groups />
+            {/* <Friend /> */}
+            {/* <Groups /> */}
           </div>
         }
 

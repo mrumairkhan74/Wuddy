@@ -20,6 +20,8 @@ import Messages from "./components/Messages";
 import MessageProfile from "./components/MessageProfile";
 import UserDetail from "./pages/UserDetail";
 import Friends from "./pages/Friends";
+import FriendRequest from "./components/FriendRequest";
+import FindFriends from "./components/FindFriends";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -110,6 +112,22 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Friends />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/friend-requests"
+              element={
+                <ProtectedRoute>
+                  <FriendRequest />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/find-friends"
+              element={
+                <ProtectedRoute>
+                  <FindFriends />
                 </ProtectedRoute>
               }
             />
