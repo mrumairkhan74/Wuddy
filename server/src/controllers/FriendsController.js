@@ -160,7 +160,7 @@ const removeFriend = async (req, res, next) => {
 const getFriendsList = async (req, res, next) => {
     try {
         const userId = req.user?._id;
-        const user = await UserModel.findById(userId).populate('friends', 'firstName lastName profilePicture');
+        const user = await UserModel.findById(userId).populate('friends', 'firstName lastName profileImg');
 
         if (!user) {
             throw new NotFoundError('User not found.');
