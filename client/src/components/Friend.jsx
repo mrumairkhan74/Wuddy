@@ -42,7 +42,7 @@ const Friend = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to={`/chat/${friend._id}`}>
+            <Link to={`/chat/message/${friend._id}`}>
               <FiMessageCircle
                 className="text-[#206059] text-2xl hover:text-gray-300 cursor-pointer"
                 title="Send Message"

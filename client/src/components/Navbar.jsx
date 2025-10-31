@@ -226,14 +226,15 @@ const Navbar = () => {
 
             {/* Messages dropdown */}
             {activeMenu === "chat" && (
-                <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
+                <div className="notifications hidden absolute md:flex-col md:flex right-30 border-white border top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                     <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Message</h4>
                     <div className="flex flex-col mt-3">
-                        <div className="flex items-start justify-between bg-white p-2 rounded-md mb-3 ">
+                        <div className="flex items-start justify-start gap-3 bg-white p-2 rounded-md mb-3 ">
+                            <img src="" alt="" className="w-10 h-10 bg-green-600 rounded-full object-cover" />
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-3">
                                     <h5 className="font-medium text-sm">Umair Khan</h5>
-                                    <p className='bg-green-600 text-[#EBF2FD] rounded-full text-[8px] py-1 px-3 text-center'>Active</p>
+                                    {/* <p className='text-green-600 text-[#EBF2FD] rounded-full text-[8px] py-1 px-3 text-center'>.</p> */}
                                 </div>
                                 <p className="text-[10px] text-gray-600">✅ new Message</p>
                             </div>
