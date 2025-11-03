@@ -74,11 +74,12 @@ const Navbar = () => {
 
                 {/* Desktop menu */}
                 <div className="hidden md:flex items-center justify-center">
-                    <Link to='/home' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Home</Link>
-                    <Link to='/chat' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Chats</Link>
-                    <Link to='/meeting' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Meeting</Link>
-                    <Link to='/group' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Groups</Link>
-                    <Link to='/notes' className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Notes</Link>
+                    <Link to='/home' onClick={() => setActiveMenu(null)} className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Home</Link>
+                    <Link to='/chat' onClick={() => setActiveMenu(null)} className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Chats</Link>
+                    <Link to='/meeting' onClick={() => setActiveMenu(null)} className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Meeting</Link>
+                    <Link to='/group' onClick={() => setActiveMenu(null)} className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Groups</Link>
+                    <Link to='/friends' onClick={() => setActiveMenu(null)} className='text-xl text-[#EBF2FD] m-2 p-3 border-b-2 border-gray-500'>Friends</Link>
+                    <Link to='/notes' onClick={() => setActiveMenu(null)} className='mx-3 hover:underline-offset-10 hover:decoration-4 hover:underline'>Notes</Link>
                 </div>
 
                 {/* Right side icons */}

@@ -37,3 +37,9 @@ export const getById = async (userId) => {
     const res = await axios.get(`${apiUrl}/user/${userId}`, { withCredentials: true })
     return res.data.users
 }
+
+
+export const getAll = async () => {
+    const res = await axios.get(`${apiUrl}/user/all`, { withCredentials: true })
+    return res.data.users
+}

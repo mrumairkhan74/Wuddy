@@ -3,6 +3,7 @@ import * as authApi from '../api/authApi';
 
 
 
+
 export const signUpUser = createAsyncThunk("auth/signupUser", async (userData, { rejectWithValue }) => {
     try {
         return await authApi.signUp(userData);
@@ -65,6 +66,15 @@ export const updatedUser = createAsyncThunk("auth/update", async ({ userId, upda
     }
 })
 
+// all user
+
+export const getAllUser = createAsyncThunk("auth/user/all", async (_, { rejectWithValue }) => {
+    try {
+        return await authApi.getAll()
+    } catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
 
 const authSlice = createSlice({
     name: 'auth',
@@ -144,6 +154,20 @@ const authSlice = createSlice({
                 state.profile = action.payload
             })
             .addCase(getUserById.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload?.error
+            })
+
+            // get all user
+            .addCase(getAllUser.pending, (state) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(getAllUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.profile = action.payload
+            })
+            .addCase(getAllUser.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload?.error
             })
