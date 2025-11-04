@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {user && <Navbar />}
+      {user && user?.isEmailVerified && <Navbar />}
       <AnimatePresence mode="wait">
         {showSplash || loading ? (
           <Loading key="splash" onFinish={() => setShowSplash(false)} />

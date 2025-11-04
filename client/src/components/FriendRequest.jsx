@@ -3,7 +3,8 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaCheck, FaTrash } from "react-icons/fa";
-import { getFriendsRequests } from '../features/friendSlice';
+import { toast } from 'react-toastify';
+import { getFriendsRequests, acceptFriendRequest, removeFriendRequest } from '../features/friendSlice';
 
 const FriendRequest = () => {
   const { friends, loading } = useSelector((state) => state.friend);
@@ -14,6 +15,28 @@ const FriendRequest = () => {
     dispatch(getFriendsRequests());
   }, [dispatch]);
 
+  // handle accept
+  const handleAccept = async (id) => {
+    try {
+      await dispatch(acceptFriendRequest(id)).unwrap();
+      toast.success('Friend request accepted');
+      dispatch(getFriendsRequests()); // refresh list
+    } catch (error) {
+      toast.error(error || 'Failed to accept request');
+    }
+  };
+
+  // handle delete
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(removeFriendRequest(id)).unwrap();
+      toast.success('Friend request deleted');
+      dispatch(getFriendsRequests());
+    } catch (error) {
+      toast.error(error || 'Failed to delete request');
+    }
+  };
+
   if (loading)
     return (
       <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -23,7 +46,7 @@ const FriendRequest = () => {
 
   return (
     <div className="container mx-auto">
-      {/* main heading */}
+      {/* Header */}
       <div className="flex justify-start rounded-t-md gap-5 mt-2 bg-[#206059] text-white font-[Poppins] items-center p-3">
         <button className="cursor-pointer" onClick={() => navigate(-1)}>
           <IoIosArrowRoundBack size={50} />
@@ -31,14 +54,14 @@ const FriendRequest = () => {
         <h4 className="text-2xl">Friend Requests</h4>
       </div>
 
-      {/* conditional rendering */}
+      {/* Requests */}
       {friends && friends.length > 0 ? (
         friends.map((friend) => (
           <div
             key={friend._id}
             className="rounded-md mt-2 p-3 shadow-md m-2 flex items-center justify-between"
           >
-            {/* main name and img */}
+            {/* Profile */}
             <div className="flex items-center gap-4">
               <img
                 src={friend?.profileImg?.url || '/default-avatar.png'}
@@ -53,12 +76,18 @@ const FriendRequest = () => {
               </div>
             </div>
 
-            {/* buttons */}
+            {/* Buttons */}
             <div className="flex gap-2 items-center">
-              <button className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#206059] text-white cursor-pointer">
+              <button
+                onClick={() => handleAccept(friend._id)}
+                className="flex items-center gap-2 rounded-full px-4 py-2 bg-[#206059] text-white cursor-pointer"
+              >
                 <FaCheck size={20} /> Accept
               </button>
-              <button className="flex items-center gap-2 rounded-full px-4 py-2 bg-red-500 text-white cursor-pointer">
+              <button
+                onClick={() => handleDelete(friend._id)}
+                className="flex items-center gap-2 rounded-full px-4 py-2 bg-red-500 text-white cursor-pointer"
+              >
                 <FaTrash size={20} /> Delete
               </button>
             </div>

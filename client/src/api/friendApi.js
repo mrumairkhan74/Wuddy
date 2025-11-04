@@ -12,13 +12,13 @@ export const getFriends = async () => {
 
 // send friend request
 export const sendRequest = async (receiverId) => {
-    const res = await axios.post(`${apiUrl}/friend/send-request/${receiverId}`, { withCredentials: true })
+    const res = await axios.post(`${apiUrl}/friend/send-request/${receiverId}`, {}, { withCredentials: true })
     return res.data
 }
 
 // accept request
 export const acceptRequest = async (senderId) => {
-    const res = await axios.post(`${apiUrl}/friend/accept-request/${senderId}`, { withCredentials: true })
+    const res = await axios.post(`${apiUrl}/friend/accept-request/${senderId}`, {}, { withCredentials: true })
     return res.data
 }
 
@@ -36,6 +36,6 @@ export const removeFriend = async (friendId) => {
 
 // get friends requests
 export const getRequests = async () => {
-    const res = await axios.get(`${apiUrl}/friend/friend-requests/`, { withCredentials: true })
-    return res.data
+    const res = await axios.get(`${apiUrl}/friend/friend-requests`, { withCredentials: true })
+    return res.data.friendRequests
 }
