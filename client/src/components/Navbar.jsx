@@ -236,7 +236,7 @@ const Navbar = () => {
             <div className="flex items-start gap-3 bg-white p-2 rounded-md mb-2">
               <img
                 src="/default-avatar.png"
-                alt="Sender"
+                alt="Sender Profile Img"
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
