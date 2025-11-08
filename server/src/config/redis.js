@@ -1,3 +1,4 @@
+required('dotenv').config();
 const { createClient } = require('redis')
 
 const client = createClient({
