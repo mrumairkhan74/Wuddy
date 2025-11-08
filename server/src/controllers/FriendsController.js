@@ -1,5 +1,5 @@
 const UserModel = require('../models/UserModel');
-const { notifyUser } = require('../utils/notificationService');
+const { notifyUser } = require('../utils/NotificationService');
 const { BadRequestError, NotFoundError } = require('../middleware/errors/httpErrors');
 
 const sendFriendRequest = async (req, res, next) => {
