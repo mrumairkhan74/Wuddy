@@ -176,7 +176,7 @@ const getFriendsList = async (req, res, next) => {
 const getFriendRequests = async (req, res, next) => {
     try {
         const userId = req.user?._id;
-        const user = await UserModel.findById(userId).populate('friendRequests', 'firstName lastName profilePicture');
+        const user = await UserModel.findById(userId).populate('friendRequests', 'firstName lastName profileImg');
 
         if (!user) {
             throw new NotFoundError('User not found.');

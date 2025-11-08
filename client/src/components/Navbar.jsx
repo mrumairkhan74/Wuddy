@@ -152,7 +152,7 @@ const Navbar = () => {
 
             {/* Desktop Profile dropdown */}
             {activeMenu === "profile" && (
-                <div className="hidden absolute md:flex-col md:flex right-2 top-20 rounded-md mt-4 bg-[#206059] w-[300px]">
+                <div className="hidden absolute md:flex-col md:flex right-2 top-22 rounded-md mt-4 bg-[#206059] w-[300px]">
                     <Link
                         to={`/myprofile/${user?._id}`}
                         onClick={() => setActiveMenu(null)}
@@ -168,7 +168,7 @@ const Navbar = () => {
 
             {/* Notifications dropdown */}
             {activeMenu === "notify" && (
-                <div className="notifications hidden absolute md:flex-col md:flex right-16 top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
+                <div className="notifications hidden absolute md:flex-col md:flex right-16 top-22 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                     <h4 className="sticky text-xl text-center text-[#EBF2FD] w-full border-b-2">
                         Latest Notification
                     </h4>
@@ -227,7 +227,7 @@ const Navbar = () => {
 
             {/* Messages dropdown */}
             {activeMenu === "chat" && (
-                <div className="notifications hidden absolute md:flex-col md:flex right-30 border-white border top-20 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
+                <div className="notifications hidden absolute md:flex-col md:flex right-30 border-white border top-22 mt-4 rounded-md p-5 bg-[#206059] w-[300px] max-h-[400px] overflow-y-auto">
                     <h4 className='sticky text-xl text-center text-[#EBF2FD] w-full border-b-2'>Latest Message</h4>
                     <div className="flex flex-col mt-3">
                         <div className="flex items-start justify-start gap-3 bg-white p-2 rounded-md mb-3 ">

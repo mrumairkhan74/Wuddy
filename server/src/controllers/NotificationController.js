@@ -12,7 +12,7 @@ const getNotification = async (req, res, next) => {
             .populate('sender', 'firstName lastName profileImg')
             .sort({ createdAt: -1 })
 
-        return res.json(notification);
+        return res.json(notification, notification.length);
     }
     catch (error) {
         next(error)

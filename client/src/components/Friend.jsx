@@ -24,7 +24,7 @@ const Friend = () => {
   return (
     <div className="space-y-3 p-2">
       {friends.map((friend) => (
-        <div
+        <Link to={`/user/${friend._id}`}
           key={friend._id}
           className="flex justify-between items-center shadow-md rounded-md p-3 bg-white"
         >
@@ -61,7 +61,7 @@ const Friend = () => {
               />
             </Link>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

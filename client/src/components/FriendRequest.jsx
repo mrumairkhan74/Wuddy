@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { getFriendsRequests, acceptFriendRequest, removeFriendRequest } from '../features/friendSlice';
 
 const FriendRequest = () => {
-  const { friends, loading } = useSelector((state) => state.friend);
+  const { friendRequests, loading } = useSelector((state) => state.friend);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -55,11 +55,11 @@ const FriendRequest = () => {
       </div>
 
       {/* Requests */}
-      {friends && friends.length > 0 ? (
-        friends.map((friend) => (
-          <div
+      {friendRequests && friendRequests.length > 0 ? (
+        friendRequests.map((friend) => (
+          <div 
             key={friend._id}
-            className="rounded-md mt-2 p-3 shadow-md m-2 flex items-center justify-between"
+            className="rounded-md mt-2 p-3  shadow-md m-2 flex items-center justify-between"
           >
             {/* Profile */}
             <div className="flex items-center gap-4">

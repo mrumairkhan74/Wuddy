@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { getUserById } from '../features/authSlice'
 import { GetPostByUser } from '../features/postsSlice'
 import UserCover from '../components/forms/UserCover'
 import UserInfo from '../components/UserInfo'
 import UserProfile from '../components/UserProfile'
 import UserPosts from '../components/UserPosts'
-
+import { IoIosArrowRoundBack } from "react-icons/io";
 const UserDetail = () => {
     const dispatch = useDispatch()
     const { id } = useParams()
     const { profile, loading } = useSelector((state) => state.auth)
     const { posts } = useSelector((state) => state.post)
+    const navigate = useNavigate()
 
     // ✅ Fetch user only when needed
     useEffect(() => {
@@ -36,7 +37,10 @@ const UserDetail = () => {
     return (
         <div className="max-w-6xl mx-auto flex flex-col">
             {/* Cover */}
-            <div className="p-2 sm:p-4">
+            <div className="p-2 sm:p-4 flex relative">
+                <button onClick={() => navigate(-1)} aria-label="Go back">
+                    <IoIosArrowRoundBack size={50} className='text-[#206059] z-[999] absolute left-5 top-5 cursor-pointer' />
+                </button>
                 <UserCover profile={profile} />
             </div>
 
