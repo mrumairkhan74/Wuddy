@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/authSlice'
-import taskReducer from './features/TaskSlice'
+import taskReducer from './features/taskSlice'
 import notificationReducer from './features/notificationSlice'
 import postsReducer from './features/postsSlice'
 import chatReducers from './features/chatSlice'
