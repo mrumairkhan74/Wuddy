@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as TaskApi from '../api/taskApi'
+import * as taskApi from '../api/taskApi'
 
 
 export const createTasks = createAsyncThunk('task/create', async (taskData, { rejectWithValue }) => {
     try {
-        return await TaskApi.createTask(taskData)
+        return await taskApi.createTask(taskData)
     }
     catch (error) {
         return rejectWithValue(error.response.data)
@@ -14,7 +14,7 @@ export const createTasks = createAsyncThunk('task/create', async (taskData, { re
 // getTask
 export const getTasks = createAsyncThunk('task/get', async (_, { rejectWithValue }) => {
     try {
-        return await TaskApi.getTask()
+        return await taskApi.getTask()
     }
     catch (error) {
         return rejectWithValue(error.response.data)
@@ -25,7 +25,7 @@ export const getTasks = createAsyncThunk('task/get', async (_, { rejectWithValue
 // delete Task 
 export const deleteTasks = createAsyncThunk('task/delete', async (id, { rejectWithValue }) => {
     try {
-        await TaskApi.deleteTask(id)
+        await taskApi.deleteTask(id)
         return id
     } catch (error) {
         return rejectWithValue(error.response.error)
