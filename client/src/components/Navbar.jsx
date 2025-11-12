@@ -47,6 +47,11 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const navLinks = [
+    { text: 'Home', path: '/', },
+    { text: 'Chat', path: '/chat' },
+    { text: 'Friend', path: '/friends' }
+  ]
   return (
     <div className="font-[Poppins] relative z-50" ref={menuRef}>
       <div className="bg-[#206059] text-[#EBF2FD] flex items-center justify-between p-4">
@@ -74,15 +79,15 @@ const Navbar = () => {
 
         {/* Center - Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          {["Home", "Chats", "Meeting", "Groups", "Friends", "Notes"].map(
+          {navLinks.map(
             (item) => (
               <Link
                 key={item}
-                to={`/${item.toLowerCase()}`}
+                to={`/${item.path}`}
                 onClick={() => setActiveMenu(null)}
                 className="hover:underline underline-offset-8 decoration-2"
               >
-                {item}
+                {item.text}
               </Link>
             )
           )}
