@@ -268,15 +268,15 @@ const Navbar = () => {
             />
             {user ? `${user.firstName} ${user.lastName}` : "Guest"}
           </Link>
-          {["Home", "Meeting", "Friends", "Groups", "Notes", "Setting"].map(
+          {navLinks.map(
             (item) => (
               <Link
                 key={item}
-                to={`/${item.toLowerCase()}`}
+                to={`/${item.path}`}
                 onClick={() => setActiveMenu(null)}
                 className="p-2 border-b border-gray-400 text-white"
               >
-                {item}
+                {item.text}
               </Link>
             )
           )}
