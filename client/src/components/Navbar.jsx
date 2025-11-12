@@ -96,7 +96,7 @@ const Navbar = () => {
         {/* Right side - Icons */}
         <div className="flex items-center gap-3 md:gap-4 relative">
           {/* Notes icon (only mobile) */}
-          <Link to="/notes" className="md:hidden">
+          <Link to="/tasks" className="md:hidden">
             <BiTask className="h-6 w-6" title="Notes" />
           </Link>
 

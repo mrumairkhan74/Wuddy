@@ -22,6 +22,7 @@ import UserDetail from "./pages/UserDetail";
 import Friends from "./pages/Friends";
 import FriendRequest from "./components/FriendRequest";
 import FindFriends from "./components/FindFriends";
+import Task from "./components/Task";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -64,6 +65,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Notification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <Task />
                 </ProtectedRoute>
               }
             />
