@@ -40,107 +40,109 @@ const App = () => {
         {showSplash || loading ? (
           <Loading key="splash" onFinish={() => setShowSplash(false)} />
         ) : (
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/verify-email/:userId" element={<VerifyEmail />} />
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/myprofile/:id"
-              element={
-                <ProtectedRoute>
-                  <MyProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/notification"
-              element={
-                <ProtectedRoute>
-                  <Notification />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tasks"
-              element={
-                <ProtectedRoute>
-                  <Task />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/setting"
-              element={
-                <ProtectedRoute>
-                  <Setting />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chat"
-              element={
-                <ProtectedRoute>
-                  <Chat />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chat/message/:id"
-              element={
-                <ProtectedRoute>
-                  <Messages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/message/:id"
-              element={
-                <ProtectedRoute>
-                  <MessageProfile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/user/:id"
-              element={
-                <ProtectedRoute>
-                  <UserDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/friends"
-              element={
-                <ProtectedRoute>
-                  <Friends />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/friend-requests"
-              element={
-                <ProtectedRoute>
-                  <FriendRequest />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/find-friends"
-              element={
-                <ProtectedRoute>
-                  <FindFriends />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+          user !== undefined && (
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/verify-email/:userId" element={<VerifyEmail />} />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/myprofile/:id"
+                element={
+                  <ProtectedRoute>
+                    <MyProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/notification"
+                element={
+                  <ProtectedRoute>
+                    <Notification />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tasks"
+                element={
+                  <ProtectedRoute>
+                    <Task />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/setting"
+                element={
+                  <ProtectedRoute>
+                    <Setting />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat"
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat/message/:id"
+                element={
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/message/:id"
+                element={
+                  <ProtectedRoute>
+                    <MessageProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user/:id"
+                element={
+                  <ProtectedRoute>
+                    <UserDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/friends"
+                element={
+                  <ProtectedRoute>
+                    <Friends />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/friend-requests"
+                element={
+                  <ProtectedRoute>
+                    <FriendRequest />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/find-friends"
+                element={
+                  <ProtectedRoute>
+                    <FindFriends />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          )
         )}
       </AnimatePresence>
     </BrowserRouter>
