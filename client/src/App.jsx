@@ -11,6 +11,7 @@ import Notification from "./pages/Notification";
 import VerifyEmail from "./components/VerifyEmail";
 import Loading from "./components/Loading";
 import ProtectedRoute from "./ProtectedRoutes";
+import PublicRoute from './PublicRoute'
 
 import { GetMe } from "./features/authSlice";
 import MyProfile from "./components/MyProfile";
@@ -32,18 +33,27 @@ const App = () => {
   useEffect(() => {
     dispatch(GetMe());
   }, [dispatch]);
+  const showLoading = showSplash || loading;
 
   return (
     <BrowserRouter>
       {user && user?.isEmailVerified && <Navbar />}
       <AnimatePresence mode="wait">
-        {showSplash || loading ? (
+        {showLoading ? (
           <Loading key="splash" onFinish={() => setShowSplash(false)} />
         ) : (
           user !== undefined && (
             <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
+              <Route path="/signup" element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              } />
               <Route path="/verify-email/:userId" element={<VerifyEmail />} />
               <Route
                 path="/home"

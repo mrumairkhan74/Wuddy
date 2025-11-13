@@ -131,7 +131,7 @@ const loginUser = async (req, res, next) => {
         res.cookie("token", AccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true if on https
-            //sameSite: "lax", // important for frontend <-> backend on different domains
+            // sameSite: "lax", // important for frontend <-> backend on different domains
             sameSite: "None", // important for frontend <-> backend on different domains
 
             maxAge: 24 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
