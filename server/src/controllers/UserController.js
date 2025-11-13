@@ -80,7 +80,7 @@ const createUser = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true if on https
             sameSite: "None", // important for frontend <-> backend on different domains
-            maxAge: 24 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
+            maxAge: 24 * 60 * 1000, // 24 minutes (or whatever your access token expiry is)
         });
 
         res.cookie("refreshToken", RefreshToken, {
@@ -293,6 +293,29 @@ const getAll = async (req, res, next) => {
     }
 }
 
+
+// new access token
+const newAccessToken = async (req, res, next) => {
+    try {
+        const { userId } = req.user?._id;
+
+        if (!user) throw new NotFoundError("Invalid user")
+
+
+        const { AccessToken } = GenerateToken({ _id: userId })
+        res.cookie('token', AccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // true if on https
+            sameSite: "None", // important for frontend <-> backend on different domains
+            maxAge: 15 * 60 * 1000, // 24 minutes (or whatever your access token expiry is)
+        })
+        return res.status(200).json({ success: true })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createUser,
     loginUser,
@@ -300,5 +323,6 @@ module.exports = {
     getMe,
     logout,
     getUserById,
-    getAll
+    getAll,
+    newAccessToken
 }

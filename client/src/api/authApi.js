@@ -22,9 +22,22 @@ export const updateUser = async (userId, updateData) => {
 }
 // get verify
 export const getMe = async () => {
-    const res = await axios.get(`${apiUrl}/user/me`, { withCredentials: true })
-    return res.data
+    try {
+        const res = await axios.get(`${apiUrl}/user/me`, { withCredentials: true })
+        return res.data
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            // Access token expired — try refreshing
+            const refresh = await refreshAccessToken()
+            if (refresh.success) {
+                const retry = await axios.get(`${apiUrl}/user/me`, { withCredentials: true })
+                return retry.data
+            }
+        }
+        throw error
+    }
 }
+
 
 // logout
 export const logout = async () => {
@@ -42,4 +55,9 @@ export const getById = async (userId) => {
 export const getAll = async () => {
     const res = await axios.get(`${apiUrl}/user/all`, { withCredentials: true })
     return res.data.users
+}
+
+export const refreshAccessToken = async () => {
+    const res = await axios.post(`${apiUrl}/user/refresh`, {}, { withCredentials: true })
+    return res.data
 }
