@@ -50,9 +50,9 @@ const Task = () => {
 
   return (
     <>
-      <div className="w-[300px] p-4 bg-[#206059] rounded-md m-2 ">
+      <div className="md:w-[300px] p-4 bg-[#206059] rounded-md m-2 ">
         <div className="flex justify-between items-center px-4 py-2 mb-2">
-          <h4 className="md:text-xl font-[Poppins] text-[#EBF2FD]">Today Task</h4>
+          <h4 className="md:text-xl text-2xl tracking-wide font-[Poppins] text-[#EBF2FD]">Today Task</h4>
           <button
             className="text-xl font-[Poppins] bg-white rounded-md px-2"
             onClick={() => setIsTaskOpen(!isTaskOpen)}

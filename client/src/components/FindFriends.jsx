@@ -70,7 +70,7 @@ const FindFriends = () => {
             className="rounded-md mt-2 p-3 shadow-md m-2 flex flex-col md:flex-row gap-5 items-center justify-between"
           >
             {/* Image & Name */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-full justify-center">
               <img
                 src={friend?.profileImg?.url || '/default-avatar.png'}
                 alt={`${friend?.firstName || 'User'} profile`}

@@ -48,7 +48,7 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { text: 'Home', path: '/', },
+    { text: 'Home', path: '/home', },
     { text: 'Chat', path: '/chat' },
     { text: 'Friend', path: '/friends' }
   ]
@@ -83,7 +83,7 @@ const Navbar = () => {
             (item) => (
               <Link
                 key={item}
-                to={`/${item.path}`}
+                to={item.path}
                 onClick={() => setActiveMenu(null)}
                 className="hover:underline underline-offset-8 decoration-2"
               >
@@ -272,7 +272,7 @@ const Navbar = () => {
             (item) => (
               <Link
                 key={item}
-                to={`/${item.path}`}
+                to={item.path}
                 onClick={() => setActiveMenu(null)}
                 className="p-2 border-b border-gray-400 text-white"
               >

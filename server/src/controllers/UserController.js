@@ -131,13 +131,16 @@ const loginUser = async (req, res, next) => {
         res.cookie("token", AccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true if on https
+            //sameSite: "lax", // important for frontend <-> backend on different domains
             sameSite: "None", // important for frontend <-> backend on different domains
+
             maxAge: 24 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
         });
 
         res.cookie("refreshToken", RefreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
+            // sameSite: "lax",
             sameSite: "None",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
@@ -267,7 +270,7 @@ const getUserById = async (req, res, next) => {
         if (!user) throw new NotFoundError("Invalid User")
         return res.status(200).json({
             success: true,
-            users:user
+            users: user
         })
     }
     catch (error) {
