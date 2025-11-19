@@ -7,7 +7,7 @@ const PostRoutes = require('./PostRoutes')
 const ChatRoutes = require('./ChatRoutes')
 const MessageRoutes = require('./MessageRoutes')
 const FriendRoutes = require('./FriendRoutes')
-
+const LikeRoutes = require('./LikeRoutes')
 
 
 
@@ -22,6 +22,7 @@ router.use('/post', PostRoutes)
 router.use('/chat', ChatRoutes)
 router.use('/message', MessageRoutes)
 router.use('/friend', FriendRoutes)
+router.use('/like', LikeRoutes)
 
 
 
