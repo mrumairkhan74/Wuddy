@@ -3,9 +3,12 @@ import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePosts, getPosts } from "../features/postsSlice";
 import { Link } from 'react-router-dom'
+import { fetchLikes, likePosts } from "../features/likeSlice";
+
 const PostPage = () => {
   const { posts, loading, error } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.auth); // 👈 logged-in user
+  const { likesByPost } = useSelector((state) => state.like); // 👈 logged-in user
   const dispatch = useDispatch();
   const [openPostId, setOpenPostId] = useState(null);
 
@@ -20,6 +23,14 @@ const PostPage = () => {
   const handleDelete = (id) => {
     dispatch(deletePosts(id));
   };
+
+  // handle likes 
+  const handleLikes = (id) => {
+    dispatch(likePosts(id));
+    dispatch(fetchLikes(id))
+  }
+
+
 
   const getHDImage = (url) => {
     if (!url) return "/default-avatar.png";
@@ -102,13 +113,27 @@ const PostPage = () => {
               )}
             </div>
           )}
+          {likesByPost[post._id]?.likes?.length > 0 ? (
+
+
+            likesByPost[post._id]?.likes?.map((like) => (
+              <div className="flex items-start justify-start mt-2 mb-0 gap-2" key={like._id}>
+                <p className="text-gray-400 text-[12px]">{like.count}</p>
+                <p className="text-gray-400 text-[12px]">
+                  {like.user?.firstName} & others like this post
+                </p>
+              </div>
+            ))) : (
+            <p className="text-gray-400 text-[12px] p-2">No likes yet</p>
+          )}
+
 
           {/* Divider */}
           <div className="border-t mt-3"></div>
 
           {/* Actions */}
           <div className="flex justify-around text-gray-600 text-sm mt-1">
-            <button className="flex items-center gap-1 hover:text-[#206059] cursor-pointer py-2 w-full justify-center">
+            <button onClick={() => handleLikes(post._id)} className="flex items-center gap-1 hover:text-[#206059] cursor-pointer py-2 w-full justify-center">
               👍 Like
             </button>
             <button className="flex items-center gap-1 hover:text-[#206059] cursor-pointer py-2 w-full justify-center">

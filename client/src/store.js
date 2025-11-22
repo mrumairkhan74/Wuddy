@@ -5,7 +5,7 @@ import notificationReducer from './features/notificationSlice'
 import postsReducer from './features/postsSlice'
 import chatReducers from './features/chatSlice'
 import friendReducers from './features/friendSlice'
-
+import likeReducer from './features/likeSlice'
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +14,7 @@ export const store = configureStore({
         notification: notificationReducer,
         post: postsReducer,
         chat: chatReducers,
-        friend: friendReducers
+        friend: friendReducers,
+        like: likeReducer
     }
 })

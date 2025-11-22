@@ -30,7 +30,7 @@ const createLike = async (req, res, next) => {
 // Unlike a post
 const unlikePost = async (req, res, next) => {
     try {
-        const { postId } = req.body;
+        const { postId } = req.params;
         const userId = req.user._id;
 
         const like = await LikeModel.findOneAndDelete({ post: postId, user: userId });
@@ -50,7 +50,7 @@ const getLikesByPost = async (req, res, next) => {
         const { postId } = req.params;
 
         const likes = await LikeModel.find({ post: postId }).populate('user', 'firstName lastName profileImg');
-        res.status(200).json({ success: true, likes, count: likes.length });
+        res.status(200).json({ success: true, likes: likes, count: likes.length });
     } catch (error) {
         next(error);
     }

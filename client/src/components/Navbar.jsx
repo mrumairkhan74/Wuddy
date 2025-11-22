@@ -82,7 +82,7 @@ const Navbar = () => {
           {navLinks.map(
             (item) => (
               <Link
-                key={item}
+                key={item.path}
                 to={item.path}
                 onClick={() => setActiveMenu(null)}
                 className="hover:underline underline-offset-8 decoration-2"
