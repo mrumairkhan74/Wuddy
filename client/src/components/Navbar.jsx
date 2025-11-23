@@ -8,7 +8,7 @@ import { IoPerson } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/authSlice";
 import { toast } from "react-toastify";
-import { getNotifications } from "../features/notificationSlice";
+import { getNotifications, readAllNotifications } from "../features/notificationSlice";
 import logo from "/logo.png";
 
 const Navbar = () => {
@@ -28,6 +28,9 @@ const Navbar = () => {
   const toggleMenu = (menu) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
   };
+  const handleReadNotification = () => {
+    dispatch(readAllNotifications());
+  }
 
   const handleLogout = async () => {
     dispatch(logoutUser());
@@ -126,11 +129,12 @@ const Navbar = () => {
                 }
               }}
             />
-            {notifications?.length > 0 && (
+            {notifications?.some(n => !n.read) && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5">
-                {notifications.length}
+                {notifications.filter(n => !n.read).length}
               </span>
             )}
+
           </div>
 
           {/* Profile image */}
@@ -184,9 +188,20 @@ const Navbar = () => {
       {/* === Notifications Dropdown (Desktop) === */}
       {activeMenu === "notify" && (
         <div className="hidden md:flex flex-col absolute right-20 top-[90px] bg-[#206059] rounded-md w-[300px] max-h-[400px] overflow-y-auto shadow-lg p-4">
-          <h4 className="text-xl text-center text-[#EBF2FD] border-b pb-2 mb-2">
-            Latest Notifications
-          </h4>
+          <div className="flex justify-between text-[#EBF2FD] items-center border-b pb-2 mb-2">
+            <h4 className="text-[14px] text-center text-[#EBF2FD]">
+              Latest Notifications
+            </h4>
+            <button
+              className={`text-[12px] p-2 rounded-md ${notifications?.every(n => n.read) ? "bg-gray-400 text-white" : "bg-white text-[#206059]"
+                }`}
+              onClick={handleReadNotification}
+              disabled={notifications?.every(n => n.read)}
+            >
+              {notifications?.every(n => n.read) ? "Readed" : "Read All"}
+            </button>
+
+          </div>
 
           {loading && (
             <p className="text-blue-200 text-center text-sm">Loading...</p>
@@ -207,7 +222,8 @@ const Navbar = () => {
             notifications?.map((notifi) => (
               <div
                 key={notifi._id}
-                className="flex items-start bg-white text-black p-2 rounded-md mb-2"
+                className={`flex items-start p-2 rounded-md mb-2 ${notifi.read ? "bg-gray-200 text-gray-500" : "bg-white text-black"
+                  }`}
               >
                 <img
                   src={notifi.sender?.profileImg?.url || "/default-avatar.png"}
@@ -215,12 +231,14 @@ const Navbar = () => {
                   alt={notifi.sender?.firstName}
                 />
                 <div className="flex flex-col flex-1">
-                  <h5 className="text-sm font-semibold">
+                  <h5 className={`text-sm font-semibold ${notifi.read ? "text-gray-500" : ""}`}>
                     {notifi.sender?.firstName} {notifi.sender?.lastName}
                   </h5>
-                  <p className="text-xs text-gray-600">{notifi.message}</p>
+                  <p className={`text-xs ${notifi.read ? "text-gray-400" : "text-gray-600"}`}>
+                    {notifi.message}
+                  </p>
                 </div>
-                <p className="text-[10px] text-gray-500">
+                <p className={`text-[10px] ${notifi.read ? "text-gray-400" : "text-gray-500"}`}>
                   {new Date(notifi.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",
                     month: "short",
@@ -228,6 +246,7 @@ const Navbar = () => {
                 </p>
               </div>
             ))}
+
         </div>
       )}
 

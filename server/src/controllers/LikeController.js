@@ -5,7 +5,7 @@ const {
     BadRequestError,
     NotFoundError,
 } = require('../middleware/errors/httpErrors');
-
+const { notifyUser } = require("../utils/NotificationService");
 // Create a like
 const createLike = async (req, res, next) => {
     try {
@@ -15,17 +15,32 @@ const createLike = async (req, res, next) => {
         const post = await PostModel.findById(postId);
         if (!post) throw new NotFoundError("Post not found");
 
-        const existingLike = await LikeModel.findOne({ post: postId, user: userId });
-        if (existingLike) {
+        const alreadyLiked = await LikeModel.findOne({ post: postId, user: userId });
+        if (alreadyLiked) {
             return res.status(200).json({ message: "Post already liked" });
         }
 
         const like = await LikeModel.create({ post: postId, user: userId });
-        res.status(201).json({ message: "Post liked successfully", like });
+
+        if (post.createdBy.toString() !== userId.toString()) {
+            await notifyUser(
+                userId,
+                post.createdBy,
+                "Post_Liked",
+                "has liked your post."
+            );
+        }
+
+        return res.status(201).json({
+            message: "Post liked successfully",
+            like
+        });
+
     } catch (error) {
         next(error);
     }
 };
+
 
 // Unlike a post
 const unlikePost = async (req, res, next) => {

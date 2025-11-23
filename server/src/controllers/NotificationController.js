@@ -35,5 +35,20 @@ const readNotification = async (req, res, next) => {
         next(error)
     }
 }
+const readAllNotification = async (req, res, next) => {
+    try {
+        const userId = req.user?._id;
 
-module.exports = { getNotification, readNotification }
+        const notification = await NotificationModel.find({ receiver: userId })
+        if (!notification || notification.length === 0) throw new NotFoundError("Not Notification available")
+
+        await NotificationModel.updateMany({ receiver: userId }, { read: false }, { read: true })
+
+        return res.status(200).json({ message: "All notification marked as read" })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { getNotification, readNotification, readAllNotification }

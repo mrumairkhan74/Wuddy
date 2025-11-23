@@ -3,12 +3,12 @@ import { BsThreeDotsVertical, BsThreeDots } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { deletePosts, getPosts } from "../features/postsSlice";
 import { Link } from 'react-router-dom'
-import { fetchLikes, likePosts } from "../features/likeSlice";
+import { likePosts } from "../features/likeSlice";
 
 const PostPage = () => {
   const { posts, loading, error } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.auth); // 👈 logged-in user
-  const { likesByPost } = useSelector((state) => state.like); // 👈 logged-in user
+  // const { likes } = useSelector((state) => state.like); // 👈 logged-in user
   const dispatch = useDispatch();
   const [openPostId, setOpenPostId] = useState(null);
 
@@ -27,7 +27,7 @@ const PostPage = () => {
   // handle likes 
   const handleLikes = (id) => {
     dispatch(likePosts(id));
-    dispatch(fetchLikes(id))
+    // dispatch(fetchLikes(id))
   }
 
 
@@ -112,19 +112,6 @@ const PostPage = () => {
                 ))
               )}
             </div>
-          )}
-          {likesByPost[post._id]?.likes?.length > 0 ? (
-
-
-            likesByPost[post._id]?.likes?.map((like) => (
-              <div className="flex items-start justify-start mt-2 mb-0 gap-2" key={like._id}>
-                <p className="text-gray-400 text-[12px]">{like.count}</p>
-                <p className="text-gray-400 text-[12px]">
-                  {like.user?.firstName} & others like this post
-                </p>
-              </div>
-            ))) : (
-            <p className="text-gray-400 text-[12px] p-2">No likes yet</p>
           )}
 
 
