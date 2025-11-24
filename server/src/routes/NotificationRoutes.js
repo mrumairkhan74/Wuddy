@@ -7,6 +7,6 @@ const router = express.Router()
 
 router.get('/all', verifyAccessToken, getNotification)
 router.put('/:id/read', verifyAccessToken, readNotification)
-router.patch('/read-all', verifyAccessToken, readAllNotification)
+router.put('/read-all', verifyAccessToken, readAllNotification)
 
 module.exports = router

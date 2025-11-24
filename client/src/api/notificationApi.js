@@ -19,6 +19,6 @@ export const readNotification = async (notificationId, update) => {
 }
 
 export const readAllNotification = async () => {
-    const res = await axios.patch(`${apiUrl}/notification/read-all`, {}, { withCredentials: true })
+    const res = await axios.put(`${apiUrl}/notification/read-all`, {}, { withCredentials: true })
     return res.data
 }

@@ -42,7 +42,7 @@ const readAllNotification = async (req, res, next) => {
         const notification = await NotificationModel.find({ receiver: userId })
         if (!notification || notification.length === 0) throw new NotFoundError("Not Notification available")
 
-        await NotificationModel.updateMany({ receiver: userId }, { read: false }, { read: true })
+        await NotificationModel.updateMany({ receiver: userId }, { read: true }, { new: true })
 
         return res.status(200).json({ message: "All notification marked as read" })
     }

@@ -49,9 +49,7 @@ const Home = () => {
 
 
         {/* Right Sidebar (hidden on mobile) */}
-        <div className="hidden md:flex flex-col shadow-md rounded-md">
-
-        </div>
+        
 
       </div>
     </div>

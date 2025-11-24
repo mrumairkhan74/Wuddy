@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getNotifications } from "../features/notificationSlice";
+import { getNotifications, readAllNotifications } from "../features/notificationSlice";
+import Loading from "../components/Loading";
 
 const Notification = () => {
   const { notifications, loading, error } = useSelector(
@@ -12,8 +13,12 @@ const Notification = () => {
     dispatch(getNotifications());
   }, [dispatch]);
 
+  const handleReadAll = async () => {
+    dispatch(readAllNotifications())
+  }
+
   if (loading) {
-    return <p className="text-blue-500">Loading....</p>;
+    return <Loading />;
   }
 
   if (error) {
@@ -30,6 +35,13 @@ const Notification = () => {
         <h4 className="text-center text-2xl tracking-[3px]  font-[Poppins] text-white">
           Notification
         </h4>
+        {
+          notifications?.read ? (
+            <button onClick={handleReadAll} className="bg-blue-500 p-2 rounded-md text-white">Marked as read</button>
+          ) : (
+            <button className="bg-gray-300 p-2 rounded-md text-[#206059]">Readed</button>
+          )
+        }
       </div>
       <div className="container mx-auto">
 

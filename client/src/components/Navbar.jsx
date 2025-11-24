@@ -275,7 +275,7 @@ const Navbar = () => {
 
       {/* === Mobile Profile Menu === */}
       {activeMenu === "profile" && (
-        <div className="md:hidden flex flex-col bg-[#206059] mt-2 rounded-md p-3">
+        <div className="md:hidden container mx-auto z-999 flex flex-col bg-[#206059] mt-2 rounded-md p-3">
           <Link
             to={`/myprofile/${user?._id}`}
             onClick={() => setActiveMenu(null)}

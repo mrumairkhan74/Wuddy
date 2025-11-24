@@ -140,7 +140,13 @@ const userSchema = new mongoose.Schema({
     sentRequests: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    isLikedPost: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post'
+        }
+    ]
 
 }, { timestamps: true })
 

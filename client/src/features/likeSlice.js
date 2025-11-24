@@ -6,8 +6,8 @@ export const fetchLikes = createAsyncThunk(
   'likes/fetchLikes',
   async (postId, { rejectWithValue }) => {
     try {
-      const res = await likeAPI.getPostLikes(postId);
-      return res; // include postId with likes and count
+      const res = await likeAPI.getPostLikes(postId);  
+      return { postId, ...res }; 
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -41,7 +41,7 @@ export const unlikePosts = createAsyncThunk(
 const likeSlice = createSlice({
   name: 'likes',
   initialState: {
-    likes: {}, // store likes per post
+    likes: {}, // dynamic object: likes[postId] = {likes, count}
     loading: false,
     error: null
   },
@@ -55,20 +55,23 @@ const likeSlice = createSlice({
       .addCase(fetchLikes.fulfilled, (state, action) => {
         state.loading = false;
         const { postId, likes, count } = action.payload;
-        state.likesByPost[postId] = { likes, count };
+        state.likes[postId] = { likes, count };
       })
       .addCase(fetchLikes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(likePosts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.likes = action.payload;
 
+      // LIKE POST
+      .addCase(likePosts.fulfilled, (state, action) => {
+        const { postId, likes, count } = action.payload;
+        state.likes[postId] = { likes, count };
       })
+
+      // UNLIKE POST
       .addCase(unlikePosts.fulfilled, (state, action) => {
         const { postId, likes, count } = action.payload;
-        state.likesByPost[postId] = { likes, count };
+        state.likes[postId] = { likes, count };
       });
   }
 });

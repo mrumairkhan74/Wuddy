@@ -30,7 +30,13 @@ const createLike = async (req, res, next) => {
                 "has liked your post."
             );
         }
-
+        await UserModel.findByIdAndUpdate(userId, {
+            $addToSet: {
+                isLikedPost: postId
+            }
+        },
+            { new: true }
+        )
         return res.status(201).json({
             message: "Post liked successfully",
             like
@@ -52,7 +58,13 @@ const unlikePost = async (req, res, next) => {
         if (!like) {
             return res.status(404).json({ message: "Like not found" });
         }
-
+        await UserModel.findByIdAndDelete(userId, {
+            $pull: {
+                isLikedPost: postId
+            }
+        },
+            { new: true }
+        )
         res.status(200).json({ message: "Post unliked successfully" });
     } catch (error) {
         next(error);
@@ -64,7 +76,7 @@ const getLikesByPost = async (req, res, next) => {
     try {
         const { postId } = req.params;
 
-        const likes = await LikeModel.find({ post: postId }).populate('user', 'firstName lastName profileImg');
+        const likes = await LikeModel.find({ post: postId }).populate('user', 'firstName lastName profileImg ');
         res.status(200).json({ success: true, likes: likes, count: likes.length });
     } catch (error) {
         next(error);
