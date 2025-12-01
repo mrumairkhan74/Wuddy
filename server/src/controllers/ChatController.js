@@ -27,6 +27,7 @@ const createOrGetMessage = async (req, res, next) => {
                 members: [userId, receiverId],
                 isGroupChat: false
             });
+            chat = await chat.populate('members', 'firstName lastName username profileImg')
         }
 
         // result

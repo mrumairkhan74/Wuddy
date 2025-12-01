@@ -9,7 +9,7 @@ import { sendMessage, getMessagesByChat } from "../features/chatSlice";
 
 const Messages = ({ chatId }) => {
   const { user } = useSelector((state) => state.auth);
-  const { messages, groups } = useSelector((state) => state.chat);
+  const { messages, chat } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
 
   const [message, setMessage] = useState("");
@@ -26,10 +26,7 @@ const Messages = ({ chatId }) => {
 
     socketRef.current.on("newMessage", (msg) => {
       // Add received message to Redux manually
-      dispatch({
-        type: "chat/sendMessage/fulfilled",
-        payload: { message: msg },
-      });
+      dispatch(sendMessage(msg));
     });
 
     return () => {
@@ -58,7 +55,7 @@ const Messages = ({ chatId }) => {
     if (!message.trim()) return;
 
     const data = {
-      chatId,
+      chatId:currentChat._id,
       senderId: user._id,
       text: message,
     };
@@ -74,25 +71,37 @@ const Messages = ({ chatId }) => {
     setMessage("");
   };
 
-  const currentChatUser = groups.find((g) => g._id === chatId);
+
+
+
+  // chatId is friendId
+  const currentChat = chat; // this will be the 1-on-1 chat from createOrGetMessage
+  const currentChatUser = currentChat?.members?.find((m) => m._id !== user._id);
+
+  const oldMessage = async (chatId) => {
+    const res = await dispatch(getMessagesByChat(chatId));
+    console.lof(res.payload)
+  }
+
+
 
   return (
     <div className="w-full container mx-auto bg-[#206059]/20 min-h-screen rounded-lg relative">
+
       {currentChatUser && (
-        <div className="flex sticky items-center justify-between bg-white mt-2 h-20 p-5 shadow-md">
+        <div className="flex items-center justify-between bg-white mt-2 h-20 p-5 shadow-md">
           <div className="flex items-center gap-2">
             <img
-              src={currentChatUser.profileImg?.url || user.profileImg?.url}
+              src={currentChatUser.profileImg?.url || "/default-avatar.png"}
               className="w-12 h-12 object-cover rounded-full"
-              alt=""
+              alt={currentChatUser.firstName}
             />
             <div className="flex flex-col gap-1">
               <h5 className="text-xl text-[#206059] font-[Poppins] tracking-wide">
-                {currentChatUser.firstName || user.firstName}{" "}
-                {currentChatUser.lastName || user.lastName}
+                {currentChatUser.firstName} {currentChatUser.lastName}
               </h5>
               <p className="bg-green-800 rounded-full p-2 w-[80px] text-center text-[10px] text-white">
-                Active now
+                {currentChatUser.isOnline ? "Online" : "Offline"}
               </p>
             </div>
           </div>
@@ -103,6 +112,17 @@ const Messages = ({ chatId }) => {
         </div>
       )}
 
+
+      {
+        chatId && !currentChatUser && (
+          <div className="flex items-center justify-center h-20 bg-white mt-2 shadow-md">
+            <h5 className="text-xl text-[#206059] font-[Poppins] tracking-wide">
+              {oldMessage.messages}
+            </h5>
+          </div>
+        )
+      }
+
       {/* Messages */}
       <div className="flex flex-col overflow-y-auto h-[calc(100vh-180px)] p-3">
         {messages.map((msg, index) => {
@@ -110,9 +130,8 @@ const Messages = ({ chatId }) => {
           return (
             <div
               key={index}
-              className={`flex items-end gap-2 my-2 ${
-                isSender ? "justify-end" : "justify-start"
-              }`}
+              className={`flex items-end gap-2 my-2 ${isSender ? "justify-end" : "justify-start"
+                }`}
             >
               {!isSender && (
                 <img
@@ -122,11 +141,10 @@ const Messages = ({ chatId }) => {
                 />
               )}
               <div
-                className={`p-2 rounded-md max-w-[60%] ${
-                  isSender
-                    ? "bg-[#206059] text-white rounded-br-none"
-                    : "bg-white rounded-bl-none"
-                }`}
+                className={`p-2 rounded-md max-w-[60%] ${isSender
+                  ? "bg-[#206059] text-white rounded-br-none"
+                  : "bg-white rounded-bl-none"
+                  }`}
               >
                 <p>{msg.text}</p>
                 <p className="text-xs text-gray-400 text-right">

@@ -130,18 +130,18 @@ const loginUser = async (req, res, next) => {
 
         res.cookie("token", AccessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // true if on https
-            //sameSite: "lax", // important for frontend <-> backend on different domains
-            sameSite: "None", // important for frontend <-> backend on different domains
+            //secure: process.env.NODE_ENV === "production", // true if on https
+            sameSite: "lax", // important for frontend <-> backend on different domains
+            // sameSite: "None", // important for frontend <-> backend on different domains
 
             maxAge: 24 * 60 * 1000, // 15 minutes (or whatever your access token expiry is)
         });
 
         res.cookie("refreshToken", RefreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            //sameSite: "lax",
-            sameSite: "None",
+            //secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            //sameSite: "None",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
         return res.status(200).json({
@@ -299,14 +299,15 @@ const newAccessToken = async (req, res, next) => {
     try {
         const { userId } = req.user?._id;
 
-        if (!user) throw new NotFoundError("Invalid user")
+        if (!userId) throw new NotFoundError("Invalid user")
 
 
         const { AccessToken } = GenerateToken({ _id: userId })
         res.cookie('token', AccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true if on https
-            sameSite: "None", // important for frontend <-> backend on different domains
+            //sameSite: "None", // important for frontend <-> backend on different domains
+            sameSite: "lax", // important for frontend <-> backend on different domains
             maxAge: 15 * 60 * 1000, // 24 minutes (or whatever your access token expiry is)
         })
         return res.status(200).json({ success: true })

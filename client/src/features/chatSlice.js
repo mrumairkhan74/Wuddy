@@ -34,16 +34,25 @@ export const sendMessage = createAsyncThunk("chat/sendMessage", async (data, { r
     }
 })
 
+export const createOrGetMessage = createAsyncThunk("chat/1-on-1", async (receiverId, { rejectWithValue }) => {
+    try {
+        const res = await chatApi.createOrGet(receiverId)
+        return res
 
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data);
+    }
+})
 
 
 const chatSlice = createSlice({
     name: 'chat',
-    initialState: { groups: [], messages: [], currentChat: null, loading: false, error: null },
+    initialState: { groups: [], messages: [], chat: [], currentChat: null, loading: false, error: null },
     reducers: {
         setCurrentChat: (state, action) => {
             state.currentChat = action.payload,
-            state.messages = []
+                state.messages = []
         }
     },
     extraReducers: (builder) => {
@@ -83,6 +92,20 @@ const chatSlice = createSlice({
                     state.messages.push(action.payload.message)
             })
             .addCase(sendMessage.rejected, (state, action) => {
+                state.loading = false,
+                    state.error = action.payload?.error
+            })
+
+            // create a one-one chat
+            .addCase(createOrGetMessage.pending, (state) => {
+                state.loading = true,
+                    state.error = null
+            })
+            .addCase(createOrGetMessage.fulfilled, (state, action) => {
+                state.loading = false,
+                    state.chat = action.payload.chat
+            })
+            .addCase(createOrGetMessage.rejected, (state, action) => {
                 state.loading = false,
                     state.error = action.payload?.error
             })
