@@ -9,7 +9,8 @@ const { notifyUser } = require('../utils/NotificationService')
 const sendMessage = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const { chatId, text, img } = req.body
+        const { chatId } = req.params
+        const { text, img } = req.body
 
         if (!chatId || (!text && !img)) {
             throw new BadRequestError("Chat ID and message content Required")

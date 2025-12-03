@@ -1,11 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import * as chatApi from '../api/chatApi'
-import * as messageApi from '../api/messageApi'
 
-export const getGroupsByUser = createAsyncThunk("chat/getByUser", async (_, { rejectWithValue }) => {
+export const getChatsByUser = createAsyncThunk("chat/getByUser", async (_, { rejectWithValue }) => {
     try {
-        const res = await chatApi.getGroup()
+        const res = await chatApi.getChats()
         return res
     }
     catch (error) {
@@ -16,7 +15,7 @@ export const getGroupsByUser = createAsyncThunk("chat/getByUser", async (_, { re
 
 export const getMessagesByChat = createAsyncThunk("chat/getMessages", async (chatId, { rejectWithValue }) => {
     try {
-        const res = await messageApi.get(chatId)
+        const res = await chatApi.get(chatId)
         return res
     }
     catch (error) {
@@ -26,7 +25,7 @@ export const getMessagesByChat = createAsyncThunk("chat/getMessages", async (cha
 
 export const sendMessage = createAsyncThunk("chat/sendMessage", async (data, { rejectWithValue }) => {
     try {
-        const res = await messageApi.send(data)
+        const res = await chatApi.send(data)
         return res
     }
     catch (error) {
@@ -46,6 +45,16 @@ export const createOrGetMessage = createAsyncThunk("chat/1-on-1", async (receive
 })
 
 
+export const chatById = createAsyncThunk("chat/chatById", async (chatId, { rejectWithValue }) => {
+    try {
+        const res = await chatApi.getChatById(chatId)
+        return res
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState: { groups: [], messages: [], chat: [], currentChat: null, loading: false, error: null },
@@ -57,15 +66,18 @@ const chatSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getGroupsByUser.pending, (state) => {
+            .addCase(getChatsByUser.pending, (state) => {
                 state.loading = true,
                     state.error = null
             })
-            .addCase(getGroupsByUser.fulfilled, (state, action) => {
-                state.loading = false,
-                    state.groups = action.payload.chat || []
+            .addCase(getChatsByUser.fulfilled, (state, action) => {
+                state.loading = false;
+
+                state.groups = action.payload.chat?.groupChats || [];
+                state.chat = action.payload.chat?.privateChats || [];
             })
-            .addCase(getGroupsByUser.rejected, (state, action) => {
+
+            .addCase(getChatsByUser.rejected, (state, action) => {
                 state.loading = false,
                     state.error = action.payload?.error
             })
@@ -87,9 +99,8 @@ const chatSlice = createSlice({
                 state.loading = true,
                     state.error = null
             })
-            .addCase(sendMessage.fulfilled, (state, action) => {
-                state.loading = false,
-                    state.messages.push(action.payload.message)
+            .addCase(sendMessage.fulfilled, (state) => {
+                state.loading = false
             })
             .addCase(sendMessage.rejected, (state, action) => {
                 state.loading = false,
@@ -109,7 +120,25 @@ const chatSlice = createSlice({
                 state.loading = false,
                     state.error = action.payload?.error
             })
+
+            // chat by id
+            .addCase(chatById.pending, (state) => {
+                state.loading = true,
+                    state.error = null
+            })
+            .addCase(chatById.fulfilled, (state, action) => {
+                state.loading = false,
+                    state.currentChat = action.payload.chat
+            })
+            .addCase(chatById.rejected, (state, action) => {
+                state.loading = false,
+                    state.error = action.payload?.error
+            })
+
+
     }
+
+
 })
 
 export const { setCurrentChat } = chatSlice.actions

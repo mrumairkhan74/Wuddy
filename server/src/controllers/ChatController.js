@@ -218,27 +218,25 @@ const removeFromGroup = async (req, res, next) => {
     }
 }
 
-const getGroupsByUser = async (req, res, next) => {
+const getChatsOfUser = async (req, res, next) => {
     try {
         const userId = req.user?._id
-        const chat = await ChatModel.find({ members: userId, isGroupChat: true }).populate("members", 'firstName lastName username profileImg')
-            .populate({
-                path: 'lastMessage',
-                populate: {
-                    path: 'sender',
-                    select: 'firstName lastName username profileImg'
-                }
-            })
-            .sort({ updatedAt: -1 })
-            .lean()
-        const uniqueChats = chat.filter(
-            (v, i, a) => a.findIndex(t => t._id.toString() === v._id.toString()) === i
-        );
-        if (!uniqueChats.length) throw new NotFoundError("ChatGroup Not Found for this user")
+        const allChats = await ChatModel.find({ members: { $in: [userId] } }).populate('members', 'firstName lastName profileImg username')
+            .populate('groupAdmin', 'firstName lastName profileImg username')
+            .populate('latestMessage', 'text sender createdAt')
+
+        const privateChats = allChats.filter(c => !c.isGroupChat);
+        const groupChats = allChats.filter(c => c.isGroupChat);
+
+        // result
         return res.status(200).json({
             success: true,
-            chat: uniqueChats
+            chat: {
+                privateChats,
+                groupChats
+            }
         })
+
     }
     catch (error) {
         next(error)
@@ -260,6 +258,24 @@ const getGroups = async (req, res, next) => {
 }
 
 
+const getChatById = async (req, res, next) => {
+    try {
+        const { chatId } = req.params;
+        const chat = await ChatModel.findById(chatId)
+            .populate('members', 'firstName lastName profileImg username ')
+            
+        if (!chat) throw new NotFoundError("Chat Not Found")
+        return res.status(200).json({
+            success: true,
+            chat: chat
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     createOrGetMessage,
     createGroup,
@@ -267,5 +283,6 @@ module.exports = {
     addToGroup,
     removeFromGroup,
     getGroups,
-    getGroupsByUser
+    getChatsOfUser,
+    getChatById
 }
