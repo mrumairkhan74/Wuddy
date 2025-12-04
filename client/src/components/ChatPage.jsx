@@ -21,16 +21,16 @@ const ChatPage = () => {
     if (user?._id) dispatch(getChatsByUser());
   }, [dispatch, user]);
 
-  const handleOpenChat = (chatId) => {
+  const handleOpenChat = (chat) => {
     // Set selected chat in redux
-    dispatch(setCurrentChat(chatId));
+    dispatch(setCurrentChat(chat));
 
     // Fetch messages of this chat
-    dispatch(getMessagesByChat(chatId));
+    dispatch(getMessagesByChat(chat._id));
 
     // Mobile navigation
     if (window.innerWidth < 768) {
-      navigate(`/chat/message/${chatId}`);
+      navigate(`/chat/message/${chat._id}`);
     } else {
       setShowMessages(true);
     }
@@ -86,7 +86,7 @@ const ChatPage = () => {
 
       {/* Chats + Messages */}
       <div className="flex items-start justify-center gap-2 mt-3 flex-wrap md:flex-nowrap">
-        
+
         {/* Sidebar */}
         <div className="flex flex-col gap-2 shadow-md w-full md:w-[400px] overflow-y-auto p-2 rounded-md bg-white">
           {loading ? (
@@ -112,7 +112,7 @@ const ChatPage = () => {
                 <div
                   key={cht._id}
                   className="bg-gray-200 flex justify-between items-center rounded-md p-2 cursor-pointer hover:bg-gray-300 transition"
-                  onClick={() => handleOpenChat(cht._id)}
+                  onClick={() => handleOpenChat(cht)}
                 >
                   <div className="flex items-center gap-2">
                     <img
@@ -142,7 +142,11 @@ const ChatPage = () => {
 
         {/* Messages Area */}
         <div className={`hidden md:flex-1 md:block ${showMessages ? "block" : "hidden"}`}>
-          {currentChat && <Messages chatId={currentChat} />}
+          {currentChat ? (
+            <Messages chatId={currentChat._id} />
+          ) : (
+            <div className="p-5 text-gray-500">Select a chat to start messaging</div>
+          )}
         </div>
       </div>
     </div>

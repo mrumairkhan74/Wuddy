@@ -20,7 +20,7 @@ const sendMessage = async (req, res, next) => {
 
         if (!chat) throw new NotFoundError("Invalid Chat Id")
 
-        const isMember = chat.members.some(m => m._id.toString() === userId.toString());
+        const isMember = chat.members.some(m => m._id?.toString() === userId?.toString());
         if (!isMember) throw new UnAuthorizedError("you are not is this Group")
 
         const message = await MessageModel.create({
@@ -39,27 +39,27 @@ const sendMessage = async (req, res, next) => {
             { path: 'chatId', select: 'chatName members isGroupChat' },
         ])
 
-        if (chat.isGroupChat) {
-            const receivers = chat.members.filter(m => m._id.toString() !== userId.toString());
-            for (const receiver of receivers) {
-                await notifyUser(
-                    userId,
-                    receiver._id,
-                    'Group_Message',
-                    `${req.user.username || "Someone"} send a message in ${chat.chatName}`
-                );
-            }
-        } else {
-            const receiver = chat.members.find(m => m._id.toString() !== userId.toString())
-            if (receiver) {
-                await notifyUser(
-                    userId,
-                    receiver._id,
-                    'message',
-                    `${req.user.username} send you a new message`
-                );
-            }
-        }
+        // if (chat.isGroupChat) {
+        //     const receivers = chat.members.filter(m => m._id.toString() !== userId.toString());
+        //     for (const receiver of receivers) {
+        //         await notifyUser(
+        //             userId,
+        //             receiver._id,
+        //             'Group_Message',
+        //             `${req.user.username || "Someone"} send a message in ${chat.chatName}`
+        //         );
+        //     }
+        // } else {
+        //     const receiver = chat.members.find(m => m._id.toString() !== userId.toString())
+        //     if (receiver) {
+        //         await notifyUser(
+        //             userId,
+        //             receiver._id,
+        //             'message',
+        //             `${req.user.username} send you a new message`
+        //         );
+        //     }
+        // }
         return res.status(200).json({
             success: true,
             message: populatedMessage

@@ -12,11 +12,14 @@ import {
   chatById,
 } from "../features/chatSlice";
 
-const Messages = ({ chatId }) => {
+const Messages = ({ chatId: propChatId }) => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
   const { messages, currentChat } = useSelector((state) => state.chat);
+
+  // Use propChatId if passed, otherwise fallback to currentChat._id
+  const chatId = propChatId || currentChat?._id;
 
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -26,6 +29,8 @@ const Messages = ({ chatId }) => {
 
   // socket connection
   useEffect(() => {
+    if (!chatId) return;
+
     socketRef.current = io(import.meta.env.VITE_BACKEND_API, {
       withCredentials: true,
     });
@@ -46,7 +51,7 @@ const Messages = ({ chatId }) => {
     dispatch(chatById(chatId));
     dispatch(getMessagesByChat(chatId));
 
-    socketRef.current.emit("joinChat", chatId);
+    socketRef.current?.emit("joinChat", chatId);
   }, [chatId, dispatch]);
 
   // auto scroll
@@ -78,8 +83,7 @@ const Messages = ({ chatId }) => {
 
   // friend for header
   const friend =
-    currentChat?.members?.find((m) => m._id?.toString() !== user._id?.toString()) ||
-    null;
+    currentChat?.members?.find((m) => m._id !== user._id) || null;
 
   return (
     <div className="w-full container mx-auto bg-[#206059]/20 min-h-screen rounded-lg relative">
@@ -113,7 +117,7 @@ const Messages = ({ chatId }) => {
       {/* Messages */}
       <div className="flex flex-col overflow-y-auto h-[calc(100vh-180px)] p-3">
         {messages?.map((msg) => {
-          const isSender = msg.sender?._id.toString() === user._id.toString();
+          const isSender = msg.sender?._id === user._id;
 
           return (
             <div
@@ -129,9 +133,8 @@ const Messages = ({ chatId }) => {
               )}
 
               <div
-                className={`p-2 rounded-md max-w-[60%] ${
-                  isSender ? "bg-[#206059] text-white" : "bg-white"
-                }`}
+                className={`p-2 rounded-md max-w-[60%] ${isSender ? "bg-[#206059] text-white" : "bg-white"
+                  }`}
               >
                 <p>{msg.text}</p>
                 <p className="text-xs text-gray-500 text-right">

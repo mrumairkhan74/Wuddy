@@ -60,15 +60,15 @@ const chatSlice = createSlice({
     initialState: { groups: [], messages: [], chat: [], currentChat: null, loading: false, error: null },
     reducers: {
         setCurrentChat: (state, action) => {
-            state.currentChat = action.payload,
-                state.messages = []
+            state.currentChat = action.payload;
+            state.messages = []
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getChatsByUser.pending, (state) => {
-                state.loading = true,
-                    state.error = null
+                state.loading = true;
+                state.error = null
             })
             .addCase(getChatsByUser.fulfilled, (state, action) => {
                 state.loading = false;
@@ -78,61 +78,66 @@ const chatSlice = createSlice({
             })
 
             .addCase(getChatsByUser.rejected, (state, action) => {
-                state.loading = false,
-                    state.error = action.payload?.error
+                state.loading = false;
+                state.error = action.payload?.error
             })
             // messages
             .addCase(getMessagesByChat.pending, (state) => {
-                state.loading = true,
-                    state.error = null
+                state.loading = true;
+                state.error = null
             })
             .addCase(getMessagesByChat.fulfilled, (state, action) => {
-                state.loading = false,
-                    state.messages = action.payload.messages || []
+                state.loading = false;
+                state.messages = action.payload.messages || []
             })
             .addCase(getMessagesByChat.rejected, (state, action) => {
-                state.loading = false,
-                    state.error = action.payload?.error
+                state.loading = false;
+                state.error = action.payload?.error
             })
             // send message
             .addCase(sendMessage.pending, (state) => {
-                state.loading = true,
-                    state.error = null
+                state.loading = true;
+                state.error = null
             })
-            .addCase(sendMessage.fulfilled, (state) => {
-                state.loading = false
+            .addCase(sendMessage.fulfilled, (state, action) => {
+                state.loading = false;
+                if (action.payload?.message) {
+                    // Append the new message to messages
+                    state.messages = [...state.messages, action.payload.message];
+                }
             })
+
             .addCase(sendMessage.rejected, (state, action) => {
-                state.loading = false,
-                    state.error = action.payload?.error
+                state.loading = false;
+                state.error = action.payload?.error
             })
 
             // create a one-one chat
             .addCase(createOrGetMessage.pending, (state) => {
-                state.loading = true,
-                    state.error = null
+                state.loading = true;
+                state.error = null
             })
             .addCase(createOrGetMessage.fulfilled, (state, action) => {
-                state.loading = false,
-                    state.chat = action.payload.chat
+                state.loading = false;
+                state.chat = action.payload.chat
             })
             .addCase(createOrGetMessage.rejected, (state, action) => {
-                state.loading = false,
-                    state.error = action.payload?.error
+                state.loading = false;
+                state.error = action.payload?.error
             })
 
             // chat by id
             .addCase(chatById.pending, (state) => {
-                state.loading = true,
-                    state.error = null
+                state.loading = true;
+                state.error = null
             })
             .addCase(chatById.fulfilled, (state, action) => {
-                state.loading = false,
-                    state.currentChat = action.payload.chat
+                state.loading = false;
+                state.currentChat = action.payload.chat
             })
             .addCase(chatById.rejected, (state, action) => {
-                state.loading = false,
-                    state.error = action.payload?.error
+                state.loading = false;
+                state.error = action.payload?.error
             })
 
 
