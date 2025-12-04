@@ -10,6 +10,7 @@ import {
   sendMessage,
   getMessagesByChat,
   chatById,
+  addMessage
 } from "../features/chatSlice";
 
 const Messages = ({ chatId: propChatId }) => {
@@ -35,9 +36,10 @@ const Messages = ({ chatId: propChatId }) => {
       withCredentials: true,
     });
 
-    socketRef.current.on("newMessage", () => {
-      dispatch(getMessagesByChat(chatId));
+    socketRef.current.on("newMessage", (msg) => {
+      dispatch(addMessage(msg));
     });
+
 
     return () => {
       socketRef.current.disconnect();
