@@ -10,7 +10,8 @@ import {
   sendMessage,
   getMessagesByChat,
   chatById,
-  addMessage
+  addMessage,
+  updateChatPreview
 } from "../features/chatSlice";
 
 const Messages = ({ chatId: propChatId }) => {
@@ -36,9 +37,16 @@ const Messages = ({ chatId: propChatId }) => {
       withCredentials: true,
     });
 
-    socketRef.current.on("newMessage", (msg) => {
-      dispatch(addMessage(msg));
-    });
+  socketRef.current.on("newMessage", (msg) => {
+    // Update messages if the chat is open
+    if (msg.chatId === currentChat?._id) {
+        dispatch(addMessage(msg));
+    }
+
+    // Update chat preview in sidebar
+    dispatch(updateChatPreview({ chatId: msg.chatId, lastMessage: msg.text }));
+});
+
 
 
     return () => {

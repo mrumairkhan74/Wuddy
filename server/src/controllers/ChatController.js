@@ -224,6 +224,7 @@ const getChatsOfUser = async (req, res, next) => {
         const allChats = await ChatModel.find({ members: { $in: [userId] } }).populate('members', 'firstName lastName profileImg username')
             .populate('groupAdmin', 'firstName lastName profileImg username')
             .populate('latestMessage', 'text sender createdAt')
+            .sort({updatedAt: -1 })
 
         const privateChats = allChats.filter(c => !c.isGroupChat);
         const groupChats = allChats.filter(c => c.isGroupChat);

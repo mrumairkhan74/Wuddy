@@ -48,7 +48,7 @@ function socketHandler(io) {
     });
 
     io.on("connection", async (socket) => {
-        const userId = socket.user._id;
+        const userId = socket.user?._id;
         onlineUsers[userId] = socket.id;
 
         // Mark user as online
@@ -73,28 +73,34 @@ function socketHandler(io) {
         // Send message
         socket.on("sendMessage", async (data) => {
             try {
-                const { chatId, senderId, text } = data;
+                const { chatId, senderId, text, img } = data;
 
                 const fakeReq = {
-                    body: { chatId, text },
+                    params: { chatId },
+                    body: { text, img }, // include img if sending images
                     user: { _id: senderId }
                 };
 
                 const fakeRes = {
                     status: () => ({
-                        json: (d) => d
+                        json: (d) => d // return full object
                     })
                 };
 
                 const result = await sendMessage(fakeReq, fakeRes, () => { });
 
-                // Emit new message to chat room
-                io.to(chatId).emit("newMessage", result.message || result);
+                if (result?.message) {
+                    // Emit only the message object to the room
+                    io.to(chatId).emit("newMessage", result.message);
+                } else {
+                    console.error("sendMessage did not return a message:", result);
+                }
 
             } catch (err) {
                 console.error("sendMessage error:", err);
             }
         });
+
 
         // Handle disconnect
         socket.on("disconnect", async () => {

@@ -123,7 +123,7 @@ const ChatPage = () => {
                     <div className="flex flex-col">
                       <h5 className="font-bold text-lg">{name}</h5>
                       <p className="text-sm text-gray-600">
-                        {lm?.sender?.firstName || ""}: {lm?.text || ""}
+                         {lm?.text || ""}
                       </p>
                     </div>
                   </div>

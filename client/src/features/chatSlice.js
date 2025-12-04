@@ -66,6 +66,18 @@ const chatSlice = createSlice({
         // NEW reducer
         addMessage: (state, action) => {
             state.messages.push(action.payload);
+        },
+        // update chat preview
+        updateChatPreview: (state, action) => {
+            const { chatId, lastMessage } = action.payload;
+
+            const chat = state.chat?.find(c => c._id === chatId) ||
+                state.groups?.find(c => c._id === chatId);
+
+            if (chat) {
+                chat.lastMessage = lastMessage;
+                chat.updatedAt = new Date().toISOString(); // optional, for sorting
+            }
         }
     },
     extraReducers: (builder) => {
@@ -150,6 +162,6 @@ const chatSlice = createSlice({
 
 })
 
-export const { setCurrentChat, addMessage } = chatSlice.actions;
+export const { setCurrentChat, addMessage, updateChatPreview } = chatSlice.actions;
 
 export default chatSlice.reducer

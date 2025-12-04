@@ -30,7 +30,7 @@ const sendMessage = async (req, res, next) => {
             img
         })
 
-        chat.lastMessage = message._id
+        chat.latestMessage = message._id
         await chat.save();
 
 

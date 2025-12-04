@@ -106,9 +106,8 @@ const userSchema = new mongoose.Schema({
         default: 'single'
     },
     activeStatus: {
-        type: String,
-        enum: ['online', 'offline'],
-        default: 'offline'
+        type: Boolean,
+        default: false
     },
     // all this user created Details
     tasks: [
