@@ -20,7 +20,6 @@ const Messages = ({ chatId: propChatId }) => {
   const { user } = useSelector((state) => state.auth);
   const { messages, currentChat } = useSelector((state) => state.chat);
 
-  // Use propChatId if passed, otherwise fallback to currentChat._id
   const chatId = propChatId || currentChat?._id;
 
   const [message, setMessage] = useState("");
@@ -37,34 +36,34 @@ const Messages = ({ chatId: propChatId }) => {
       withCredentials: true,
     });
 
-  socketRef.current.on("newMessage", (msg) => {
-    // Update messages if the chat is open
-    if (msg.chatId === currentChat?._id) {
+    socketRef.current.emit("joinChat", chatId);
+
+    socketRef.current.on("newMessage", (msg) => {
+      // If the message is for the active chat, add instantly
+      if (msg.chatId === currentChat?._id) {
         dispatch(addMessage(msg));
-    }
+      }
 
-    // Update chat preview in sidebar
-    dispatch(updateChatPreview({ chatId: msg.chatId, lastMessage: msg.text }));
-});
+      // Update chat preview
+      dispatch(
+        updateChatPreview({
+          chatId: msg.chatId,
+          lastMessage: msg.text,
+        })
+      );
+    });
 
-
-
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [dispatch, chatId]);
-
-  // load chat details + old messages
-  useEffect(() => {
-    if (!chatId) return;
-
-    dispatch(chatById(chatId));
-    dispatch(getMessagesByChat(chatId));
-
-    socketRef.current?.emit("joinChat", chatId);
+    return () => socketRef.current.disconnect();
   }, [chatId, dispatch]);
 
-  // auto scroll
+  // load chat details and history
+  useEffect(() => {
+    if (!chatId) return;
+    dispatch(chatById(chatId));
+    dispatch(getMessagesByChat(chatId));
+  }, [chatId, dispatch]);
+
+  // auto scroll on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -76,22 +75,33 @@ const Messages = ({ chatId: propChatId }) => {
   const handleSend = async () => {
     if (!message.trim()) return;
 
-    const data = {
+    // create instant local message (temporary)
+    const tempMsg = {
+      _id: Date.now(),
+      chatId,
+      sender: user,
+      text: message,
+      createdAt: new Date().toISOString(),
+    };
+
+    // show instantly like WhatsApp
+    dispatch(addMessage(tempMsg));
+
+    // send to socket instantly
+    socketRef.current.emit("sendMessage", tempMsg);
+
+    const finalData = {
       chatId,
       senderId: user._id,
       text: message,
     };
 
-    const res = await dispatch(sendMessage(data));
-
-    if (res.payload?.message) {
-      socketRef.current.emit("sendMessage", res.payload.message);
-    }
+    // backend save
+    dispatch(sendMessage(finalData));
 
     setMessage("");
   };
 
-  // friend for header
   const friend =
     currentChat?.members?.find((m) => m._id !== user._id) || null;
 
@@ -143,8 +153,9 @@ const Messages = ({ chatId: propChatId }) => {
               )}
 
               <div
-                className={`p-2 rounded-md max-w-[60%] ${isSender ? "bg-[#206059] text-white" : "bg-white"
-                  }`}
+                className={`p-2 rounded-md max-w-[60%] ${
+                  isSender ? "bg-[#206059] text-white" : "bg-white"
+                }`}
               >
                 <p>{msg.text}</p>
                 <p className="text-xs text-gray-500 text-right">
@@ -166,7 +177,7 @@ const Messages = ({ chatId: propChatId }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* message input */}
+      {/* Input */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[90%] bg-white p-2 rounded-md shadow-md flex items-center gap-3">
         <FaSmile
           className="text-2xl text-[#206059] cursor-pointer"
