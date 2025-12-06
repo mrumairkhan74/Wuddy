@@ -79,7 +79,12 @@ const Messages = ({ chatId: propChatId }) => {
     const tempMsg = {
       _id: Date.now(),
       chatId,
-      sender: user,
+      sender: {
+        _id: user._id,
+        profileImg: user.profileImg,
+        firstName: user.firstName,
+        lastName: user.lastName
+      },
       text: message,
       createdAt: new Date().toISOString(),
     };
@@ -88,7 +93,11 @@ const Messages = ({ chatId: propChatId }) => {
     dispatch(addMessage(tempMsg));
 
     // send to socket instantly
-    socketRef.current.emit("sendMessage", tempMsg);
+    socketRef.current.emit("sendMessage", {
+      chatId,
+      senderId: user._id,
+      text: message,
+    });
 
     const finalData = {
       chatId,
@@ -153,9 +162,8 @@ const Messages = ({ chatId: propChatId }) => {
               )}
 
               <div
-                className={`p-2 rounded-md max-w-[60%] ${
-                  isSender ? "bg-[#206059] text-white" : "bg-white"
-                }`}
+                className={`p-2 rounded-md max-w-[60%] ${isSender ? "bg-[#206059] text-white" : "bg-white"
+                  }`}
               >
                 <p>{msg.text}</p>
                 <p className="text-xs text-gray-500 text-right">
