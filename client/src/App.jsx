@@ -3,6 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence } from "framer-motion";
 
+// socket id
+import { socket } from "./socket";
+import { updateUserStatus } from "./features/authSlice"; // create this reducer
+
+
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Auth/Login";
@@ -29,6 +35,15 @@ const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    socket.on("userStatusChanged", ({ userId, activeStatus }) => {
+      console.log("STATUS EVENT:", userId, activeStatus);
+      dispatch(updateUserStatus({ userId, activeStatus }));
+    });
+
+    return () => socket.off("userStatusChanged");
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(GetMe());
