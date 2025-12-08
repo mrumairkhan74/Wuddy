@@ -2,6 +2,19 @@ import axios from 'axios'
 
 const apiUrl = import.meta.env.VITE_BACKEND_API
 
+
+const safeRequest = async (fn) => {
+    try {
+        return await fn();
+    } catch (err) {
+        if (import.meta.env.MODE === "development") {
+            console.error(err);
+        }
+        return { error: true };
+    }
+};
+
+
 // signupApi
 
 export const signUp = async (userData) => {
@@ -58,6 +71,9 @@ export const getAll = async () => {
 }
 
 export const refreshAccessToken = async () => {
-    const res = await axios.post(`${apiUrl}/api/user/refresh`, {}, { withCredentials: true })
-    return res.data
-}
+  return await safeRequest(async () => {
+    const res = await axios.post(`${apiUrl}/api/user/refresh`, {}, { withCredentials: true });
+    return res.data;
+  });
+};
+
