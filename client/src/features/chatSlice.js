@@ -55,13 +55,24 @@ export const chatById = createAsyncThunk("chat/chatById", async (chatId, { rejec
     }
 })
 
+// createGroup
+export const newGroup = createAsyncThunk("chat/group/create", async (groupData, { rejectWithValue }) => {
+    try {
+        const res = await chatApi.createGroup(groupData)
+        return res;
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
+
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState: { groups: [], messages: [], chat: [], currentChat: null, loading: false, error: null },
     reducers: {
         setCurrentChat: (state, action) => {
             state.currentChat = action.payload;
-            state.messages = []
         },
         // NEW reducer
         addMessage: (state, action) => {
@@ -75,7 +86,10 @@ const chatSlice = createSlice({
                 state.groups?.find(c => c._id === chatId);
 
             if (chat) {
-                chat.lastMessage = lastMessage;
+                chat.lastMessage = {
+                    text: lastMessage,
+                    createdAt: new Date().toISOString()
+                };
                 chat.updatedAt = new Date().toISOString(); // optional, for sorting
             }
         }
@@ -115,12 +129,9 @@ const chatSlice = createSlice({
                 state.loading = true;
                 state.error = null
             })
-            .addCase(sendMessage.fulfilled, (state, action) => {
+            .addCase(sendMessage.fulfilled, (state) => {
                 state.loading = false;
-                if (action.payload?.message) {
-                    // Append the new message to messages
-                    state.messages = [...state.messages, action.payload.message];
-                }
+
             })
 
             .addCase(sendMessage.rejected, (state, action) => {
@@ -156,6 +167,19 @@ const chatSlice = createSlice({
                 state.error = action.payload?.error
             })
 
+            // createGroups
+            .addCase(newGroup.pending, (state) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(newGroup.fulfilled, (state, action) => {
+                state.loading = false;
+                state.groups = action.payload.groups
+            })
+            .addCase(newGroup.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error
+            })
 
     }
 
