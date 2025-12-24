@@ -29,6 +29,8 @@ const chatSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+chatSchema.index({ members: 1, isGroupChat: 1 }, { unique: true, partialFilterExpression: { isGroupChat: false } });
+
 const ChatModel = mongoose.model('Chat', chatSchema)
 
 module.exports = ChatModel

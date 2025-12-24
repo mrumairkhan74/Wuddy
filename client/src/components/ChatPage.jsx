@@ -3,7 +3,7 @@ import { IoSearch } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import { GetFriends } from "../features/friendSlice";
 import Messages from "../components/Messages";
 import {
   getChatsByUser,
@@ -17,16 +17,20 @@ const ChatPage = () => {
 
   const [search, setSearch] = useState(false);
   const [groupModal, setGroupModal] = useState(false);
-  const [chatName, setChatName] = useState("");
+  const [form, setForm] = useState({
+    chatName: "",
+    members: []
+  });
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const { user } = useSelector((state) => state.auth);
   const { chat, groups, loading, currentChat } = useSelector((state) => state.chat);
-  const { friend } = useSelector((state) => state.friend);
+  const { friends } = useSelector((state) => state.friend);
 
   useEffect(() => {
     if (user?._id) {
       dispatch(getChatsByUser());
+      dispatch(GetFriends());
     }
   }, [dispatch, user]);
 
@@ -46,20 +50,22 @@ const ChatPage = () => {
     );
   };
 
-  const createGroupHandler = async () => {
-    if (!chatName.trim() || selectedUsers.length < 2) return;
+  const createGroup = async () => {
+    if (!form.chatName.trim()) return;
+    if (selectedUsers.length < 1) return;
 
     await dispatch(
       newGroup({
-        chatName,
+        chatName: form.chatName,
         members: selectedUsers
       })
     );
 
-    setChatName("");
-    setSelectedUsers([]);
     setGroupModal(false);
+    setSelectedUsers([]);
+    setForm({ chatName: "", members: [] });
   };
+
 
   const allChats = useMemo(
     () => [...(chat || []), ...(groups || [])],
@@ -102,31 +108,32 @@ const ChatPage = () => {
 
             <input
               type="text"
-              value={chatName}
-              onChange={(e) => setChatName(e.target.value)}
+              value={form.chatName}
+              onChange={(e) => setForm({ ...form, chatName: e.target.value })}
               placeholder="Group name"
               className="w-full border p-2 rounded-md mb-3"
             />
 
-            <div className="max-h-[200px] overflow-y-auto mb-3">
-              {friend?.map((f) => (
+            <div className="max-h-[200px] overflow-y-auto mb-3 space-y-2">
+              {friends?.map((f) => (
                 <div
                   key={f._id}
                   onClick={() => toggleUser(f._id)}
-                  className={`flex items-center gap-2 p-2 rounded cursor-pointer ${
-                    selectedUsers.includes(f._id)
-                      ? "bg-[#206059] text-white"
-                      : "bg-gray-100"
-                  }`}
+                  className={`flex items-center gap-2 p-2 rounded cursor-pointer ${selectedUsers.includes(f._id)
+                    ? "bg-[#206059] text-white"
+                    : "bg-gray-100"
+                    }`}
                 >
                   <img
                     src={f.profileImg?.url || "/default-avatar.png"}
                     className="w-8 h-8 rounded-full"
+                    alt=""
                   />
                   <span>{f.firstName} {f.lastName}</span>
                 </div>
               ))}
             </div>
+
 
             <div className="flex gap-2">
               <button
@@ -136,7 +143,7 @@ const ChatPage = () => {
                 Cancel
               </button>
               <button
-                onClick={createGroupHandler}
+                onClick={createGroup}
                 className="w-1/2 bg-[#206059] text-white p-2 rounded"
               >
                 Create
@@ -166,13 +173,26 @@ const ChatPage = () => {
                 <div
                   key={cht._id}
                   onClick={() => handleOpenChat(cht)}
-                  className="flex justify-between items-center p-2 rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                  className="flex justify-between items-center p-2 m-2 rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
                 >
                   <div>
-                    <p className="font-bold">{name}</p>
-                    <p className="text-sm text-gray-600">
-                      {cht.latestMessage?.text || ""}
-                    </p>
+                    <div className="flex gap-2 items-center">
+                      <img src={
+                        cht.isGroupChat
+                          ? "/group-icon.png"
+                          : friendUser?.profileImg?.url || "/default-avatar.png"
+                      }
+                        alt=""
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <div className="flex flex-col m-2">
+                        <p className="font-bold">{name}</p>
+                        <p className="text-sm text-gray-600">
+                          {cht.latestMessage?.text || ""}
+                        </p>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               );
@@ -183,7 +203,7 @@ const ChatPage = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 md:hidden">
+        <div className="hidden md:flex-1 md:inline-block">
           {currentChat ? (
             <Messages chatId={currentChat._id} />
           ) : (

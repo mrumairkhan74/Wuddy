@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const MessageProfile = () => {
-    const { user } = useSelector((state) => state.auth);
+    const { user } = useSelector(state => state.auth);
+    const { currentChat } = useSelector(state => state.chat);
     const [activeTab, setActiveTab] = useState("images");
 
-    // Example placeholder data (replace with actual user data later)
+    // Example placeholder media (replace with real chat media later)
     const images = [
         "https://source.unsplash.com/random/200x200?sig=1",
         "https://source.unsplash.com/random/200x200?sig=2",
@@ -26,25 +27,55 @@ const MessageProfile = () => {
         { name: "Notes.txt", type: "Text File" }
     ];
 
+    // Determine profile data (group or private)
+    const isGroupChat = currentChat?.isGroupChat;
+
+    const profileData = isGroupChat
+        ? {
+            name: currentChat?.chatName,
+            image: currentChat?.groupProfile?.url || "/group-avatar.png",
+            subtitle: `${currentChat?.members?.length || 0} members`
+        }
+        : (() => {
+            const friend = currentChat?.members?.find(
+                m => m._id !== user._id
+            );
+
+            return friend
+                ? {
+                    name: `${friend.firstName} ${friend.lastName}`,
+                    image: friend.profileImg?.url || "/default-avatar.png",
+                    subtitle: friend.isOnline ? "Online" : "Offline",
+                    userId: friend._id
+                }
+                : null;
+        })();
+
+    if (!currentChat) return null;
+
     return (
         <div className="flex flex-col items-center w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mt-5">
             {/* Profile Section */}
             <div className="flex flex-col items-center justify-center w-full p-6 bg-[#f9fafa]">
                 <img
-                    src={user?.profileImg?.url || "https://via.placeholder.com/120"}
-                    alt="User profile"
+                    src={profileData?.image || "https://via.placeholder.com/120"}
+                    alt="Chat profile"
                     className="w-32 h-32 rounded-full object-cover shadow-md border border-gray-200"
                 />
                 <h2 className="text-2xl font-semibold mt-3 text-gray-700">
-                    {user?.firstName} {user?.lastName}
+                    {profileData?.name}
                 </h2>
                 <p className="text-gray-500 text-sm mb-4">
-                    @{user?.username || "@username"}
+                    {profileData?.subtitle}
                 </p>
 
-                {/* Icons */}
+                {/* Action Icons */}
                 <div className="flex justify-center items-center gap-5 mt-2">
-                    <Link to={`/myProfile/${user?._id}`}><IoPerson className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" /></Link>
+                    {!isGroupChat && (
+                        <Link to={`/myProfile/${profileData?.userId}`}>
+                            <IoPerson className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
+                        </Link>
+                    )}
                     <IoCall className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
                     <IoVideocam className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
                     <BsThreeDots className="text-3xl text-[#206059] hover:text-[#1b4e47] cursor-pointer transition-transform hover:scale-110" />
@@ -66,7 +97,7 @@ const MessageProfile = () => {
                         className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "images"
                             ? "bg-[#206059] text-white"
                             : "text-gray-600 hover:bg-gray-100"
-                            }`}
+                        }`}
                     >
                         Images
                     </button>
@@ -75,7 +106,7 @@ const MessageProfile = () => {
                         className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "videos"
                             ? "bg-[#206059] text-white"
                             : "text-gray-600 hover:bg-gray-100"
-                            }`}
+                        }`}
                     >
                         Videos
                     </button>
@@ -84,7 +115,7 @@ const MessageProfile = () => {
                         className={`text-lg font-medium px-4 py-2 rounded-md transition ${activeTab === "others"
                             ? "bg-[#206059] text-white"
                             : "text-gray-600 hover:bg-gray-100"
-                            }`}
+                        }`}
                     >
                         Others
                     </button>
@@ -98,7 +129,7 @@ const MessageProfile = () => {
                                 <img
                                     key={i}
                                     src={src}
-                                    alt="User media"
+                                    alt="Chat media"
                                     className="w-full h-24 object-cover rounded-lg shadow-sm cursor-pointer hover:opacity-90 transition"
                                 />
                             ))}

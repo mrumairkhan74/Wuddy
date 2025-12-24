@@ -12,6 +12,11 @@ const createOrGetMessage = async (req, res, next) => {
 
         const userId = req.user?._id
 
+        if (!receiverId) throw new BadRequestError("ReceiverId is required")
+
+        if (!receiverId.toString() === userId.toString()) {
+            throw new BadRequestError("You cannot create chat with yourself")
+        }
         // find chat through chat id and is group or not
         let chat = await ChatModel.findOne({
             isGroupChat: false,
@@ -21,6 +26,8 @@ const createOrGetMessage = async (req, res, next) => {
         })
             .populate('members', 'firstName lastName username profileImg')
 
+
+
         // if not then create new
         if (!chat) {
             chat = await ChatModel.create({
@@ -29,6 +36,7 @@ const createOrGetMessage = async (req, res, next) => {
             });
             chat = await chat.populate('members', 'firstName lastName username profileImg')
         }
+
 
         // result
         return res.status(200).json({
@@ -45,60 +53,67 @@ const createOrGetMessage = async (req, res, next) => {
 // create group
 const createGroup = async (req, res, next) => {
     try {
-        let { chatName, members } = req.body
+        let { chatName, members } = req.body;
         const userId = req.user?._id;
 
         if (typeof members === "string") {
-            members = JSON.parse(members)
+            members = JSON.parse(members);
         }
-        //    checking input fields
-        if (!chatName || !members || !Array.isArray(members) || members.length + 1 < 2) {
-            throw new BadRequestError('At Least 2 members request to create a group')
-        }
-        const allMembers = [...members, userId]
-        const cloudinaryResult = await uploadGroupImgToCloudinary(req.file.buffer)
 
-        // create group
+        if (!chatName || !Array.isArray(members) || members.length < 1) {
+            throw new BadRequestError(
+                "At least 2 members are required to create a group"
+            );
+        }
+
+        const allMembers = [...new Set([...members, userId.toString()])];
+
+        let groupProfile = {};
+        if (req.file) {
+            const cloudinaryResult = await uploadGroupImgToCloudinary(req.file.buffer);
+            groupProfile = {
+                url: cloudinaryResult.secure_url,
+                public_id: cloudinaryResult.public_id
+            };
+        }
+
         const groupChat = await ChatModel.create({
             chatName,
             members: allMembers,
-            groupProfile: {
-                url: cloudinaryResult.secure_url,
-                public_id: cloudinaryResult.public_id
-            },
+            groupProfile,
             isGroupChat: true,
             groupAdmin: userId
-        })
+        });
 
         await UserModel.updateMany(
             { _id: { $in: allMembers } },
-            { $push: { groups: groupChat._id } },
-            { new: true }
-        )
+            { $push: { groups: groupChat._id } }
+        );
+
         for (const memberId of members) {
-            await notifyUser(
+            notifyUser(
                 userId,
                 memberId,
                 "Group_Added",
-                `You have been Added in ${groupChat.chatName}`
-            )
+                `You have been added to ${groupChat.chatName}`
+            ).catch(() => { });
         }
-        // check all members in group
-        const populatedGroup = await groupChat.populate([
-            { path: 'members', select: 'firstName lastName username profileImg' },
-            { path: 'groupAdmin', select: 'firstName lastName username profileImg' }
-        ])
 
-        // result
+        const populatedGroup = await groupChat.populate([
+            { path: "members", select: "firstName lastName username profileImg" },
+            { path: "groupAdmin", select: "firstName lastName username profileImg" }
+        ]);
+
         return res.status(200).json({
             success: true,
             populatedGroup
-        })
+        });
+
+    } catch (error) {
+        next(error);
     }
-    catch (error) {
-        next(error)
-    }
-}
+};
+
 // rename group
 const renameGroup = async (req, res, next) => {
     try {
@@ -224,7 +239,7 @@ const getChatsOfUser = async (req, res, next) => {
         const allChats = await ChatModel.find({ members: { $in: [userId] } }).populate('members', 'firstName lastName profileImg username')
             .populate('groupAdmin', 'firstName lastName profileImg username')
             .populate('latestMessage', 'text sender createdAt')
-            .sort({updatedAt: -1 })
+            .sort({ updatedAt: -1 })
 
         const privateChats = allChats.filter(c => !c.isGroupChat);
         const groupChats = allChats.filter(c => c.isGroupChat);
@@ -264,7 +279,7 @@ const getChatById = async (req, res, next) => {
         const { chatId } = req.params;
         const chat = await ChatModel.findById(chatId)
             .populate('members', 'firstName lastName profileImg username ')
-            
+
         if (!chat) throw new NotFoundError("Chat Not Found")
         return res.status(200).json({
             success: true,
