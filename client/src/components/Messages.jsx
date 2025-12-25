@@ -101,6 +101,7 @@ const Messages = ({ chatId: propChatId }) => {
     };
 
     dispatch(sendMessage(msgData));
+    dispatch(getMessagesByChat(chatId))
     socket.emit("sendMessage", msgData);
     setMessage("");
   };
