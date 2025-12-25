@@ -1,6 +1,6 @@
 const ChatModel = require('../models/ChatModel');
 const UserModel = require('../models/UserModel');
-const { sendMessage } = require('../controllers/MessageController');
+const { createMessage } = require('../services/createMessageService');
 const jwt = require("jsonwebtoken");
 
 // -----------------------------------------
@@ -22,7 +22,7 @@ function getCookie(name, cookieString) {
 function verifySocketToken(token) {
     try {
         return jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
-    } catch (err) {
+    } catch {
         return null;
     }
 }
@@ -31,9 +31,7 @@ function verifySocketToken(token) {
 // Main Socket.io handler
 // -----------------------------------------
 function socketHandler(io) {
-    const onlineUsers = {}; // { userId: socketId }
 
-    // Authentication middleware
     io.use((socket, next) => {
         const cookieHeader = socket.handshake.headers.cookie;
         const token = getCookie("token", cookieHeader);
@@ -43,72 +41,49 @@ function socketHandler(io) {
         const decoded = verifySocketToken(token);
         if (!decoded) return next(new Error("Unauthorized"));
 
-        socket.user = decoded; // contains _id
+        socket.user = decoded; // {_id}
         next();
     });
 
     io.on("connection", async (socket) => {
-        const userId = socket.user?._id;
-        onlineUsers[userId] = socket.id;
+        const userId = socket.user._id;
+        // console.log(`User connected: ${userId}`);
 
-        // Mark user as online
         await UserModel.findByIdAndUpdate(userId, { activeStatus: true });
-
-        console.log("User connected:", userId);
         io.emit("userStatusChanged", { userId, activeStatus: true });
 
-        // Join user room
+        // personal room
         socket.join(userId);
 
-        // Join specific chat room
         socket.on("joinChat", (chatId) => {
+            // console.log("Joined chat:", chatId, "user:", userId);
             socket.join(chatId);
         });
 
-        // Join multiple group chat rooms
         socket.on("joinGroup", (groupIds) => {
             groupIds.forEach(id => socket.join(id));
         });
 
-        // Send message
-        socket.on("sendMessage", async (data) => {
+        // ✅ FIXED SEND MESSAGE
+        socket.on("sendMessage", async ({ chatId, text, img }) => {
             try {
-                const { chatId, senderId, text, img } = data;
-
-                const fakeReq = {
-                    params: { chatId },
-                    body: { text, img }, // include img if sending images
-                    user: { _id: senderId }
-                };
-
-                const fakeRes = {
-                    status: () => ({
-                        json: (d) => d // return full object
-                    })
-                };
-
-                const result = await sendMessage(fakeReq, fakeRes, () => { });
-
-                if (result?.message) {
-                    // Emit only the message object to the room
-                    io.to(chatId).emit("newMessage", result.message);
-                } else {
-                    console.error("sendMessage did not return a message:", result);
-                }
+                const message = await createMessage({
+                    chatId,
+                    userId,
+                    text,
+                    img
+                });
+                // console.log("Message received:", text, "from", userId);
+                io.to(chatId).emit("newMessage", message);
 
             } catch (err) {
-                console.error("sendMessage error:", err);
+                console.error("Socket sendMessage error:", err.message);
             }
         });
 
-
-        // Handle disconnect
         socket.on("disconnect", async () => {
-            delete onlineUsers[userId];
             await UserModel.findByIdAndUpdate(userId, { activeStatus: false });
-
             io.emit("userStatusChanged", { userId, activeStatus: false });
-            console.log("User disconnected:", userId);
         });
     });
 }

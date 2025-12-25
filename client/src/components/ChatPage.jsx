@@ -187,8 +187,7 @@ const ChatPage = () => {
                       />
                       <div className="flex flex-col m-2">
                         <p className="font-bold">{name}</p>
-                        <p className="text-sm text-gray-600">
-                          {cht.latestMessage?.text || ""}
+                        <p className="text-sm text-gray-600">{cht.latestMessage?.text || ""}
                         </p>
                       </div>
                     </div>
