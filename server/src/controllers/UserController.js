@@ -243,17 +243,17 @@ const logout = async (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "None",
             //sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
             path: "/", // must match login
         });
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "None",
             //sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
             path: "/", // must match login
         });
 

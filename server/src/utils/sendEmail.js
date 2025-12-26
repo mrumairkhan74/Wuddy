@@ -18,7 +18,7 @@ transporter.verify(function (error, success) {
     if (error) {
         console.error('Email config error', error);
     } else {
-        console.log("Email Server Ready to take Message");
+        console.log("Email Server Ready to take Message",success);
     }
 });
 

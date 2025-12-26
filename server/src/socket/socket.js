@@ -47,7 +47,7 @@ function socketHandler(io) {
 
     io.on("connection", async (socket) => {
         const userId = socket.user._id;
-        console.log(`User connected: ${userId}`);
+        // console.log(`User connected: ${userId}`);
 
         await UserModel.findByIdAndUpdate(userId, { activeStatus: true });
         io.emit("userStatusChanged", { userId, activeStatus: true });
@@ -56,7 +56,7 @@ function socketHandler(io) {
         socket.join(userId);
 
         socket.on("joinChat", (chatId) => {
-            console.log("Joined chat:", chatId, "user:", userId);
+            // console.log("Joined chat:", chatId, "user:", userId);
             socket.join(chatId);
         });
 
@@ -73,7 +73,7 @@ function socketHandler(io) {
                     text,
                     img
                 });
-                console.log("Message received:", text, "from", userId);
+                // console.log("Message received:", text, "from", userId);
                 io.to(chatId).emit("newMessage", message);
 
             } catch (err) {

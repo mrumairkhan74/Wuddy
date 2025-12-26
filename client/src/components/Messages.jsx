@@ -47,7 +47,7 @@ const Messages = ({ chatId: propChatId }) => {
     socket.emit("joinChat", chatId);
 
     const handleNewMessage = (msg) => {
-      // console.log("New message received:", msg);
+      console.log("New message received:", msg);
       // Only add messages for this chat
       if (msg.chatId._id === chatId) {
         dispatch(addMessage(msg));
