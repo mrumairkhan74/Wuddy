@@ -2,7 +2,7 @@ const express = require('express')
 
 
 //chat controllers
-const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup, getGroups, getChatsOfUser, getChatById } = require('../controllers/ChatController')
+const { createGroup, createOrGetMessage, addToGroup, removeFromGroup, renameGroup, getGroups, getChatsOfUser, getChatById, updateGroupProfile } = require('../controllers/ChatController')
 
 // messages
 
@@ -37,6 +37,9 @@ router.put('/:chatId/rename-group', verifyAccessToken, renameGroup)
 
 // remove member
 router.delete('/:chatId/remove-member/:memberId', verifyAccessToken, removeFromGroup)
+
+// group Profile Update 
+router.put('/:chatId/update-group-profile', upload.single("groupProfile"), verifyAccessToken, updateGroupProfile);
 
 
 // all messages

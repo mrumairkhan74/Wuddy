@@ -179,7 +179,7 @@ const ChatPage = () => {
                     <div className="flex gap-2 items-center">
                       <img src={
                         cht.isGroupChat
-                          ? "/group-icon.png"
+                          ? cht.groupProfile?.url || "/group-avatar.png"
                           : friendUser?.profileImg?.url || "/default-avatar.png"
                       }
                         alt=""

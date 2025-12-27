@@ -292,6 +292,49 @@ const getChatById = async (req, res, next) => {
 }
 
 
+const updateGroupProfile = async (req, res, next) => {
+    try {
+        const { chatId } = req.params;
+        const userId = req.user?._id;
+
+        const chat = await ChatModel.findById(chatId);
+        if (!chat) throw new NotFoundError("Chat Not Found");
+        if (chat.groupAdmin.toString() !== userId.toString()) {
+            // User is group admin, allow profile update
+            throw new UnAuthorizedError("Only group admin can update group profile");
+        }
+
+
+        let groupProfile = {};
+        if (req.file) {
+            const cloudinaryResult = await uploadGroupImgToCloudinary(req.file.buffer);
+            groupProfile = {
+                url: cloudinaryResult.secure_url,
+                public_id: cloudinaryResult.public_id
+            };
+        }
+
+        const updatedChat = await ChatModel.findByIdAndUpdate(
+            chatId,
+            { groupProfile },
+            { new: true }
+        ).populate('members', 'firstName lastName username profileImg');
+
+        if (!updatedChat) throw new NotFoundError("Chat Not Found");
+
+        return res.status(200).json({
+            success: true,
+            message: "Group profile updated successfully",
+            chat: updatedChat
+        });
+
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     createOrGetMessage,
     createGroup,
@@ -300,5 +343,6 @@ module.exports = {
     removeFromGroup,
     getGroups,
     getChatsOfUser,
-    getChatById
+    getChatById,
+    updateGroupProfile
 }

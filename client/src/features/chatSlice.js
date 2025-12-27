@@ -67,6 +67,29 @@ export const newGroup = createAsyncThunk("chat/group/create", async (groupData, 
 })
 
 
+// GroupProfile Update
+export const updateGroupProfileApi = createAsyncThunk("chat/group/updateProfile", async ({ chatId, formData }, { rejectWithValue }) => {
+    try {
+        const res = await chatApi.updateGroupProfile(chatId, formData)
+        return res;
+    } catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
+
+
+// rename Group 
+export const renameGroupApi = createAsyncThunk('chat/group/rename', async ({ chatId, data }, { rejectWithValue }) => {
+    try {
+        const res = await chatApi.renameGroup(chatId, data);
+        return res;
+    }
+    catch (error) {
+        return rejectWithValue(error.response?.data)
+    }
+})
+
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState: { groups: [], messages: [], chat: [], currentChat: null, loading: false, error: null },
@@ -180,6 +203,25 @@ const chatSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload?.error
             })
+
+            // update group profile
+            .addCase(updateGroupProfileApi.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateGroupProfileApi.fulfilled, (state, action) => {
+                state.loading = false;
+                // assuming action.payload is the updated chat
+                const updatedChat = action.payload;
+                const index = state.groups.findIndex(g => g._id === updatedChat._id);
+                if (index !== -1) state.groups[index] = updatedChat;
+            })
+            .addCase(updateGroupProfileApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error;
+            });
+
+        // rename Group
 
     }
 

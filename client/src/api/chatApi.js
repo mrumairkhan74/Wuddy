@@ -7,6 +7,14 @@ export const getGroup = async () => {
     return res.data
 }
 
+// update group Profile
+export const updateGroupProfile = async(chatId,formData)=>{
+    const res = await axios.put(`${apiUrl}/api/chat/${chatId}/update-group-profile`, formData, { withCredentials: true })
+    return res.data
+}
+
+
+
 export const getChats = async () => {
     const res = await axios.get(`${apiUrl}/api/chat/allChats`, { withCredentials: true })
     return res.data
