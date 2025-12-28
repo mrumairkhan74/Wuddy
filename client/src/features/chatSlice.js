@@ -219,10 +219,23 @@ const chatSlice = createSlice({
             .addCase(updateGroupProfileApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.error;
-            });
+            })
 
-        // rename Group
-
+            // rename Group
+            .addCase(renameGroupApi.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(renameGroupApi.fulfilled, (state, action) => {
+                state.loading = false;
+                const updatedChat = action.payload;
+                const index = state.groups.findIndex(g => g._id === updatedChat._id);
+                if (index !== -1) state.groups[index] = updatedChat;
+            })
+            .addCase(renameGroupApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.error;
+            })
     }
 
 

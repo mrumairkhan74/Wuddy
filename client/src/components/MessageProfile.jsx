@@ -1,24 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { IoCall, IoVideocam, IoPerson, IoCamera } from "react-icons/io5";
 import { BsThreeDots } from "react-icons/bs";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { updateGroupProfileApi } from '../features/chatSlice';
+import { renameGroupApi, updateGroupProfileApi } from '../features/chatSlice';
 import { MdEdit } from "react-icons/md";
 
 const MessageProfile = () => {
     const { user } = useSelector(state => state.auth);
     const { currentChat } = useSelector(state => state.chat);
     const dispatch = useDispatch();
-
+    const [isOpenDropDown, setIsOpenDropDown] = useState(false)
     const [activeTab, setActiveTab] = useState("images");
     const [groupProfile, setGroupProfile] = useState(null);
     const [isEditingName, setIsEditingName] = useState(false);
     const [groupName, setGroupName] = useState("");
+    const dropdownRef = useRef(null);
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpenDropDown(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     if (!currentChat || !user) return null;
 
     const isGroupChat = currentChat.isGroupChat;
+
+
+
+    // Close dropdown when clicking outside
+
+
 
     const isGroupAdmin =
         isGroupChat &&
@@ -39,6 +61,14 @@ const MessageProfile = () => {
         );
     };
 
+    const handleGroupRename = () => {
+        dispatch(
+            renameGroupApi({
+                chatId: currentChat._id,
+                data: { chatName: groupName }
+            })
+        );
+    };
     const profileData = isGroupChat
         ? {
             name: currentChat.chatName,
@@ -89,7 +119,7 @@ const MessageProfile = () => {
                     {!isEditingName ? (
                         <>
                             <h2 className="text-2xl font-semibold text-gray-700">
-                                {groupName}
+                                {groupName || profileData?.name}
                             </h2>
 
                             {isGroupAdmin && (
@@ -112,8 +142,10 @@ const MessageProfile = () => {
                                     if (e.key === "Enter") {
                                         setIsEditingName(false);
                                         // later: dispatch update group name API here
+                                        handleGroupRename();
                                     }
                                 }}
+                                placeholder={profileData?.name}
                                 className="border border-gray-300 rounded-md px-3 py-1 text-gray-700 w-full outline-[#206059]"
                                 autoFocus
                             />
@@ -136,7 +168,7 @@ const MessageProfile = () => {
                 )}
 
                 {/* Action Icons */}
-                <div className="flex gap-5 mt-4">
+                <div className="flex gap-5 mt-4" ref={dropdownRef} >
                     {!isGroupChat && (
                         <Link to={`/myProfile/${profileData?.userId}`}>
                             <IoPerson className="text-3xl text-[#206059]" />
@@ -144,10 +176,26 @@ const MessageProfile = () => {
                     )}
                     <IoCall className="text-3xl text-[#206059]" />
                     <IoVideocam className="text-3xl text-[#206059]" />
-                    <BsThreeDots className="text-3xl text-[#206059]" />
+                    <BsThreeDots className="text-3xl text-[#206059]" onClick={() => setIsOpenDropDown(!isOpenDropDown)} />
                 </div>
             </div>
 
+            {isOpenDropDown && (
+                <div className="flex flex-col justify-center items-center w-80 h-40 rounded-md border-2 border-[#206059] overflow-y-auto p-2">
+                    <ul className='flex flex-col justify-center items-center w-full'>
+                        <Link className="p-2 mt-1 text-md border-b-2 border-gray-400 flex gap-2 items-center w-full text-[#206059]">See member</Link>
+                        {isGroupAdmin ? (
+                            <div className="flex flex-col justify-center items-center w-full">
+                                <Link className="p-2 mt-1 text-md border-b-2 border-gray-400 flex gap-2 items-center w-full text-[#206059]">Add member</Link>
+                                <Link className="p-2 mt-1 text-md flex gap-2 items-center w-full text-red-500 font-bold">Remove member</Link>
+                            </div>
+                        ) : (
+                            <Link className="p-2 mt-1 text-md flex gap-2 items-center w-full text-red-500 font-bold">Leave Group</Link>
+                        )}
+                    </ul>
+                </div>
+
+            )}
             {/* Media Tabs */}
             <div className="w-full p-5">
                 <div className="flex justify-around mb-5">
