@@ -12,6 +12,8 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
+    logger: true,
+    debug: true
 });
 
 transporter.verify(function (error, success) {
@@ -22,6 +24,10 @@ transporter.verify(function (error, success) {
     }
 });
 
-
+console.log({
+    user: process.env.EMAIL_USER,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+})
 
 module.exports = transporter
