@@ -80,6 +80,7 @@ const createUser = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true if on https
             sameSite: "None", // important for frontend <-> backend on different domains
+            // sameSite: "lax", // important for frontend <-> backend on different domains
             maxAge: 24 * 60 * 1000, // 24 minutes (or whatever your access token expiry is)
         });
 
@@ -87,6 +88,7 @@ const createUser = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "None",
+            // sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
         return res.status(200).json({

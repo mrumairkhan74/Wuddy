@@ -16,7 +16,7 @@ const sendEmailVerificationCode = async (user) => {
         const code = generateCode(6);
 
         await client.setEx(redisKeys.emailVerify(user._id), 600, String(code));
-        transporter.sendMail({
+        await transporter.sendMail({
             from: `"Wuddy" <${process.env.EMAIL_USER}>`,
             to: user.email,
             subject: "Verify Your Wuddy Account",
