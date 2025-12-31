@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
+const apiUrl = import.meta.env.VITE_BACKEND_API
 const VerifyEmail = () => {
     const [code, setCode] = useState("");
     const [status, setStatus] = useState("");
@@ -17,7 +17,7 @@ const VerifyEmail = () => {
 
         try {
             await axios.put(
-                `http://localhost:5000/api/user/${userId}/verify-email`,
+                `${apiUrl}/user/${userId}/verify-email`,
                 { code },
                 { withCredentials: true } // send cookies if using session
             );
