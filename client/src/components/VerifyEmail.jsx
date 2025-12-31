@@ -17,7 +17,7 @@ const VerifyEmail = () => {
 
         try {
             await axios.put(
-                `${apiUrl}/user/${userId}/verify-email`,
+                `${apiUrl}/api/user/${userId}/verify-email`,
                 { code },
                 { withCredentials: true } // send cookies if using session
             );
