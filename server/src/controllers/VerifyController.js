@@ -1,6 +1,6 @@
 const UserModel = require('../models/UserModel')
 const client = require('../config/redis');
-const transporter = require('../utils/sendEmail')
+const sendEmail = require('../utils/sendEmail')
 const { generateResetToken, generateCode } = require('../utils/GenerateCode')
 const redisKeys = require('../utils/redisKey');
 
@@ -10,37 +10,33 @@ const redisKeys = require('../utils/redisKey');
 // send verification code
 const sendEmailVerificationCode = async (user) => {
     try {
-        if (!user?._id || !user?.email) {
-            throw new Error("User object must include id or email")
-        }
-        const code = generateCode(6);
+        if (!user?._id || !user?.email) throw new Error("User object must include id or email");
 
+        const code = generateCode(6);
         await client.setEx(redisKeys.emailVerify(user._id), 600, String(code));
-        const info = await transporter.sendMail({
-            from: `"Wuddy" <${process.env.EMAIL_USER}>`,
+
+        await sendEmail({
             to: user.email,
             subject: "Verify Your Wuddy Account",
             html: `
-    <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-      <img src="" 
-           alt="Wuddy Logo" 
-           style="width: 80px; margin-bottom: 20px; border-radius: 50%;" />
-      <h2>Welcome to Wuddy</h2>
-      <p>Your verification code is:</p>
-      <div style="font-size: 24px; font-weight: bold; background: #206059; color: white; padding: 12px 20px; display: inline-block; border-radius: 8px;">
-        ${code}
-      </div>
-      <p>This code will expire in 10 minutes.</p>
-    </div>
-  `
-
+        <div style="text-align:center; font-family:Arial,sans-serif;">
+          <h2>Welcome to Wuddy</h2>
+          <p>Your verification code is:</p>
+          <div style="font-size:24px; font-weight:bold; background:#206059; color:white; padding:12px 20px; border-radius:8px;">
+            ${code}
+          </div>
+          <p>This code will expire in 10 minutes.</p>
+        </div>
+      `,
+            replyTo: 'support@wuddy.app'
         });
-        console.log("Email sent: %s", info.response);
-    } catch (error) {
-        console.error("Server Error", error);
 
+        console.log(`Verification email sent to ${user.email}`);
+    } catch (error) {
+        console.error("Email send error:", error);
     }
-}
+};
+
 
 
 // verify email 
