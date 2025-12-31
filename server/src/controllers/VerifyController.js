@@ -42,19 +42,23 @@ const sendEmailVerificationCode = async (user) => {
 // verify email 
 const verifyEmail = async (req, res) => {
     try {
-        const { code } = req.body;
-        const userId = req.params.id; // from URL
-        console.log(userId)
+        const code = req.body.code?.trim(); // trim spaces
+        const userId = req.params.id;
+
         const storedCode = await client.get(redisKeys.emailVerify(userId));
 
-        if (!storedCode || storedCode !== code) {
+        console.log("UserId:", userId);
+        console.log("Entered code:", code);
+        console.log("Stored code:", storedCode);
+
+        if (!storedCode || storedCode.trim() !== code) {
             return res.status(400).json({ error: "Invalid or Expired Code" });
         }
 
         const user = await UserModel.findByIdAndUpdate(
             userId,
             { isEmailVerified: true },
-            { new: true } // return updated user
+            { new: true }
         );
 
         await client.del(redisKeys.emailVerify(userId));
@@ -72,6 +76,7 @@ const verifyEmail = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 
 
 
