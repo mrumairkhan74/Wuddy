@@ -9,8 +9,8 @@ const transporter = nodemailer.createTransport({
     maxConnections: 5,
     maxMessages: 100,
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.SENDGRID_API_USER,
+        pass: process.env.SENDGRID_API_SECRET
     },
     logger: true,
     debug: true
@@ -25,7 +25,7 @@ transporter.verify(function (error, success) {
 });
 
 console.log({
-    user: process.env.EMAIL_USER,
+    user: process.env.SENDGRID_API_USER,
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
 })
