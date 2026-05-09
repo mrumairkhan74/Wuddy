@@ -85,7 +85,7 @@ const deletePost = async (req, res, next) => {
         const { id } = req.params
         const post = await PostModel.findById(id)
 
-        if (post.createdBy.toString() !== userId) {
+        if (post.createdBy.toString() !== userId.toString() {
             throw new UnAuthorizedError("You are not authorized to delete this post")
         }
         await PostModel.findByIdAndDelete(id)
@@ -115,7 +115,7 @@ const updatePost = async (req, res, next) => {
             throw new NotFoundError("Post not found");
         }
 
-        if (post.createdBy.toString() !== userId) {
+        if (post.createdBy.toString() !== userId.toString() {
             throw new UnAuthorizedError("Unauthorized to update this post");
         }
 
