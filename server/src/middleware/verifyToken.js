@@ -10,13 +10,7 @@ const verifyAccessToken = (req, res, next) => {
             return res.status(401).json({ error: "No Token Provided" })
         }
         const decoded = jwt.verify(token, accessSecret)
-        req.user = {
-            _id: decoded._id,
-            // name: decoded.name,
-            // username: decoded.username,
-            // email: decoded.email,
-            // profileImg: decoded.profileImg
-        }
+        req.user = decoded
         next()
     }
     catch (error) {
@@ -37,13 +31,7 @@ const verifyRefreshToken = (req, res, next) => {
             return res.status(401).json({ error: "Invalid Token" })
         }
         const decoded = jwt.verify(token, refreshSecret)
-        req.user = {
-            _id: decoded._id,
-            // name: decoded.name,
-            // username: decoded.username,
-            // email: decoded.email,
-            // profileImg: decoded.profileImg
-        }
+        req.user = decoded
         next()
     }
     catch (error) {
