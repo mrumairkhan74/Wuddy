@@ -115,7 +115,7 @@ const updatePost = async (req, res, next) => {
             throw new NotFoundError("Post not found");
         }
 
-        if (post.createdBy.toString() !== userId.toString() {
+        if (post.createdBy.toString() !== userId.toString()) {
             throw new UnAuthorizedError("Unauthorized to update this post");
         }
 
